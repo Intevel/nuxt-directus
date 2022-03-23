@@ -12,3 +12,13 @@ export interface DirectusAuthResponse {
   expires: number;
   refresh_token?: string;
 }
+
+export interface DirectusPasswordForgotCredentials {
+  email: string;
+  reset_url?: string;
+}
+
+export interface DirectusPasswordResetCredentials {
+  email: string;
+  password: string;
+}

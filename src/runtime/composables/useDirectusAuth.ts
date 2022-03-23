@@ -3,6 +3,8 @@ import type {
   DirectusAuthResponse,
   DirectusAuthCredentials,
   DirectusUser,
+  DirectusPasswordForgotCredentials,
+  DirectusPasswordResetCredentials,
 } from "../types";
 import { useDirectus } from "./useDirectus";
 import { useDirectusUser } from "./useDirectusUser";
@@ -35,14 +37,6 @@ export const useDirectusAuth = () => {
     return user;
   };
 
-  /**
-   * Login
-   *
-   * @param  {DirectusAuthCredentials} data - User authentication credentials
-   * @param  {string} data.email - The email
-   * @param  {string} data.password - The password of the user
-   * @returns Promise<DirectusAuthResponse>
-   */
   const login = async (
     data: DirectusAuthCredentials
   ): Promise<DirectusAuthResponse> => {
@@ -64,10 +58,30 @@ export const useDirectusAuth = () => {
     };
   };
 
+  const requestPasswordReset = async (
+    data: DirectusPasswordForgotCredentials
+  ): Promise<void> => {
+    await directus("/auth/password/request", {
+      method: "POST",
+      body: data,
+    });
+  };
+
+  const resetPassword = async (
+    data: DirectusPasswordResetCredentials
+  ): Promise<void> => {
+    await directus("/auth/password/reset", {
+      method: "POST",
+      body: data,
+    });
+  };
+
   return {
     setToken,
     setUser,
     fetchUser,
     login,
+    requestPasswordReset,
+    resetPassword,
   };
 };
