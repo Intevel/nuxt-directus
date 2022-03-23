@@ -39,7 +39,7 @@ export const useDirectusAuth = () => {
    * Login
    *
    * @param  {DirectusAuthCredentials} data - User authentication credentials
-   * @param  {string} data.email - The email or username of the user
+   * @param  {string} data.email - The email
    * @param  {string} data.password - The password of the user
    * @returns Promise<DirectusAuthResponse>
    */
