@@ -1,0 +1,37 @@
+{
+  "name": "nuxt-directus",
+  "version": "1.0.0",
+  "license": "MIT",
+  "type": "module",
+  "author": {
+    "name": "Conner Luka Bachmann",
+    "email": "github@conner-bachmann.de"
+  },
+  "contributors": [],
+  "exports": {
+    ".": {
+      "import": "./dist/module.mjs",
+      "require": "./dist/module.cjs"
+    }
+  },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "prepack": "nuxt-module-build",
+    "dev": "nuxi dev playground",
+    "dev:build": "nuxi build playground",
+    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground"
+  },
+  "dependencies": {
+    "@nuxt/kit": "npm:@nuxt/kit-edge@latest"
+  },
+  "devDependencies": {
+    "@nuxt/module-builder": "latest",
+    "@nuxtjs/eslint-config-typescript": "latest",
+    "eslint": "latest",
+    "nuxt3": "latest"
+  }
+}
