@@ -28,7 +28,7 @@ export const useDirectus = () => {
         },
       });
     } catch (err: any) {
-      //   nuxt.hooks.callHook("direcuts:error" as any, e);
+      //   nuxt.hooks.callHook("directus:error" as any, e);
       throw err;
     }
   };
