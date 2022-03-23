@@ -28,7 +28,8 @@ export const useDirectusAuth = () => {
   const fetchUser = async (): Promise<Ref<DirectusUser>> => {
     if (token.value && !user.value) {
       try {
-        user.value = await directus("/users/me");
+        var res = await directus("/users/me");
+        setUser(res.data);
       } catch (e) {
         setToken(null);
       }

@@ -1,5 +1,7 @@
 import { defineNuxtPlugin } from "#app";
 
-export default defineNuxtPlugin((nuxtApp) => {
-  console.log("Directus");
+export default defineNuxtPlugin(async (nuxtApp) => {
+  const { fetchUser } = useDirectusAuth();
+
+  await fetchUser();
 });
