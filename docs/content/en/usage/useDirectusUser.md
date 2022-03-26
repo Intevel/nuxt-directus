@@ -5,7 +5,7 @@ position: 9
 category: "Usage"
 ---
 
-If you are logged in you can access the user everywhere, if you are not logged in undefined is returned.
+If you are logged in you can access the user everywhere, if you are not logged in `undefined` is returned.
 
 ```vue
 <script setup>
