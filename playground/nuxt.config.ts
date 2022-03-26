@@ -1,11 +1,9 @@
-import { defineNuxtConfig } from 'nuxt3'
-import MyModule from '..'
+import { defineNuxtConfig } from "nuxt3";
+import NuxtDirectus from "..";
 
 export default defineNuxtConfig({
-  modules: [
-    MyModule
-  ],
-  myModule: {
-    addPlugin: true
-  }
-})
+  modules: [NuxtDirectus],
+  directus: {
+    url: "-",
+  },
+});
