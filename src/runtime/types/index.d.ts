@@ -22,3 +22,19 @@ export interface DirectusPasswordResetCredentials {
   token: string;
   password: string;
 }
+
+export interface DirectusItemRequest {
+  collection: string;
+  id?: string;
+  params?: DirectusQueryParams;
+}
+
+export interface DirectusQueryParams {
+  fields?: Array<string>;
+  sort?: string | Array<string>;
+  filter?: Record<string, unknown>;
+  limit?: number;
+  offset?: number;
+  page?: number;
+  alias?: string | Array<string>;
+}
