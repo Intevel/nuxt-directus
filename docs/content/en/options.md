@@ -12,7 +12,7 @@ URL of the Directus server.
 ```js{}[nuxt.config.js]
 export default {
 	directus: {
-		url: 'mydirectusurl'
+		url: 'https://your-directus-server.app/'
 	}
 };
 ```
