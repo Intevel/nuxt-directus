@@ -29,6 +29,7 @@ export const useDirectusAuth = () => {
     if (token.value && !user.value) {
       try {
         var res = await directus("/users/me");
+        //@ts-ignore
         setUser(res.data);
       } catch (e) {
         setToken(null);
@@ -43,10 +44,13 @@ export const useDirectusAuth = () => {
   ): Promise<DirectusAuthResponse> => {
     setToken(null);
 
-    const response: DirectusAuthResponse = await directus("/auth/login", {
-      method: "POST",
-      body: data,
-    });
+    const response: { data: DirectusAuthResponse } = await directus(
+      "/auth/login",
+      {
+        method: "POST",
+        body: data,
+      }
+    );
 
     setToken(response.data.access_token);
 
