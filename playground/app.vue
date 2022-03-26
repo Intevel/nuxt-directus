@@ -80,5 +80,5 @@ const fetchArticles = async () => {
 
     router.push("/d");
   } catch (e) {}
-}; // Items don't have a pre-defined schema. The format depends completely on how you configured your collections and fields in Directus.
+};
 </script>
