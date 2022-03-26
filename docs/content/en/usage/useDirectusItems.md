@@ -1,7 +1,7 @@
 ---
 title: "useDirectusItems"
 description: "Learn how to use Nuxt & Directus"
-position: 10
+position: 11
 category: "Usage"
 ---
 

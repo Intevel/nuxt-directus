@@ -1,7 +1,7 @@
 ---
 title: "useDirectusAuth"
 description: "Learn how to use Nuxt & Directus"
-position: 9
+position: 10
 category: "Usage"
 ---
 
