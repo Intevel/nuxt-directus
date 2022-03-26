@@ -29,6 +29,11 @@ export interface DirectusItemRequest {
   params?: DirectusQueryParams;
 }
 
+export interface DirectusItemCreation {
+  collection: string;
+  items: Array<Object> | Object;
+}
+
 export interface DirectusQueryParams {
   fields?: Array<string>;
   sort?: string | Array<string>;
