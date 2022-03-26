@@ -24,6 +24,7 @@
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
+    "docs": "cd docs && yarn dev",
     "release": "nuxt-module-build && standard-version && git push --follow-tags && npm publish"
   },
   "dependencies": {
