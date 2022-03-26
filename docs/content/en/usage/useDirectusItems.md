@@ -19,7 +19,7 @@ Search for items in a specific collection, [`global search querys`](https://docs
 
 ```vue [pages/articles.vue]
 <script setup lang="ts">
-const { getItems } = useDirectusAuth();
+const { getItems } = useDirectusItems();
 const router = useRouter();
 
 const fetchArticles = async () => {
@@ -48,7 +48,7 @@ Search for an item by id in a specific collection
 
 ```vue [pages/article.vue]
 <script setup lang="ts">
-const { getItemById } = useDirectusAuth();
+const { getItemById } = useDirectusItems();
 
 const fetchArticle = async () => {
   try {
@@ -56,6 +56,42 @@ const fetchArticle = async () => {
       collection: "News",
       id: "4776864a-75ee-4746-9ef4-bd5c2e38cc66",
     });
+  } catch (e) {}
+};
+</script>
+```
+
+### `createItems`
+
+Create one or multiple items in a specific collection
+
+_Items don't have a pre-defined schema. The format depends completely on how you configured your collections and fields in Directus._
+
+- **Arguments:**
+
+  - data: [`DirectusItemCreation`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#32)
+
+- **Returns:** `Empty body`
+
+```vue [pages/article.vue]
+<script setup lang="ts">
+const { createItems } = useDirectusItems();
+
+const createArticles = async () => {
+  try {
+    var items = [
+      {
+        title: "testitem",
+        content: "testcontent",
+        status: "published",
+      },
+      {
+        title: "testitem2",
+        content: "testcontent2",
+        status: "published",
+      },
+    ];
+    await createItems({ collection: "News", items });
   } catch (e) {}
 };
 </script>
