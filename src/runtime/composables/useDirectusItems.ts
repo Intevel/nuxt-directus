@@ -8,7 +8,8 @@ export const useDirectusItems = () => {
       method: "GET",
     });
 
-    return items;
+    // @ts-ignore
+    return items.data;
   };
 
   return { getItems };
