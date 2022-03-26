@@ -1,5 +1,9 @@
 import { useDirectus } from "./useDirectus";
-import { DirectusItemRequest, DirectusItemCreation } from "../types";
+import {
+  DirectusItemRequest,
+  DirectusItemCreation,
+  DirectusItemDeletion,
+} from "../types";
 
 export const useDirectusItems = () => {
   const directus = useDirectus();
@@ -34,5 +38,12 @@ export const useDirectusItems = () => {
     });
   };
 
-  return { getItems, getItemById, createItems };
+  const deleteItems = async (data: DirectusItemDeletion) => {
+    await directus(`/items/${data.collection}`, {
+      method: "DELETE",
+      body: data.items,
+    });
+  };
+
+  return { getItems, getItemById, createItems, deleteItems };
 };

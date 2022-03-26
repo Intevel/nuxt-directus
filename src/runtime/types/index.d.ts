@@ -34,6 +34,11 @@ export interface DirectusItemCreation {
   items: Array<Object> | Object;
 }
 
+export interface DirectusItemDeletion {
+  collection: string;
+  items: Array<string> | string;
+}
+
 export interface DirectusQueryParams {
   fields?: Array<string>;
   sort?: string | Array<string>;
