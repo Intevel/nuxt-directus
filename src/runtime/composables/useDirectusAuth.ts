@@ -81,6 +81,12 @@ export const useDirectusAuth = () => {
     });
   };
 
+  const logout = (): void => {
+    // https://docs.directus.io/reference/authentication/#logout todo: implement this
+    setToken(null);
+    setUser(null);
+  };
+
   return {
     setToken,
     setUser,
@@ -88,5 +94,6 @@ export const useDirectusAuth = () => {
     login,
     requestPasswordReset,
     resetPassword,
+    logout,
   };
 };
