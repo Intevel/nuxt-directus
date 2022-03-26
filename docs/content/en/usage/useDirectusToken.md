@@ -1,5 +1,5 @@
 ---
-title: "useDirectusUser"
+title: "useDirectusToken"
 description: "Learn how to use Nuxt & Directus"
 position: 8
 category: "Usage"
