@@ -19,6 +19,6 @@ export interface DirectusPasswordForgotCredentials {
 }
 
 export interface DirectusPasswordResetCredentials {
-  email: string;
+  token: string;
   password: string;
 }
