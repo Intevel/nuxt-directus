@@ -73,7 +73,7 @@ _Items don't have a pre-defined schema. The format depends completely on how you
 
 - **Returns:** `Empty body`
 
-```vue [pages/article.vue]
+```vue [pages/articles.vue]
 <script setup lang="ts">
 const { createItems } = useDirectusItems();
 
@@ -92,6 +92,29 @@ const createArticles = async () => {
       },
     ];
     await createItems({ collection: "News", items });
+  } catch (e) {}
+};
+</script>
+```
+
+### `deleteItems`
+
+Delete one or multiple items in a specific collection
+
+- **Arguments:**
+
+  - data: [`DirectusItemDeletion`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#37)
+
+- **Returns:** `Empty body`
+
+```vue [pages/articles.vue]
+<script setup lang="ts">
+const { deleteItems } = useDirectusItems();
+
+const deleteArticles = async () => {
+  try {
+    var items = ["15", "20", "22"];
+    await deleteItems({ collection: "News", items });
   } catch (e) {}
 };
 </script>
