@@ -7,7 +7,9 @@
     "name": "Conner Luka Bachmann",
     "email": "github@conner-bachmann.de"
   },
-  "contributors": [],
+  "contributors": [
+    "Intevel <github@conner-bachmann.de>"
+  ],
   "exports": {
     ".": {
       "import": "./dist/module.mjs",
@@ -35,5 +37,17 @@
     "@nuxtjs/eslint-config-typescript": "latest",
     "eslint": "latest",
     "nuxt3": "latest"
-  }
+  },
+  "keywords": [
+    "nuxt",
+    "directus",
+    "nuxtjs",
+    "nuxt-module",
+    "vue3",
+    "nuxt3",
+    "directus-module",
+    "nuxt-directus",
+    "nuxtdirectus",
+    "nuxt-community"
+  ]
 }
