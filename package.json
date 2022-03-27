@@ -2,6 +2,8 @@
   "name": "nuxt-directus",
   "version": "1.1.2",
   "license": "MIT",
+  "repository": "https://github.com/intevel/nuxt-directus",
+  "homepage": "https://nuxt-directus.netlify.app/",
   "type": "module",
   "author": {
     "name": "Conner Luka Bachmann",
