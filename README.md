@@ -20,7 +20,6 @@
 - RESTful methods
 - TypeScript Support
 
-[📖 &nbsp;Read the documentation](https://nuxt-directus.netlify.app/)
 
 ## Setup
 
