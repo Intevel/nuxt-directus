@@ -37,6 +37,6 @@ export default {
 
 <alert type="success">
 
-That's it! You can now use [Directus](/usage) in your Nuxt app ✨
+That's it! You can now use [Directus](/usage/useDirectusToken) in your Nuxt app ✨
 
 </alert>
