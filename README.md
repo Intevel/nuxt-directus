@@ -20,7 +20,6 @@
 - RESTful methods
 - TypeScript Support
 
-[📖 &nbsp;Read the documentation](https://nuxt-directus.netlify.app/)
 
 ## Setup
 
@@ -31,7 +30,7 @@ npm i nuxt-directus # npm
 
 ## Basic usage
 
-Firstly, you need to add `nuxt-directus` to your Nuxt config.
+Add `nuxt-directus` to your Nuxt config:
 
 ```javascript
 // nuxt.config.js
@@ -40,8 +39,6 @@ export default {
   buildModules: ["nuxt-directus"],
 };
 ```
-
-Then you can start using `nuxt-directus` in your app!
 
 ## Development
 
