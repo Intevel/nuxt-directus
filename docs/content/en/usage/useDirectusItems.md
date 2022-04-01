@@ -103,7 +103,7 @@ Delete one or multiple items in a specific collection
 
 - **Arguments:**
 
-  - data: [`DirectusItemDeletion`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#37)
+  - data: [`DirectusItemDeletion`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#42)
 
 - **Returns:** `Empty body`
 
@@ -115,6 +115,29 @@ const deleteArticles = async () => {
   try {
     var items = ["15", "20", "22"];
     await deleteItems({ collection: "News", items });
+  } catch (e) {}
+};
+</script>
+```
+
+### `updateItem`
+
+Update item in a specific collection
+
+- **Arguments:**
+
+  - data: [`DirectusItemUpdate`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#37)
+
+- **Returns:** `Empty body`
+
+```vue [pages/articles.vue]
+<script setup lang="ts">
+const { updateItem } = useDirectusItems();
+
+const updateArticles = async () => {
+  try {
+    var newItem = { title: "This Item was updated" };
+    await updateItem({ collection: "News", id: "itemid", item: newItem });
   } catch (e) {}
 };
 </script>
