@@ -3,6 +3,7 @@ import {
   DirectusItemRequest,
   DirectusItemCreation,
   DirectusItemDeletion,
+  DirectusItemUpdate,
 } from "../types";
 
 export const useDirectusItems = () => {
@@ -45,5 +46,12 @@ export const useDirectusItems = () => {
     });
   };
 
-  return { getItems, getItemById, createItems, deleteItems };
+  const updateItem = async (data: DirectusItemUpdate) => {
+    await directus(`/items/${data.collection}/${data.id}`, {
+      method: "PATCH",
+      body: data.item,
+    });
+  };
+
+  return { getItems, getItemById, createItems, deleteItems, updateItem };
 };

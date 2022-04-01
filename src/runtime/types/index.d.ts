@@ -34,6 +34,11 @@ export interface DirectusItemCreation {
   items: Array<Object> | Object;
 }
 
+export interface DirectusItemUpdate {
+  collection: string;
+  id: string;
+  item: Object;
+}
 export interface DirectusItemDeletion {
   collection: string;
   items: Array<string> | string;
