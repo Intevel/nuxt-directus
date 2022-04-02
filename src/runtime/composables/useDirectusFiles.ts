@@ -1,7 +1,7 @@
 import { useDirectusUrl } from "./useDirectusUrl";
 import { DirectusThumbnailOptions } from "../types";
 
-export const useDirectusImage = () => {
+export const useDirectusFiles = () => {
   const directusUrl = useDirectusUrl();
 
   const getThumbnail = (

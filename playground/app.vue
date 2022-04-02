@@ -27,7 +27,7 @@ const user = useDirectusUser();
 const { getItems, getItemById, createItems, deleteItems } = useDirectusItems();
 const router = useRouter();
 const fileId = 'da8e7c7b-d115-40cd-a88c-d4aedd7eea6c'
-const { getThumbnail: img } = useDirectus();
+const { getThumbnail: img } = useDirectusFiles();
 
 const onSubmit = async () => {
   try {
