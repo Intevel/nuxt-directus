@@ -14,6 +14,10 @@
       Delete Articles
     </button>
     <button style="margin-top: 25px" @click="logUser">Log User</button>
+    <div style="margin-top: 25px">
+        <img :src="img(fileId, { width: 300, height: 300, fit: 'cover' })" alt="square thumbnail" />
+        <img :src="img(fileId, { width: 300, format: 'webp' })" alt="webp" />
+    </div>
   </div>
 </template>
 
@@ -22,6 +26,8 @@ const { login } = useDirectusAuth();
 const user = useDirectusUser();
 const { getItems, getItemById, createItems, deleteItems } = useDirectusItems();
 const router = useRouter();
+const fileId = 'da8e7c7b-d115-40cd-a88c-d4aedd7eea6c'
+const { getThumbnail: img } = useDirectusFiles();
 
 const onSubmit = async () => {
   try {

@@ -53,3 +53,16 @@ export interface DirectusQueryParams {
   page?: number;
   alias?: string | Array<string>;
 }
+
+export type DirectusThumbnailFormat = "jpg" | "png" | "webp" | "tiff";
+
+export type DirectusThumbnailFit = "cover" | "contain" | "inside" | "outside";
+
+export interface DirectusThumbnailOptions {
+  width?: number;
+  height?: number;
+  quality?: number;
+  fit?: DirectusThumbnailFit;
+  format?: DirectusThumbnailFormat;
+  withoutEnlargement?: boolean;
+}
