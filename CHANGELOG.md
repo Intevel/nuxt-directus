@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/intevel/nuxt-directus/compare/v1.2.1...v1.3.0) (2022-04-03)
+
+
+### Features
+
+* add docs ([48846c8](https://github.com/intevel/nuxt-directus/commit/48846c83dff8d79cf9f71c86c1893642065224d7))
+* add getThumbnail method ([64c2640](https://github.com/intevel/nuxt-directus/commit/64c264027abc10565f17f9adfa56d39bb85a0275))
+* add playground Generics ([fe48ef0](https://github.com/intevel/nuxt-directus/commit/fe48ef0c780894f5b68b686522d28d8efa989197))
+* add sample to playground ([a44fa42](https://github.com/intevel/nuxt-directus/commit/a44fa42a6d7a21cd7af9e424cb89066f96ad393d))
+* add updateItem method ([7e844e7](https://github.com/intevel/nuxt-directus/commit/7e844e73aa8462f042bcf3fdccd1acb75c06fc4b))
+
+
+### Bug Fixes
+
+* naming issue ([4707cab](https://github.com/intevel/nuxt-directus/commit/4707cabe9446744e9936f5fedb5c0c313f7f1595))
+* **useDirectusAuth:** remove typescript ignore ([39098b3](https://github.com/intevel/nuxt-directus/commit/39098b3db6e737a758cb1389913da4fe6b23369a))
+* **useDirectusAuth:** remove typescript ignore ([516e40e](https://github.com/intevel/nuxt-directus/commit/516e40e6e98cf02ab203a4c20e87f0e4303b3d4b))
+
 ### [1.2.1](https://github.com/intevel/nuxt-directus/compare/v1.2.0...v1.2.1) (2022-03-31)
 
 ## [1.2.0](https://github.com/intevel/nuxt-directus/compare/v1.1.4...v1.2.0) (2022-03-31)
