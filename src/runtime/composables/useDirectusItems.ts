@@ -9,49 +9,57 @@ import {
 export const useDirectusItems = () => {
   const directus = useDirectus();
 
-  const getItems = async (data: DirectusItemRequest) => {
+  const getItems = async <T>(data: DirectusItemRequest): Promise<T[]> => {
     if (data.params?.filter) {
-      // @ts-ignore
-      data.params.filter = JSON.stringify(data.params.filter);
+      (data.params.filter as unknown) = JSON.stringify(data.params.filter);
     }
-    const items = await directus(`/items/${data.collection}`, {
+    const items = await directus<{data: T[]}>(`/items/${data.collection}`, {
       method: "GET",
       params: data.params,
     });
-
-    // @ts-ignore
     return items.data;
   };
-
-  const getItemById = async (data: DirectusItemRequest) => {
-    const items = await directus(`/items/${data.collection}/${data.id}`, {
+  
+  const getSingletonItem = async <T>(data: DirectusItemRequest): Promise<T> => {
+    if (data.params?.filter) {
+      (data.params.filter as unknown) = JSON.stringify(data.params.filter);
+    }
+    const items = await directus<{data: T}>(`/items/${data.collection}`, {
+      method: "GET",
+      params: data.params,
+    });
+    return items.data;
+  };
+  
+  const getItemById = async <T>(data: DirectusItemRequest): Promise<T[]> => {
+    const items = await directus<{data: T[]}>(`/items/${data.collection}/${data.id}`, {
       method: "GET",
     });
-
-    // @ts-ignore
     return items.data;
   };
 
-  const createItems = async (data: DirectusItemCreation) => {
-    await directus(`/items/${data.collection}`, {
+  const createItems = async <T>(data: DirectusItemCreation): Promise<T[]> => {
+    const items = await directus<{data: T[]}>(`/items/${data.collection}`, {
       method: "POST",
       body: data.items,
     });
+    return items.data;
   };
 
-  const deleteItems = async (data: DirectusItemDeletion) => {
-    await directus(`/items/${data.collection}`, {
+  const deleteItems = async (data: DirectusItemDeletion): Promise<void> => {
+    await directus<void>(`/items/${data.collection}`, {
       method: "DELETE",
       body: data.items,
     });
   };
 
-  const updateItem = async (data: DirectusItemUpdate) => {
-    await directus(`/items/${data.collection}/${data.id}`, {
+  const updateItem = async <T>(data: DirectusItemUpdate): Promise<T> => {
+    const item = await directus<{data: T}>(`/items/${data.collection}/${data.id}`, {
       method: "PATCH",
       body: data.item,
     });
+    return item.data;
   };
 
-  return { getItems, getItemById, createItems, deleteItems, updateItem };
+  return { getItems, getSingletonItem, getItemById, createItems, deleteItems, updateItem };
 };
