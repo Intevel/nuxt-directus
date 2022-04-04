@@ -83,3 +83,29 @@ const onSubmit = async () => {
 };
 </script>
 ```
+
+## Middleware example
+### Redirect user to login
+You can protect your authenticated routes by creating a custom middleware in your project, here is an example:
+
+Create ```./middleware/auth.ts```
+
+```ts
+export default defineNuxtRouteMiddleware((to, _from) => {
+    const user = useDirectusUser();
+  
+    if (!user.value) {
+      return navigateTo('/login')
+    }
+  })
+```
+
+Now you can add the middleware to your pages
+
+```ts
+<script setup lang="ts">
+definePageMeta({
+  middleware: ["auth"]
+})
+</script>
+```
