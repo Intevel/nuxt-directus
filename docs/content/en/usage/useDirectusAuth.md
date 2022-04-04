@@ -83,3 +83,26 @@ const onSubmit = async () => {
 };
 </script>
 ```
+
+## Real-life Example
+### Redirect user to login
+You can protect your authenticated routes by creating a custom composable in your project, here is an example:
+
+Add ```./middleware/auth.ts```
+
+```ts
+export default defineNuxtRouteMiddleware((to, _from) => {
+    const user = useDirectusUser();
+  
+    if (!user.value) {
+      return navigateTo('/login')
+    }
+  })
+```
+
+Now you can add to your pages in the ```<script setup lang="ts">```
+```ts
+definePageMeta({
+  middleware: ["auth"]
+})
+```
