@@ -86,9 +86,9 @@ const onSubmit = async () => {
 
 ## Middleware example
 ### Redirect user to login
-You can protect your authenticated routes by creating a custom composable in your project, here is an example:
+You can protect your authenticated routes by creating a custom middleware in your project, here is an example:
 
-Add ```./middleware/auth.ts```
+Create ```./middleware/auth.ts```
 
 ```ts
 export default defineNuxtRouteMiddleware((to, _from) => {
@@ -100,9 +100,12 @@ export default defineNuxtRouteMiddleware((to, _from) => {
   })
 ```
 
-Now you can add to your pages in the ```<script setup lang="ts">```
+Now you can add the middleware to your pages
+
 ```ts
+<script setup lang="ts">
 definePageMeta({
   middleware: ["auth"]
 })
+</script>
 ```
