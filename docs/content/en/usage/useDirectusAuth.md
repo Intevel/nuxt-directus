@@ -84,7 +84,7 @@ const onSubmit = async () => {
 </script>
 ```
 
-## Real-life Example
+## Middleware example
 ### Redirect user to login
 You can protect your authenticated routes by creating a custom composable in your project, here is an example:
 
