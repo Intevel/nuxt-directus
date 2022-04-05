@@ -15,10 +15,28 @@ export const useDirectusAuth = () => {
   const url = useDirectusUrl();
   const directus = useDirectus();
   const user = useDirectusUser();
-  const token = useDirectusToken();
+  const { accessToken, refreshToken, expiredAt, token } = useDirectusToken();
 
-  const setToken = (value: string | null) => {
-    token.value = value;
+  const setTokens = (
+    accessToken: string | null,
+    refreshToken: string | null,
+    expiredAt: number | null
+  ) => {
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+    setTokenExpireDate(expiredAt);
+  };
+
+  const setAccessToken = (value: string | null) => {
+     accessToken.value = value;
+  };
+
+  const setRefreshToken = (value: string | null) => {
+    refreshToken.value = value;
+  };
+
+  const setTokenExpireDate = (offset: number | null) => {
+    offset === null ?  expiredAt.value = null : (expiredAt.value = new Date().getTime() + offset);
   };
 
   const setUser = (value: DirectusUser) => {
@@ -26,12 +44,13 @@ export const useDirectusAuth = () => {
   };
 
   const fetchUser = async (): Promise<Ref<DirectusUser>> => {
-    if (token.value && !user.value) {
+    const bearerToken = await token();
+    if (bearerToken && !user.value) {
       try {
-        var res = await directus<{data: DirectusUser}>("/users/me");
+        var res = await directus<{ data: DirectusUser }>("/users/me");
         setUser(res.data);
       } catch (e) {
-        setToken(null);
+        setTokens(null, null, null);
       }
     }
     return user;
@@ -40,7 +59,7 @@ export const useDirectusAuth = () => {
   const login = async (
     data: DirectusAuthCredentials
   ): Promise<DirectusAuthResponse> => {
-    setToken(null);
+    setTokens(null, null, null);
 
     const response: { data: DirectusAuthResponse } = await directus(
       "/auth/login",
@@ -50,13 +69,13 @@ export const useDirectusAuth = () => {
       }
     );
 
-    setToken(response.data.access_token);
-
+    const res = response.data;   
+    setTokens(res.access_token, res.refresh_token, res.expires);
     const user = await fetchUser();
-
     return {
       user,
       access_token: response.data.access_token,
+      refresh_token: response.data.refresh_token,
       expires: response.data.expires,
     };
   };
@@ -79,14 +98,23 @@ export const useDirectusAuth = () => {
     });
   };
 
-  const logout = (): void => {
-    // https://docs.directus.io/reference/authentication/#logout todo: implement this
-    setToken(null);
-    setUser(null);
+  const logout = async (): Promise<void> => {
+    const body = {
+      refresh_token: refreshToken.value,
+    };
+    try {
+      await directus<void>("/auth/logout", {
+        body,
+        method: "POST",
+      });
+    } catch (error) {
+      setTokens(null, null, null);
+    }
+    setTokens(null, null, null);
   };
 
   return {
-    setToken,
+    setAccessToken,
     setUser,
     fetchUser,
     login,
