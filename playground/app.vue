@@ -6,6 +6,8 @@
     <button style="margin-top: 25px" @click="createArticles">Create Articles</button>
     <button style="margin-top: 25px" @click="deleteArticles">Delete Articles</button>
     <button style="margin-top: 25px" @click="logUser">Log User</button>
+    <button style="margin-top: 25px" @click="logout">Logout User</button>
+    <button style="margin-top: 25px" @click="refreshTokens">RefreshTokens</button>
     <div style="margin-top: 25px">
       <img :src="img(fileId, { width: 300, height: 300, fit: 'cover' })" alt="square thumbnail" />
       <img :src="img(fileId, { width: 300, format: 'webp' })" alt="webp" />
@@ -14,7 +16,8 @@
 </template>
 
 <script setup lang="ts">
-const { login } = useDirectusAuth();
+const { login, logout } = useDirectusAuth();
+const { refreshTokens } = useDirectusToken();
 const user = useDirectusUser();
 const { getItems, getItemById, createItems, deleteItems } = useDirectusItems();
 const router = useRouter();
