@@ -15,21 +15,57 @@ Search for items in a specific collection, [`global search querys`](https://docs
 
   - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
 
-- **Returns:** `Array`
+- **Returns:** `Array<T>`
 
 ```vue [pages/articles.vue]
 <script setup lang="ts">
 const { getItems } = useDirectusItems();
 const router = useRouter();
 
+interface Article {
+  id?: string | number;
+  title: string;
+  content: string;
+  status: string;
+}
+
 const fetchArticles = async () => {
   try {
     var filters = { content: "testcontent", title: "Test1" };
-    var items = await getItems({
+    var items = await getItems<Article>({
       collection: "News",
       params: {
         filter: filters,
       },
+    });
+  } catch (e) {}
+};
+</script>
+```
+
+### `getSingletonItem`
+
+Get object from Singleton marked collection
+
+- **Arguments:**
+
+  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
+
+- **Returns:** `Object<T>`
+
+```vue [pages/imprint.vue]
+<script setup lang="ts">
+const { getSingletonItem } = useDirectusItems();
+
+interface Imprint {
+  id?: string | number;
+  content: string;
+}
+
+const fetchArticle: Article[] = async () => {
+  try {
+    var item = await getSingletonItem<Imprint>({
+      collection: "Imprint",
     });
   } catch (e) {}
 };
@@ -44,15 +80,22 @@ Search for an item by id in a specific collection
 
   - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
 
-- **Returns:** `Object`
+- **Returns:** `Object<T>`
 
 ```vue [pages/article.vue]
 <script setup lang="ts">
 const { getItemById } = useDirectusItems();
 
-const fetchArticle = async () => {
+interface Article {
+  id?: string | number;
+  title: string;
+  content: string;
+  status: string;
+}
+
+const fetchArticle: Article = async () => {
   try {
-    var item = await getItemById({
+    var item = await getItemById<Article>({
       collection: "News",
       id: "4776864a-75ee-4746-9ef4-bd5c2e38cc66",
     });
@@ -71,15 +114,22 @@ _Items don't have a pre-defined schema. The format depends completely on how you
 
   - data: [`DirectusItemCreation`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#32)
 
-- **Returns:** `Empty body`
+- **Returns:** `Array<T>`
 
 ```vue [pages/articles.vue]
 <script setup lang="ts">
 const { createItems } = useDirectusItems();
 
-const createArticles = async () => {
+interface Article {
+  id?: string | number;
+  title: string;
+  content: string;
+  status: string;
+}
+
+const createArticles: Article[] = async () => {
   try {
-    var items = [
+    var items: Article[] = [
       {
         title: "testitem",
         content: "testcontent",
@@ -91,7 +141,7 @@ const createArticles = async () => {
         status: "published",
       },
     ];
-    await createItems({ collection: "News", items });
+    await createItems<Article>({ collection: "News", items });
   } catch (e) {}
 };
 </script>
@@ -111,7 +161,7 @@ Delete one or multiple items in a specific collection
 <script setup lang="ts">
 const { deleteItems } = useDirectusItems();
 
-const deleteArticles = async () => {
+const deleteArticles: void = async () => {
   try {
     var items = ["15", "20", "22"];
     await deleteItems({ collection: "News", items });
@@ -128,16 +178,23 @@ Update item in a specific collection
 
   - data: [`DirectusItemUpdate`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#37)
 
-- **Returns:** `Empty body`
+- **Returns:** `Array<T>`
 
 ```vue [pages/articles.vue]
 <script setup lang="ts">
 const { updateItem } = useDirectusItems();
 
-const updateArticles = async () => {
+interface Article {
+  id?: string | number;
+  title: string;
+  content: string;
+  status: string;
+}
+
+const updateArticles: Article[] = async () => {
   try {
     var newItem = { title: "This Item was updated" };
-    await updateItem({ collection: "News", id: "itemid", item: newItem });
+    await updateItem<Article>({ collection: "News", id: "itemid", item: newItem });
   } catch (e) {}
 };
 </script>

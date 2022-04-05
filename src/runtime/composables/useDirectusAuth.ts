@@ -28,14 +28,12 @@ export const useDirectusAuth = () => {
   const fetchUser = async (): Promise<Ref<DirectusUser>> => {
     if (token.value && !user.value) {
       try {
-        var res = await directus("/users/me");
-        //@ts-ignore
+        var res = await directus<{data: DirectusUser}>("/users/me");
         setUser(res.data);
       } catch (e) {
         setToken(null);
       }
     }
-
     return user;
   };
 
