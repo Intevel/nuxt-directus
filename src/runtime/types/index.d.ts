@@ -66,3 +66,8 @@ export interface DirectusThumbnailOptions {
   format?: DirectusThumbnailFormat;
   withoutEnlargement?: boolean;
 }
+
+export interface DirectusRegisterCredentials {
+  email: string;
+  password: string;
+}

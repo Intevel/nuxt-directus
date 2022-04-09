@@ -42,6 +42,27 @@ const onSubmit = async () => {
 </script>
 ```
 
+### `createUser`
+
+Create a new Directus user, can also be used as `register()`. **Email and password are required**, partial user object is given.
+
+- **Arguments:**
+  - data: [`DirectusRegisterCredentials`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L70)
+- **Returns:** [`Promise<DirectusUser>`](https://docs.directus.io/reference/system/users/#the-user-object)
+
+```vue [pages/register.vue]
+<script setup lang="ts">
+const { createUser } = useDirectusAuth();
+const router = useRouter();
+
+const onSubmit = async () => {
+  try {
+    var newUser = await createUser({ email: "", password: "" });
+  } catch (e) {}
+};
+</script>
+```
+
 ### `requestPasswordReset`
 
 Password Request is submitted with email of the user to the given directus server.
@@ -85,19 +106,21 @@ const onSubmit = async () => {
 ```
 
 ## Middleware example
+
 ### Redirect user to login
+
 You can protect your authenticated routes by creating a custom middleware in your project, here is an example:
 
-Create ```./middleware/auth.ts```
+Create `./middleware/auth.ts`
 
 ```ts
 export default defineNuxtRouteMiddleware((to, _from) => {
-    const user = useDirectusUser();
-  
-    if (!user.value) {
-      return navigateTo('/login')
-    }
-  })
+  const user = useDirectusUser();
+
+  if (!user.value) {
+    return navigateTo("/login");
+  }
+});
 ```
 
 Now you can add the middleware to your pages

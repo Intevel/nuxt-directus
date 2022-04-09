@@ -5,6 +5,7 @@ import type {
   DirectusUser,
   DirectusPasswordForgotCredentials,
   DirectusPasswordResetCredentials,
+  DirectusRegisterCredentials,
 } from "../types";
 import { useDirectus } from "./useDirectus";
 import { useDirectusUser } from "./useDirectusUser";
@@ -28,7 +29,7 @@ export const useDirectusAuth = () => {
   const fetchUser = async (): Promise<Ref<DirectusUser>> => {
     if (token.value && !user.value) {
       try {
-        var res = await directus<{data: DirectusUser}>("/users/me");
+        var res = await directus<{ data: DirectusUser }>("/users/me");
         setUser(res.data);
       } catch (e) {
         setToken(null);
@@ -59,6 +60,22 @@ export const useDirectusAuth = () => {
       access_token: response.data.access_token,
       expires: response.data.expires,
     };
+  };
+
+  const createUser = async (
+    data: DirectusRegisterCredentials
+  ): Promise<DirectusUser> => {
+    return await directus("/users", {
+      method: "POST",
+      body: data,
+    });
+  };
+
+  // Alias for createUser
+  const register = async (
+    data: DirectusRegisterCredentials
+  ): Promise<DirectusUser> => {
+    return createUser(data);
   };
 
   const requestPasswordReset = async (
@@ -93,5 +110,7 @@ export const useDirectusAuth = () => {
     requestPasswordReset,
     resetPassword,
     logout,
+    createUser,
+    register,
   };
 };
