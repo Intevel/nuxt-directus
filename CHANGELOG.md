@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/intevel/nuxt-directus/compare/v1.3.0...v1.4.0) (2022-04-09)
+
+
+### Features
+
+* added createUser method ([0444c23](https://github.com/intevel/nuxt-directus/commit/0444c235160aa3bf7968786533ac2a9e4736a4dc))
+* **examples:** moved to directus repository ([872545c](https://github.com/intevel/nuxt-directus/commit/872545c856762f710899e0a2a99aafbb066cb7dd))
+
+
+### Bug Fixes
+
+* updated middleware docs ([67caccb](https://github.com/intevel/nuxt-directus/commit/67caccb28c4c618c14be64747f0945374842281c))
+
 ## [1.3.0](https://github.com/intevel/nuxt-directus/compare/v1.2.1...v1.3.0) (2022-04-03)
 
 
