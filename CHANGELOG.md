@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/intevel/nuxt-directus/compare/v1.4.0...v1.5.0) (2022-04-11)
+
+
+### Features
+
+* add global params support to getItemsByID ([bbb161e](https://github.com/intevel/nuxt-directus/commit/bbb161e2d2e462b18428b747f45ecd86bdc42d03))
+
 ## [1.4.0](https://github.com/intevel/nuxt-directus/compare/v1.3.0...v1.4.0) (2022-04-09)
 
 
