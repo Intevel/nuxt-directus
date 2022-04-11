@@ -34,6 +34,7 @@ export const useDirectusItems = () => {
   const getItemById = async <T>(data: DirectusItemRequest): Promise<T[]> => {
     const items = await directus<{data: T[]}>(`/items/${data.collection}/${data.id}`, {
       method: "GET",
+	  params: data.params
     });
     return items.data;
   };
