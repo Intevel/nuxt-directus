@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/intevel/nuxt-directus/compare/v1.5.0...v1.6.0) (2022-04-14)
+
+
+### Features
+
+* **chore:** added deep query params support ([a06fb19](https://github.com/intevel/nuxt-directus/commit/a06fb19887147d64187eb27aa00fa849bc68a1e7)), closes [#21](https://github.com/intevel/nuxt-directus/issues/21)
+
 ## [1.5.0](https://github.com/intevel/nuxt-directus/compare/v1.4.0...v1.5.0) (2022-04-11)
 
 
