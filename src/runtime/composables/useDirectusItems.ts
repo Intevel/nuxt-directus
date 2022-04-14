@@ -13,34 +13,43 @@ export const useDirectusItems = () => {
     if (data.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter);
     }
-    const items = await directus<{data: T[]}>(`/items/${data.collection}`, {
-      method: "GET",
-      params: data.params,
-    });
-    return items.data;
-  };
-  
-  const getSingletonItem = async <T>(data: DirectusItemRequest): Promise<T> => {
-    if (data.params?.filter) {
-      (data.params.filter as unknown) = JSON.stringify(data.params.filter);
+    if (data.params?.deep) {
+      (data.params.deep as unknown) = JSON.stringify(data.params.deep);
     }
-    const items = await directus<{data: T}>(`/items/${data.collection}`, {
+    const items = await directus<{ data: T[] }>(`/items/${data.collection}`, {
       method: "GET",
       params: data.params,
-    });
-    return items.data;
-  };
-  
-  const getItemById = async <T>(data: DirectusItemRequest): Promise<T[]> => {
-    const items = await directus<{data: T[]}>(`/items/${data.collection}/${data.id}`, {
-      method: "GET",
-	  params: data.params
     });
     return items.data;
   };
 
+  const getSingletonItem = async <T>(data: DirectusItemRequest): Promise<T> => {
+    if (data.params?.filter) {
+      (data.params.filter as unknown) = JSON.stringify(data.params.filter);
+    }
+    if (data.params?.deep) {
+      (data.params.deep as unknown) = JSON.stringify(data.params.deep);
+    }
+    const items = await directus<{ data: T }>(`/items/${data.collection}`, {
+      method: "GET",
+      params: data.params,
+    });
+    return items.data;
+  };
+
+  const getItemById = async <T>(data: DirectusItemRequest): Promise<T[]> => {
+    const items = await directus<{ data: T[] }>(
+      `/items/${data.collection}/${data.id}`,
+      {
+        method: "GET",
+        params: data.params,
+      }
+    );
+    return items.data;
+  };
+
   const createItems = async <T>(data: DirectusItemCreation): Promise<T[]> => {
-    const items = await directus<{data: T[]}>(`/items/${data.collection}`, {
+    const items = await directus<{ data: T[] }>(`/items/${data.collection}`, {
       method: "POST",
       body: data.items,
     });
@@ -55,12 +64,22 @@ export const useDirectusItems = () => {
   };
 
   const updateItem = async <T>(data: DirectusItemUpdate): Promise<T> => {
-    const item = await directus<{data: T}>(`/items/${data.collection}/${data.id}`, {
-      method: "PATCH",
-      body: data.item,
-    });
+    const item = await directus<{ data: T }>(
+      `/items/${data.collection}/${data.id}`,
+      {
+        method: "PATCH",
+        body: data.item,
+      }
+    );
     return item.data;
   };
 
-  return { getItems, getSingletonItem, getItemById, createItems, deleteItems, updateItem };
+  return {
+    getItems,
+    getSingletonItem,
+    getItemById,
+    createItems,
+    deleteItems,
+    updateItem,
+  };
 };

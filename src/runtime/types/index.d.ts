@@ -52,6 +52,7 @@ export interface DirectusQueryParams {
   offset?: number;
   page?: number;
   alias?: string | Array<string>;
+  deep?: Record<string, unknown>;
 }
 
 export type DirectusThumbnailFormat = "jpg" | "png" | "webp" | "tiff";
