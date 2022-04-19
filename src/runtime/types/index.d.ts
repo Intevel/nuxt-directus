@@ -74,3 +74,8 @@ export interface DirectusRegisterCredentials {
 }
 
 export type DirectusFile = object | null;
+
+export interface DirectusFileRequest {
+  id?: string;
+  params?: DirectusQueryParams;
+}

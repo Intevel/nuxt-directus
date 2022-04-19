@@ -1,11 +1,15 @@
 import { useDirectusUrl } from "./useDirectusUrl";
-import { DirectusThumbnailOptions, DirectusItemRequest } from "../types";
+import {
+  DirectusThumbnailOptions,
+  DirectusItemRequest,
+  DirectusFileRequest,
+} from "../types";
 
 export const useDirectusFiles = () => {
   const directusUrl = useDirectusUrl();
   const directus = useDirectus();
 
-  const getFiles = async <T>(data: DirectusItemRequest): Promise<T[]> => {
+  const getFiles = async <T>(data: DirectusFileRequest): Promise<T[]> => {
     if (data.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter);
     }
