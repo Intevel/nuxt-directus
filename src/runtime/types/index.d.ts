@@ -72,3 +72,5 @@ export interface DirectusRegisterCredentials {
   email: string;
   password: string;
 }
+
+export type DirectusFile = object | null;

@@ -1,8 +1,24 @@
 import { useDirectusUrl } from "./useDirectusUrl";
-import { DirectusThumbnailOptions } from "../types";
+import { DirectusThumbnailOptions, DirectusItemRequest } from "../types";
 
 export const useDirectusFiles = () => {
   const directusUrl = useDirectusUrl();
+  const directus = useDirectus();
+
+  const getFiles = async <T>(data: DirectusItemRequest): Promise<T[]> => {
+    if (data.params?.filter) {
+      (data.params.filter as unknown) = JSON.stringify(data.params.filter);
+    }
+    if (data.params?.deep) {
+      (data.params.deep as unknown) = JSON.stringify(data.params.deep);
+    }
+
+    const files = await directus<{ data: T[] }>(`/files/`, {
+      method: "GET",
+      params: data.params,
+    });
+    return files.data;
+  };
 
   const getThumbnail = (
     fileId: string,
@@ -24,5 +40,5 @@ export const useDirectusFiles = () => {
     return url.href;
   };
 
-  return { getThumbnail };
+  return { getFiles, getThumbnail };
 };
