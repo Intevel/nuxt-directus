@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/intevel/nuxt-directus/compare/v1.6.0...v1.7.0) (2022-04-19)
+
+
+### Features
+
+* **chore:** created npmignore ([a456c11](https://github.com/intevel/nuxt-directus/commit/a456c114173c6e9344e9914b474565029f3af3f3))
+* **module:** added getFiles method ([6c4b6bf](https://github.com/intevel/nuxt-directus/commit/6c4b6bfabbf32ad9d31e93e3152c2f1a0ec28afa))
+
+
+### Bug Fixes
+
+* **chore:** updated types ([a1c123f](https://github.com/intevel/nuxt-directus/commit/a1c123fa3c3aa08db8d6be4ad2ca8c146870ac1e))
+
 ## [1.6.0](https://github.com/intevel/nuxt-directus/compare/v1.5.0...v1.6.0) (2022-04-14)
 
 
