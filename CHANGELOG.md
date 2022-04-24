@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/intevel/nuxt-directus/compare/v1.7.1...v1.8.0) (2022-04-24)
+
+
+### Features
+
+* **chore:** add graphql support ([358bbf6](https://github.com/intevel/nuxt-directus/commit/358bbf6d4c418741c5528b3d083f054d6efbb355))
+
+
+### Bug Fixes
+
+* **chore:** useDirectusFiles 500 error ([5ca7a54](https://github.com/intevel/nuxt-directus/commit/5ca7a54efca7ee72a7f580112e0d5b2df764f94f)), closes [#23](https://github.com/intevel/nuxt-directus/issues/23)
+
 ### [1.7.1](https://github.com/intevel/nuxt-directus/compare/v1.7.0...v1.7.1) (2022-04-23)
 
 ## [1.7.0](https://github.com/intevel/nuxt-directus/compare/v1.6.0...v1.7.0) (2022-04-19)
