@@ -1,9 +1,10 @@
-import { useDirectusUrl } from "./useDirectusUrl";
 import {
   DirectusThumbnailOptions,
   DirectusItemRequest,
   DirectusFileRequest,
 } from "../types";
+import { useDirectusUrl } from "./useDirectusUrl";
+import { useDirectus } from "./useDirectus";
 
 export const useDirectusFiles = () => {
   const directusUrl = useDirectusUrl();
