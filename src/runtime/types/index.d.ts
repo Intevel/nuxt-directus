@@ -79,3 +79,15 @@ export interface DirectusFileRequest {
   id?: string;
   params?: DirectusQueryParams;
 }
+
+export interface DirectusNotificationObject {
+  id?: number;
+  timestamp?: string;
+  status?: "inbox" | "archived";
+  recipient: Array<string> | string;
+  sender?: Array<string> | string;
+  subject: string;
+  message?: string;
+  collection?: string;
+  item?: string;
+}
