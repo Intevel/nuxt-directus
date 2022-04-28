@@ -1,4 +1,4 @@
-import { useCookie, useNuxtApp, useRuntimeConfig } from "#app";
+import { useCookie, useNuxtApp } from "#app";
 
 export const useDirectusToken = () => {
   const nuxtApp = useNuxtApp();
