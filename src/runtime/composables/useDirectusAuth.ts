@@ -11,15 +11,37 @@ import { useDirectus } from "./useDirectus";
 import { useDirectusUser } from "./useDirectusUser";
 import { useDirectusUrl } from "./useDirectusUrl";
 import { useDirectusToken } from "./useDirectusToken";
+import { useDirectusRefresh } from "./useDirectusRefresh";
 
 export const useDirectusAuth = () => {
   const url = useDirectusUrl();
   const directus = useDirectus();
   const user = useDirectusUser();
   const token = useDirectusToken();
+  const { refreshToken, expiredAt, refreshTokens } = useDirectusRefresh();
 
-  const setToken = (value: string | null) => {
+  const setTokens = (
+    accessToken: string | null,
+    refreshToken: string | null,
+    expiredAt: number | null
+  ) => {
+    setAccessToken(accessToken);
+    setRefreshToken(refreshToken);
+    setTokenExpireDate(expiredAt);
+  };
+
+  const setAccessToken = (value: string | null) => {
     token.value = value;
+  };
+
+  const setRefreshToken = (value: string | null) => {
+    refreshToken.value = value;
+  };
+
+  const setTokenExpireDate = (offset: number | null) => {
+    offset === null
+      ? (expiredAt.value = null)
+      : (expiredAt.value = new Date().getTime() + offset);
   };
 
   const setUser = (value: DirectusUser) => {
@@ -32,7 +54,7 @@ export const useDirectusAuth = () => {
         var res = await directus<{ data: DirectusUser }>("/users/me");
         setUser(res.data);
       } catch (e) {
-        setToken(null);
+        setTokens(null, null, null);
       }
     }
     return user;
@@ -41,7 +63,7 @@ export const useDirectusAuth = () => {
   const login = async (
     data: DirectusAuthCredentials
   ): Promise<DirectusAuthResponse> => {
-    setToken(null);
+    setTokens(null, null, null);
 
     const response: { data: DirectusAuthResponse } = await directus(
       "/auth/login",
@@ -51,7 +73,11 @@ export const useDirectusAuth = () => {
       }
     );
 
-    setToken(response.data.access_token);
+    setTokens(
+      response.data.access_token,
+      response.data.refresh_token,
+      response.data.expires
+    );
 
     const user = await fetchUser();
 
@@ -98,12 +124,12 @@ export const useDirectusAuth = () => {
 
   const logout = (): void => {
     // https://docs.directus.io/reference/authentication/#logout todo: implement this
-    setToken(null);
+    setTokens(null, null, null);
     setUser(null);
   };
 
   return {
-    setToken,
+    setTokens,
     setUser,
     fetchUser,
     login,
