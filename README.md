@@ -36,7 +36,7 @@ Add `nuxt-directus` to your Nuxt config:
 // nuxt.config.js
 
 export default {
-  buildModules: ["nuxt-directus"],
+  modules: ["nuxt-directus"],
 };
 ```
 
