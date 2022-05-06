@@ -37,7 +37,7 @@ export const useDirectusItems = () => {
     return items.data;
   };
 
-  const getItemById = async <T>(data: DirectusItemRequest): Promise<T[]> => {
+  const getItemById = async <T>(data: DirectusItemRequest): Promise<T> => {
     const items = await directus<{ data: T[] }>(
       `/items/${data.collection}/${data.id}`,
       {
@@ -45,7 +45,7 @@ export const useDirectusItems = () => {
         params: data.params,
       }
     );
-    return items.data;
+    return items.data[0];
   };
 
   const createItems = async <T>(data: DirectusItemCreation): Promise<T[]> => {
