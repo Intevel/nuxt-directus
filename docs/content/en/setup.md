@@ -26,7 +26,7 @@ npm install nuxt-directus
   </code-block>
 </code-group>
 
-Then add it to the `modules ` section in your `nuxt.config.js`:
+Then add it to the `modules` section in your `nuxt.config.js`:
 
 ```js{}[nuxt.config.js]
 export default {
