@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/intevel/nuxt-directus/compare/v1.8.0...v2.0.0) (2022-05-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **chore:** getItemById return an array of items
+
+### Features
+
+* **docs:** created docs for notifications ([afacf8a](https://github.com/intevel/nuxt-directus/commit/afacf8ae5c3e5cf947371db5b91623f4953538e9))
+* **main:** created notification types ([f0d8719](https://github.com/intevel/nuxt-directus/commit/f0d8719a40c5c31000657a2d71f60e057556e0ed))
+* **main:** implement notification support ([7d0c5b9](https://github.com/intevel/nuxt-directus/commit/7d0c5b95a4455c95fd1cd2e4d5530c286fd75570))
+* **main:** removed error throwing ([7919b63](https://github.com/intevel/nuxt-directus/commit/7919b63a06d0b7122c5a4fec15ce5115d6d82c27))
+
+
+### Bug Fixes
+
+* **chore:** getItemById return an array of items ([2ef29ce](https://github.com/intevel/nuxt-directus/commit/2ef29ce9094508cd9606bb450bb8461e7fa212ed)), closes [#29](https://github.com/intevel/nuxt-directus/issues/29)
+* **docs:** buildModules to module ([0731e38](https://github.com/intevel/nuxt-directus/commit/0731e386a4a95da22585c9e7055552cf01ae1097))
+* **docs:** setup buildModule ([291b9e7](https://github.com/intevel/nuxt-directus/commit/291b9e731f0860c33275ca5bf7d8c0c01fedc2bd))
+* **docs:** setup space ([8268149](https://github.com/intevel/nuxt-directus/commit/8268149dffe011254bda94c9ef7e3ce426081aba))
+
 ## [1.8.0](https://github.com/intevel/nuxt-directus/compare/v1.7.1...v1.8.0) (2022-04-24)
 
 
