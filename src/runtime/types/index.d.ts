@@ -91,3 +91,44 @@ export interface DirectusNotificationObject {
   collection?: string;
   item?: string;
 }
+
+export interface DirectusCollectionRequest {
+  name?: string;
+}
+
+export interface DirectusCollectionMeta {
+  collection?: string;
+  icon?: string;
+  note?: string;
+  display_template?: string;
+  hidden?: boolean;
+  singleton?: boolean;
+  translations?: [
+    {
+      language?: string;
+      translation?: string;
+    }
+  ];
+  archive_field?: string;
+  archive_value?: string;
+  unarchive_value?: string;
+  archive_app_filter?: boolean;
+  sort_field?: string;
+  item_duplication_fields?: string[];
+  sort?: number;
+  collapse?: "open" | "closed" | "locked";
+}
+
+export interface DirectusCollectionCreation {
+  collection: string;
+  meta?: DirectusCollectionMeta;
+  schema?: {
+    name?: string;
+    comment: string;
+  };
+}
+
+export interface DirectusCollectionUpdate {
+  name: string;
+  meta: DirectusCollectionMeta;
+}
