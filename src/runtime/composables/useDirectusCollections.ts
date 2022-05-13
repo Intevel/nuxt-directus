@@ -2,6 +2,7 @@ import {
   DirectusCollectionCreation,
   DirectusCollectionMeta,
   DirectusCollectionRequest,
+  DirectusCollectionUpdate,
 } from "../types";
 
 import { useDirectus } from "./useDirectus";
@@ -46,23 +47,34 @@ export const useDirectusCollections = () => {
     return collection.data;
   };
 
-  const updateCollection = async <T>( data: DirectusCollectionUpdate): Promise<T> {
+  const updateCollection = async <T>(
+    data: DirectusCollectionUpdate
+  ): Promise<T> => {
     const collection = await directus<{ data: T }>(
-      `/collections/${data.collection}/${data.id}`,
+      `/collections/${data.name}`,
       {
         method: "PATCH",
-        meta: data.meta,
+        body: {
+          meta: data.meta,
+        },
       }
     );
     return collection.data;
-  }
+  };
 
-  const deleteCollection = async <T>( data: DirectusCollectionRequest): void => {
-    await directus<{ data: T }>(
-      `/collections/${data.name}`,
-      {
-        method: "DELETE"
-      }
-    );
-  }
+  const deleteCollection = async <T>(
+    data: DirectusCollectionRequest
+  ): Promise<void> => {
+    await directus<{ data: T }>(`/collections/${data.name}`, {
+      method: "DELETE",
+    });
+  };
+
+  return {
+    listCollections,
+    getCollection,
+    createCollection,
+    updateCollection,
+    deleteCollection,
+  };
 };

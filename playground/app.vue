@@ -5,6 +5,7 @@
     <button style="margin-top: 25px" @click="fetchArticles">Fetch Articles</button>
     <button style="margin-top: 25px" @click="createArticles">Create Articles</button>
     <button style="margin-top: 25px" @click="deleteArticles">Delete Articles</button>
+    <button style="margin-top: 25px" @click="fetchCollections">Fetch Collections</button>
     <button style="margin-top: 25px" @click="logUser">Log User</button>
     <div style="margin-top: 25px">
       <img :src="img(fileId, { width: 300, height: 300, fit: 'cover' })" alt="square thumbnail" />
@@ -85,5 +86,13 @@ const fetchArticles = async () => {
 
     router.push("/d");
   } catch (e) { }
-};
+
+  const fetchCollections = async () => {
+    try {
+      const collections = await listCollections()
+      console.log(collections)
+
+      router.push('/d')
+    } catch (e) { }
+  };
 </script>

@@ -93,7 +93,7 @@ export interface DirectusNotificationObject {
 }
 
 export interface DirectusCollectionRequest {
-  name?: string;
+  collection?: string;
 }
 
 export interface DirectusCollectionMeta {
@@ -124,11 +124,11 @@ export interface DirectusCollectionCreation {
   meta?: DirectusCollectionMeta;
   schema?: {
     name?: string;
-    comment: string;
+    comment?: string;
   };
 }
 
 export interface DirectusCollectionUpdate {
-  name: string;
+  collection: string;
   meta: DirectusCollectionMeta;
 }
