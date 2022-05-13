@@ -52,9 +52,7 @@ const fetchCollection = async () => {
 
 ### `createCollection`
 
-Create a new collection
-
-_Items don't have a pre-defined schema. The format depends completely on how you configured your collections and fields in Directus._
+Create a new collection.
 
 - **Arguments:**
 
@@ -91,7 +89,7 @@ Delete a specific collection
 
 ```vue [pages/collection.vue]
 <script setup lang="ts">
-const { deleteCollection } = useDirectusItems();
+const { deleteCollection } = useDirectusCollections();
 
 const deleteArticles: void = async () => {
   try {
@@ -113,12 +111,11 @@ Update collection metadata. _Note: only meta data is updatable._
 
 ```vue [pages/collection.vue]
 <script setup lang="ts">
-const { updateCollection } = useDirectusItems();
+const { updateCollection } = useDirectusCollections();
 
 const updateCollection: Collection = async () => {
   try {
-    var newItem = { title: "This Item was updated" };
-    await updateItem<Collection>({ 
+    await updateCollection<Collection>({ 
       collection: "News", 
       meta: {
         icon: 'page'
