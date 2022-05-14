@@ -7,7 +7,7 @@ category: "Usage"
 
 > Check out the Directus [Collections](https://docs.directus.io/reference/collections/) documentation.
 
-### `listCollections`
+### `getCollections`
 
 List all collections.
 
@@ -19,11 +19,11 @@ List all collections.
 
 ```vue [pages/collections.vue]
 <script setup lang="ts">
-const { listCollections } = useDirectusCollections();
+const { getCollections } = useDirectusCollections();
 const router = useRouter();
 
 const fetchCollections = async () => {
-  var collections = await listCollections();
+  var collections = await getCollections();
 };
 </script>
 ```

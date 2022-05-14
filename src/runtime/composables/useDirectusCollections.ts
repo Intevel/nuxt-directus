@@ -12,8 +12,8 @@ export const useDirectusCollections = () => {
   const directusUrl = useDirectusUrl();
   const directus = useDirectus();
 
-  const listCollections = async <T>(): Promise<T[]> => {
-    const collections = await directus<{ data: T[] }>(`/collections/`, {
+  const getCollections = async <T>(): Promise<T[]> => {
+    const collections = await directus<{ data: T[] }>("/collections/", {
       method: "GET",
     });
     return collections.data;
@@ -40,7 +40,7 @@ export const useDirectusCollections = () => {
   const createCollection = async <T>(
     data: DirectusCollectionCreation
   ): Promise<T> => {
-    const collection = await directus<{ data: T }>(`/collections`, {
+    const collection = await directus<{ data: T }>("/collections", {
       method: "POST",
       body: data,
     });
@@ -71,7 +71,7 @@ export const useDirectusCollections = () => {
   };
 
   return {
-    listCollections,
+    getCollections,
     getCollection,
     createCollection,
     updateCollection,

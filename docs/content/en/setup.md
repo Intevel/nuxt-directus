@@ -35,16 +35,6 @@ export default {
 };
 ```
 
-If you have a `runtimeConfig` in your `nuxt.config.js` file then you will need to add the `directus` config object to it:
-
-```js{}[nuxt.config.js]
-runtimeConfig: {
-  directus: {
-    url: "",
-  },
-}
-```
-
 <alert type="success">
 
 That's it! You can now use [Directus](/usage/useDirectusToken) in your Nuxt app ✨
