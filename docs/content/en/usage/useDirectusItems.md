@@ -80,22 +80,15 @@ Search for an item by id in a specific collection
 
   - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
 
-- **Returns:** `Object<T>`
+- **Returns:** `Array`
 
 ```vue [pages/article.vue]
 <script setup lang="ts">
 const { getItemById } = useDirectusItems();
 
-interface Article {
-  id?: string | number;
-  title: string;
-  content: string;
-  status: string;
-}
-
-const fetchArticle: Article = async () => {
+const fetchArticle = async () => {
   try {
-    var item = await getItemById<Article>({
+    var item = await getItemById({
       collection: "News",
       id: "4776864a-75ee-4746-9ef4-bd5c2e38cc66",
     });
@@ -194,7 +187,11 @@ interface Article {
 const updateArticles: Article[] = async () => {
   try {
     var newItem = { title: "This Item was updated" };
-    await updateItem<Article>({ collection: "News", id: "itemid", item: newItem });
+    await updateItem<Article>({
+      collection: "News",
+      id: "itemid",
+      item: newItem,
+    });
   } catch (e) {}
 };
 </script>

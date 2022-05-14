@@ -45,7 +45,7 @@ export const useDirectusItems = () => {
         params: data.params,
       }
     );
-    return items.data[0];
+    return items.data;
   };
 
   const createItems = async <T>(data: DirectusItemCreation): Promise<T[]> => {
