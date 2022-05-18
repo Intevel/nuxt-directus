@@ -56,9 +56,9 @@ export interface DirectusQueryParams {
   search?: string;
 }
 
-export type DirectusThumbnailFormat = 'jpg' | 'png' | 'webp' | 'tiff';
+export type DirectusThumbnailFormat = "jpg" | "png" | "webp" | "tiff";
 
-export type DirectusThumbnailFit = 'cover' | 'contain' | 'inside' | 'outside';
+export type DirectusThumbnailFit = "cover" | "contain" | "inside" | "outside";
 
 export interface DirectusThumbnailOptions {
   width?: number;
@@ -84,7 +84,7 @@ export interface DirectusFileRequest {
 export interface DirectusNotificationObject {
   id?: number;
   timestamp?: string;
-  status?: 'inbox' | 'archived';
+  status?: "inbox" | "archived";
   recipient: Array<string> | string;
   sender?: Array<string> | string;
   subject: string;
@@ -117,7 +117,7 @@ export interface DirectusCollectionMeta {
   sort_field?: string;
   item_duplication_fields?: string[];
   sort?: number;
-  collapse?: 'open' | 'closed' | 'locked';
+  collapse?: "open" | "closed" | "locked";
 }
 
 export interface DirectusCollectionCreation {
