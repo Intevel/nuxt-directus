@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/intevel/nuxt-directus/compare/v2.0.0...v2.0.1) (2022-05-18)
+
+
+### Bug Fixes
+
+* **chore:** getItemById returns undefined ([cd8df17](https://github.com/intevel/nuxt-directus/commit/cd8df171fd8f7c88ba6b2fcd9499f5e27c094390)), closes [#35](https://github.com/intevel/nuxt-directus/issues/35)
+* **chore:** merge options order ([74c0d02](https://github.com/intevel/nuxt-directus/commit/74c0d02508fe1b36048448d304750279f3a8e6e6))
+
 ## [2.0.0](https://github.com/intevel/nuxt-directus/compare/v1.8.0...v2.0.0) (2022-05-06)
 
 
