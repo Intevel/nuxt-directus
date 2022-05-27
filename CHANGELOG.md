@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/intevel/nuxt-directus/compare/v2.0.1...v2.0.2) (2022-05-27)
+
+
+### Bug Fixes
+
+* **chore:** missing Directus URL in .env ([02c6bfe](https://github.com/intevel/nuxt-directus/commit/02c6bfeef5fba258a6235626d6c8efa806002d74))
+* **chore:** missing Directus URL in .env ([01f25b5](https://github.com/intevel/nuxt-directus/commit/01f25b5a1e5a0ed765711ec8e0792c6e62cda633))
+
 ### [2.0.1](https://github.com/intevel/nuxt-directus/compare/v2.0.0...v2.0.1) (2022-05-18)
 
 
