@@ -29,11 +29,17 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.options.publicRuntimeConfig.directus,
       {
         url: options.url,
+<<<<<<< Updated upstream
       }
     );
     if (!nuxt.options.publicRuntimeConfig.directus.url) {
       throw new Error("Missing `DIRECTUS_URL` in `.env`");
     }
+=======
+        token: options.token,
+      }
+    );
+>>>>>>> Stashed changes
 
     const runtimeDir = fileURLToPath(new URL("./runtime", import.meta.url));
     nuxt.options.build.transpile.push(runtimeDir);
