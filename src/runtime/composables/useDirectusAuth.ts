@@ -11,9 +11,11 @@ import { useDirectus } from "./useDirectus";
 import { useDirectusUser } from "./useDirectusUser";
 import { useDirectusUrl } from "./useDirectusUrl";
 import { useDirectusToken } from "./useDirectusToken";
+import { useRuntimeConfig } from "#app";
 
 export const useDirectusAuth = () => {
   const url = useDirectusUrl();
+  const config = useRuntimeConfig();
   const directus = useDirectus();
   const user = useDirectusUser();
   const token = useDirectusToken();
@@ -29,7 +31,23 @@ export const useDirectusAuth = () => {
   const fetchUser = async (): Promise<Ref<DirectusUser>> => {
     if (token.value && !user.value) {
       try {
-        var res = await directus<{ data: DirectusUser }>("/users/me");
+        if (config.directus.fetchUserParams?.filter) {
+          (config.directus.fetchUserParams.filter as unknown) = JSON.stringify(
+            config.directus.fetchUserParams.filter
+          );
+        }
+        if (config.directus.fetchUserParams?.deep) {
+          (config.directus.fetchUserParams.deep as unknown) = JSON.stringify(
+            config.directus.fetchUserParams.deep
+          );
+        }
+        if (config.directus.fetchUserParams) {
+          var res = await directus<{ data: DirectusUser }>("/users/me", {
+            params: config.directus.fetchUserParams,
+          });
+        } else {
+          var res = await directus<{ data: DirectusUser }>("/users/me");
+        }
         setUser(res.data);
       } catch (e) {
         setToken(null);

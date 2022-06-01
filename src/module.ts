@@ -2,7 +2,7 @@ import { resolve } from "path";
 import { fileURLToPath } from "url";
 import defu from "defu";
 import { defineNuxtModule, addPlugin } from "@nuxt/kit";
-
+import { DirectusQueryParams } from "./runtime/types";
 export interface ModuleOptions {
   /**
    * Directus API URL
@@ -16,6 +16,11 @@ export interface ModuleOptions {
    * @type boolean
    */
   autoFetch?: boolean;
+  /**
+   * fetch user params
+   * @type boolean
+   */
+  fetchUserParams?: DirectusQueryParams;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -37,6 +42,7 @@ export default defineNuxtModule<ModuleOptions>({
       {
         url: options.url,
         autoFetch: options.autoFetch,
+        fetchUserParams: options.fetchUserParams,
       }
     );
 
