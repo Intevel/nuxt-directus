@@ -10,6 +10,12 @@ export interface ModuleOptions {
    * @type string
    */
   url?: string;
+  /**
+   * Auto fetch user
+   * @default true
+   * @type boolean
+   */
+  autoFetch?: boolean;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -23,15 +29,16 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     url: process.env.DIRECTUS_URL,
+    autoFetch: true,
   },
   setup(options, nuxt) {
     nuxt.options.publicRuntimeConfig.directus = defu(
       nuxt.options.publicRuntimeConfig.directus,
       {
         url: options.url,
+        autoFetch: options.autoFetch,
       }
     );
-   
 
     const runtimeDir = fileURLToPath(new URL("./runtime", import.meta.url));
     nuxt.options.build.transpile.push(runtimeDir);
