@@ -38,6 +38,12 @@ export const useDirectusItems = () => {
   };
 
   const getItemById = async <T>(data: DirectusItemRequest): Promise<T> => {
+    if (data.params?.filter) {
+      (data.params.filter as unknown) = JSON.stringify(data.params.filter);
+    }
+    if (data.params?.deep) {
+      (data.params.deep as unknown) = JSON.stringify(data.params.deep);
+    }
     const items = await directus<{ data: T[] }>(
       `/items/${data.collection}/${data.id}`,
       {
