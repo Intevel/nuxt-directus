@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/intevel/nuxt-directus/compare/v2.0.2...v2.1.0) (2022-06-10)
+
+
+### Features
+
+* **chore:** implement fetch user params ([2fe048a](https://github.com/intevel/nuxt-directus/commit/2fe048af2fb7bc25fc72c383216b99475487236d)), closes [#37](https://github.com/intevel/nuxt-directus/issues/37)
+* **chore:** integrate autoFetch user option ([66d3dba](https://github.com/intevel/nuxt-directus/commit/66d3dba04f4d7b5cbe620deab9d71a96586a0bb1)), closes [#37](https://github.com/intevel/nuxt-directus/issues/37)
+
+
+### Bug Fixes
+
+* stringify "deep" key on get item by id ([1ca45b6](https://github.com/intevel/nuxt-directus/commit/1ca45b67af898250431ecd2d3b547c37f53e8ada))
+
 ### [2.0.2](https://github.com/intevel/nuxt-directus/compare/v2.0.1...v2.0.2) (2022-05-27)
 
 
