@@ -59,6 +59,6 @@ Directus will generate the image with the given [`parameters`](https://github.co
 
 <script setup lang="ts">
 const fileId = "5e47b7e6-fd78-400c-821f-0dca4a176f4f";
-const { getThumbnail: img } = useDirectus();
+const { getThumbnail: img } = useDirectusFiles();
 </script>
 ```
