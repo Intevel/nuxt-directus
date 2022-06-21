@@ -1,5 +1,5 @@
-import { useDirectusUrl } from "./useDirectusUrl";
 import type { FetchError, FetchOptions } from "ohmyfetch";
+import { useDirectusUrl } from "./useDirectusUrl";
 
 export const useDirectusGraphQL = (query: any, variables?: object) => {
   let url = useDirectusUrl();

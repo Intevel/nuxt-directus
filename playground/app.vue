@@ -13,8 +13,12 @@
     <button style="margin-top: 25px" @click="deleteArticles">
       Delete Articles
     </button>
-    <button style="margin-top: 25px" @click="logUser">Log User</button>
-    <button style="margin-top: 25px" @click="logout">Logout User</button>
+    <button style="margin-top: 25px" @click="logUser">
+      Log User
+    </button>
+    <button style="margin-top: 25px" @click="logout">
+      Logout User
+    </button>
     <button style="margin-top: 25px" @click="refreshTokens">
       RefreshTokens
     </button>
@@ -22,8 +26,8 @@
       <img
         :src="img(fileId, { width: 300, height: 300, fit: 'cover' })"
         alt="square thumbnail"
-      />
-      <img :src="img(fileId, { width: 300, format: 'webp' })" alt="webp" />
+      >
+      <img :src="img(fileId, { width: 300, format: 'webp' })" alt="webp">
     </div>
   </div>
 </template>
@@ -53,7 +57,7 @@ const onSubmit = async () => {
     router.push("/authenticated-page");
   } catch (e) {}
 };
-const logUser = async () => {
+const logUser = () => {
   try {
     console.log(user);
     console.log(user.value.email);
@@ -78,7 +82,7 @@ const createArticles = async () => {
 };
 const deleteArticles = async () => {
   try {
-    var items = [
+    const items = [
       "c7480ee3-4be1-4562-87af-9dfa692a56bb",
       "a2f6b5e7-b151-42a1-9d9b-b6ccf1ae87ff",
     ];

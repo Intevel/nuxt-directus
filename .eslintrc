@@ -3,6 +3,15 @@
     "@nuxtjs/eslint-config-typescript"
   ],
   "rules": {
+    "quotes": [
+      "error",
+      "double"
+    ],
+    "semi": [
+      "error",
+      "always"
+    ],
+    "comma-dangle": "off",
     "@typescript-eslint/no-unused-vars": [
       "off"
     ]

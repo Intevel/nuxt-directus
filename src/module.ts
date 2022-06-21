@@ -17,14 +17,14 @@ export default defineNuxtModule<ModuleOptions>({
     name: "nuxt-directus",
     configKey: "directus",
     compatibility: {
-      nuxt: '^3.0.0 || ^2.16.0',
+      nuxt: "^3.0.0 || ^2.16.0",
       bridge: true
     }
   },
   defaults: {
     url: process.env.DIRECTUS_URL,
   },
-  setup(options, nuxt) {
+  setup (options, nuxt) {
     if (!options.url) {
       throw new Error("Missing `DIRECTUS_URL` in `.env`");
     }

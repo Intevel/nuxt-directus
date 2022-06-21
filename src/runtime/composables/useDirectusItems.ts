@@ -1,10 +1,10 @@
-import { useDirectus } from "./useDirectus";
 import {
   DirectusItemRequest,
   DirectusItemCreation,
   DirectusItemDeletion,
   DirectusItemUpdate,
 } from "../types";
+import { useDirectus } from "./useDirectus";
 
 export const useDirectusItems = () => {
   const directus = useDirectus();
