@@ -1,6 +1,9 @@
 # Dependencies
 node_modules
 
+# Archive
+archive
+
 # Logs
 *.log*
 
