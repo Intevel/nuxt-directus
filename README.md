@@ -1,6 +1,6 @@
-[![nuxt-directus](https://nuxt-directus.netlify.app/preview-dark.png)](https://nuxt-directus.netlify.app/)
+[![nuxt-directus](https://nuxt-directus.netlify.app/cover.png)](https://nuxt-directus.netlify.app/)
 
-# nuxt-directus
+# Nuxt Directus
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
