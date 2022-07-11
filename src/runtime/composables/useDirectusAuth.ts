@@ -69,6 +69,7 @@ export const useDirectusAuth = () => {
       }
     );
 
+    if(!response.data.access_token)  throw new Error("Login failed, please check your credentials.")
     setToken(response.data.access_token);
 
     const user = await fetchUser();
