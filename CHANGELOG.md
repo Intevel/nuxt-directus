@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.0](https://github.com/intevel/nuxt-directus/compare/v2.1.0...v2.2.0) (2022-07-11)
+
+
+### Features
+
+* **chore:** archive to gitignore ([3a1945a](https://github.com/intevel/nuxt-directus/commit/3a1945abe0d8854fc2889fba4ed098aaa22c35e4))
+* **chore:** updated cover & title readme ([af14019](https://github.com/intevel/nuxt-directus/commit/af14019e592527d8e04b923b8cd06cc7cecfba8b))
+
+
+### Bug Fixes
+
+* **docs:** correct usage of getThumbnail ([eb1b399](https://github.com/intevel/nuxt-directus/commit/eb1b3997cc9f00ab08c3a0c1f681c435d198a0e2))
+* throw error instead of type error login ([fa310a2](https://github.com/intevel/nuxt-directus/commit/fa310a249fb343bc56374a0aa82098bdd9db26a2))
+
 ## [2.1.0](https://github.com/intevel/nuxt-directus/compare/v2.0.2...v2.1.0) (2022-06-10)
 
 
