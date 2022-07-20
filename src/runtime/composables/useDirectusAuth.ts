@@ -5,7 +5,7 @@ import type {
   DirectusUser,
   DirectusPasswordForgotCredentials,
   DirectusPasswordResetCredentials,
-  DirectusRegisterCredentials
+  DirectusRegisterCredentials,
 } from "../types";
 import { useDirectus } from "./useDirectus";
 import { useDirectusUser } from "./useDirectusUser";
@@ -78,7 +78,7 @@ export const useDirectusAuth = () => {
       "/auth/login",
       {
         method: "POST",
-        body: data
+        body: data,
       }
     );
 
@@ -93,7 +93,7 @@ export const useDirectusAuth = () => {
     return {
       user,
       access_token: response.data.access_token,
-      expires: response.data.expires
+      expires: response.data.expires,
     };
   };
 
@@ -102,7 +102,7 @@ export const useDirectusAuth = () => {
   ): Promise<DirectusUser> => {
     return await directus("/users", {
       method: "POST",
-      body: data
+      body: data,
     });
   };
 
@@ -118,7 +118,7 @@ export const useDirectusAuth = () => {
   ): Promise<void> => {
     await directus("/auth/password/request", {
       method: "POST",
-      body: data
+      body: data,
     });
   };
 
@@ -127,7 +127,7 @@ export const useDirectusAuth = () => {
   ): Promise<void> => {
     await directus("/auth/password/reset", {
       method: "POST",
-      body: data
+      body: data,
     });
   };
 
@@ -146,6 +146,6 @@ export const useDirectusAuth = () => {
     resetPassword,
     logout,
     createUser,
-    register
+    register,
   };
 };
