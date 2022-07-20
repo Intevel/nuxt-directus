@@ -21,6 +21,11 @@ export interface ModuleOptions {
    * @type boolean
    */
   fetchUserParams?: DirectusQueryParams;
+  /**
+   * Auth Token
+   * @type string
+   */
+  token?: string;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -37,12 +42,13 @@ export default defineNuxtModule<ModuleOptions>({
     autoFetch: true,
   },
   setup(options, nuxt) {
-    nuxt.options.publicRuntimeConfig.directus = defu(
-      nuxt.options.publicRuntimeConfig.directus,
+    nuxt.options.runtimeConfig.public.directus = defu(
+      nuxt.options.runtimeConfig.public.directus,
       {
         url: options.url,
         autoFetch: options.autoFetch,
         fetchUserParams: options.fetchUserParams,
+        token: options.token
       }
     );
 

@@ -1,13 +1,14 @@
 import type { FetchError, FetchOptions } from "ohmyfetch";
-import { useNuxtApp } from "#app";
+import { useNuxtApp, useRuntimeConfig } from "#app";
 import { useDirectusUrl } from "./useDirectusUrl";
 import { useDirectusToken } from "./useDirectusToken";
 
 export const useDirectus = () => {
   const nuxt = useNuxtApp();
   const baseURL = useDirectusUrl();
-  const token = useDirectusToken();
-
+  const config = useRuntimeConfig()
+  var token = useDirectusToken();
+  
   return async <T>(
     url: string,
     fetchOptions: FetchOptions = {}
@@ -16,6 +17,8 @@ export const useDirectus = () => {
 
     if (token && token.value) {
       headers.Authorization = `Bearer ${token.value}`;
+    } else if (config.directus.token) {
+      headers.Authorization = `Bearer ${config.directus.token}`
     }
 
     try {
