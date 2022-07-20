@@ -99,14 +99,14 @@ const fetchArticles = async () => {
 
     router.push('/d')
   } catch (e) { }
+}
 
-  const fetchCollections = async () => {
-    try {
-      const collections = await getCollections()
-      console.log(collections)
+const fetchCollections = async () => {
+  try {
+    const collections = await getCollections()
+    console.log(collections)
 
-      router.push('/d')
-    } catch (e) { }
-  }
+    router.push('/d')
+  } catch (e) { }
 }
 </script>
