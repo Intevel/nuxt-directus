@@ -28,7 +28,9 @@ export const useDirectus = () => {
         },
       });
     } catch (err: any) {
-      console.error("[Directus Error]: " + err);
+      if(!err.includes("401 Unauthorized")){
+        console.error("[Directus Error]: " + err);
+      }
     }
   };
 };

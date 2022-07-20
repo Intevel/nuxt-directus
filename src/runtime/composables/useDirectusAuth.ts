@@ -54,7 +54,16 @@ export const useDirectusAuth = () => {
         var res = await directus<{ data: DirectusUser }>("/users/me");
         setUser(res.data);
       } catch (e) {
-        setTokens(null, null, null);
+        try {
+          // refresh token if expired
+          // eslint-disable-next-line camelcase
+          const { access_token, expires, refresh_token, user } = await refreshTokens();
+          setTokens(access_token, refresh_token, expires);
+          setUser(user);
+        } catch (e) {
+          // remove refresh token after expired refresh token
+          setTokens(null, null, null);
+        } 
       }
     }
     return user;
