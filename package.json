@@ -30,8 +30,7 @@
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "docs": "cd docs && yarn dev",
     "release": "nuxt-module-build && standard-version && git push --follow-tags && npm publish",
-    "lint": "eslint --ext .js,.ts,.vue .",
-    "lint:fix": "eslint --ext .js,.ts,.vue --fix ."
+    "lint": "eslint --ext .js,.ts,.vue"
   },
   "dependencies": {
     "@nuxt/kit": "^3.0.0-rc.1",

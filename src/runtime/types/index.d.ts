@@ -23,17 +23,6 @@ export interface DirectusPasswordResetCredentials {
   password: string;
 }
 
-export interface DirectusQueryParams {
-  fields?: Array<string>;
-  sort?: string | Array<string>;
-  filter?: Record<string, unknown>;
-  limit?: number;
-  offset?: number;
-  page?: number;
-  alias?: string | Array<string>;
-  deep?: Record<string, unknown>;
-}
-
 export interface DirectusItemRequest {
   collection: string;
   id?: string;
@@ -53,6 +42,17 @@ export interface DirectusItemUpdate {
 export interface DirectusItemDeletion {
   collection: string;
   items: Array<string> | string;
+}
+
+export interface DirectusQueryParams {
+  fields?: Array<string>;
+  sort?: string | Array<string>;
+  filter?: Record<string, unknown>;
+  limit?: number;
+  offset?: number;
+  page?: number;
+  alias?: string | Array<string>;
+  deep?: Record<string, unknown>;
 }
 
 export type DirectusThumbnailFormat = "jpg" | "png" | "webp" | "tiff";

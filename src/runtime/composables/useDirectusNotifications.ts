@@ -1,5 +1,5 @@
-import { DirectusQueryParams, DirectusNotificationObject } from "../types";
 import { useDirectus } from "./useDirectus";
+import { DirectusQueryParams, DirectusNotificationObject } from "../types";
 
 export const useDirectusNotifications = () => {
   const directus = useDirectus();
@@ -13,7 +13,7 @@ export const useDirectusNotifications = () => {
     if (data.params?.deep) {
       (data.params.deep as unknown) = JSON.stringify(data.params.deep);
     }
-    const notifications = await directus<{ data: T[] }>("/notifications", {
+    const notifications = await directus<{ data: T[] }>(`/notifications`, {
       method: "GET",
       params: data.params,
     });
@@ -38,7 +38,7 @@ export const useDirectusNotifications = () => {
   const createNotification = async <T>(data: {
     notification: DirectusNotificationObject;
   }): Promise<T[]> => {
-    const notification = await directus<{ data: T[] }>("/notifications", {
+    const notification = await directus<{ data: T[] }>(`/notifications`, {
       method: "POST",
       body: data.notification,
     });
@@ -48,7 +48,7 @@ export const useDirectusNotifications = () => {
   const deleteNotification = async (data: {
     notifications: Array<string> | string;
   }): Promise<void> => {
-    await directus<void>("/notifications", {
+    await directus<void>(`/notifications`, {
       method: "DELETE",
       body: data.notifications,
     });

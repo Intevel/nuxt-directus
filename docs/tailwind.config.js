@@ -5,4 +5,4 @@ module.exports = {
     defaultLineHeights: true,
     standardFontWeights: true
   }
-};
+}

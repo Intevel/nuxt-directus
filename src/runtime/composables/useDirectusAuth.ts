@@ -1,4 +1,4 @@
-import type { Ref } from "vue";
+import type { Ref } from 'vue'
 import type {
   DirectusAuthResponse,
   DirectusAuthCredentials,
@@ -14,81 +14,81 @@ import { useDirectusToken } from "./useDirectusToken";
 import { useDirectusRefresh } from "./useDirectusRefresh";
 
 export const useDirectusAuth = () => {
-  const url = useDirectusUrl();
-  const directus = useDirectus();
-  const user = useDirectusUser();
-  const token = useDirectusToken();
-  const { refreshToken, expiredAt, refreshTokens } = useDirectusRefresh();
+  const url = useDirectusUrl()
+  const directus = useDirectus()
+  const user = useDirectusUser()
+  const token = useDirectusToken()
+  const { refreshToken, expiredAt, refreshTokens } = useDirectusRefresh()
 
   const setTokens = (
     accessToken: string | null,
     refreshToken: string | null,
     expiredAt: number | null
   ) => {
-    setAccessToken(accessToken);
-    setRefreshToken(refreshToken);
-    setTokenExpireDate(expiredAt);
-  };
+    setAccessToken(accessToken)
+    setRefreshToken(refreshToken)
+    setTokenExpireDate(expiredAt)
+  }
 
   const setAccessToken = (value: string | null) => {
-    token.value = value;
-  };
+    token.value = value
+  }
 
   const setRefreshToken = (value: string | null) => {
-    refreshToken.value = value;
-  };
+    refreshToken.value = value
+  }
 
   const setTokenExpireDate = (offset: number | null) => {
     offset === null
       ? (expiredAt.value = null)
-      : (expiredAt.value = new Date().getTime() + offset);
-  };
+      : (expiredAt.value = new Date().getTime() + offset)
+  }
 
   const setUser = (value: DirectusUser) => {
-    user.value = value;
-  };
+    user.value = value
+  }
 
   const fetchUser = async (): Promise<Ref<DirectusUser>> => {
     if (token.value && !user.value) {
       try {
-        const res = await directus<{ data: DirectusUser }>("/users/me");
-        setUser(res.data);
+        const res = await directus<{ data: DirectusUser }>('/users/me')
+        setUser(res.data)
       } catch (e) {
         try {
           // refresh token if expired
           // eslint-disable-next-line camelcase
-          const { access_token, expires, refresh_token, user } = await refreshTokens();
-          setTokens(access_token, refresh_token, expires);
-          setUser(user);
+          const { access_token, expires, refresh_token, user } = await refreshTokens()
+          setTokens(access_token, refresh_token, expires)
+          setUser(user)
         } catch (e) {
           // remove refresh token after expired refresh token
-          setTokens(null, null, null);
+          setTokens(null, null, null)
         }
       }
     }
-    return user;
-  };
+    return user
+  }
 
   const login = async (
     data: DirectusAuthCredentials
   ): Promise<DirectusAuthResponse> => {
-    setTokens(null, null, null);
+    setTokens(null, null, null)
 
     const response: { data: DirectusAuthResponse } = await directus(
-      "/auth/login",
+      '/auth/login',
       {
         method: "POST",
         body: data,
       }
-    );
+    )
 
     setTokens(
       response.data.access_token,
       response.data.refresh_token,
       response.data.expires
-    );
+    )
 
-    const user = await fetchUser();
+    const user = await fetchUser()
 
     return {
       user,
@@ -110,8 +110,8 @@ export const useDirectusAuth = () => {
   const register = async (
     data: DirectusRegisterCredentials
   ): Promise<DirectusUser> => {
-    return await createUser(data);
-  };
+    return createUser(data)
+  }
 
   const requestPasswordReset = async (
     data: DirectusPasswordForgotCredentials
@@ -133,9 +133,9 @@ export const useDirectusAuth = () => {
 
   const logout = (): void => {
     // https://docs.directus.io/reference/authentication/#logout todo: implement this
-    setTokens(null, null, null);
-    setUser(null);
-  };
+    setTokens(null, null, null)
+    setUser(null)
+  }
 
   return {
     setTokens,

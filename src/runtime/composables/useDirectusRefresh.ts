@@ -1,7 +1,7 @@
 import { useCookie, useNuxtApp } from "#app";
-import { DirectusAuthResponse } from "../types";
 import { useDirectusToken } from "./useDirectusToken";
 import { useDirectusUrl } from "./useDirectusUrl";
+import { DirectusAuthResponse } from "../types";
 
 export const useDirectusRefresh = () => {
   const nuxtApp = useNuxtApp();
