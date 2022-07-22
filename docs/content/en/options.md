@@ -18,3 +18,15 @@ export default {
 ```
 
 You can also set Enviroment variable `DIRECTUS_URL` to override `url`
+
+### `token`
+
+Auth option for static tokens, *user token after login has priority*
+
+```js{}[nuxt.config.js]
+export default {
+	directus: {
+		token: 'sDhjk!.Ddj........'
+	}
+};
+```
