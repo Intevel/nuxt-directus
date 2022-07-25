@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/intevel/nuxt-directus/compare/v2.2.0...v2.3.0) (2022-07-25)
+
+
+### Features
+
+* **chore:** implemented token auth option ([45ad98f](https://github.com/intevel/nuxt-directus/commit/45ad98f3a53f636406cedd3df0a056faa385c1d6))
+* **docs:** added new option to docs ([0cfc499](https://github.com/intevel/nuxt-directus/commit/0cfc499a9184cff3e76a45b10f06ff539ae04d30))
+
+
+### Bug Fixes
+
+* :bug: playground fetch collection now works ([2c4f260](https://github.com/intevel/nuxt-directus/commit/2c4f260ce5e4c0b55e3684b694247b360d6b182e))
+
 ## [2.2.0](https://github.com/intevel/nuxt-directus/compare/v2.1.0...v2.2.0) (2022-07-11)
 
 
