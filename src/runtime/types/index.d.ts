@@ -54,6 +54,7 @@ export interface DirectusQueryParams {
   alias?: string | Array<string>;
   deep?: Record<string, unknown>;
   search?: string;
+  meta?: "total_count" | "filter_count" | "*";
 }
 
 export type DirectusThumbnailFormat = "jpg" | "png" | "webp" | "tiff";
