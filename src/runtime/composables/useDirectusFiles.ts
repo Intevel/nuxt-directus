@@ -3,12 +3,16 @@ import {
   DirectusItemRequest,
   DirectusFileRequest,
 } from "../types";
+import { useRuntimeConfig } from "#app";
 import { useDirectusUrl } from "./useDirectusUrl";
 import { useDirectus } from "./useDirectus";
+import { useDirectusToken } from "./useDirectusToken";
 
 export const useDirectusFiles = () => {
+  const config = useRuntimeConfig();
   const directusUrl = useDirectusUrl();
   const directus = useDirectus();
+  const token = useDirectusToken();
 
   const getFiles = async <T>(data: DirectusFileRequest): Promise<T[]> => {
     if (data.params?.filter) {
@@ -41,6 +45,11 @@ export const useDirectusFiles = () => {
         url.searchParams.append("withoutEnlargement", "true");
       if (options.fit) url.searchParams.append("fit", options.fit);
       if (options.format) url.searchParams.append("format", options.format);
+    }
+    if (token && token.value) {
+      url.searchParams.append("access_token", token.value);
+    } else if (config.directus.token) {
+      url.searchParams.append("access_token", config.directus.token);
     }
     return url.href;
   };
