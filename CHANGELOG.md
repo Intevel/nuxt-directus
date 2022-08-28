@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/intevel/nuxt-directus/compare/v2.4.0...v3.0.0) (2022-08-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **main:** getItems doesnt return meta
+
+### Features
+
+* add token to getThumbnail url query params ([361e0a5](https://github.com/intevel/nuxt-directus/commit/361e0a52ba620f1586cea3e6bdb1468a21bc915c))
+
+
+### Bug Fixes
+
+* **main:** getItems doesnt return meta ([92b268c](https://github.com/intevel/nuxt-directus/commit/92b268cee6272ebcba51a039ab83d189d3230133))
+
 ## [2.4.0](https://github.com/intevel/nuxt-directus/compare/v2.3.0...v2.4.0) (2022-07-29)
 
 
