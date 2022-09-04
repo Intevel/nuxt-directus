@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.1](https://github.com/intevel/nuxt-directus/compare/v3.0.0...v3.0.1) (2022-09-04)
+
+
+### Bug Fixes
+
+* **module:** compatibily issue ([641a504](https://github.com/intevel/nuxt-directus/commit/641a504416f6ea43f7ad6dc820d3810d524ef547))
+
 ## [3.0.0](https://github.com/intevel/nuxt-directus/compare/v2.4.0...v3.0.0) (2022-08-28)
 
 
