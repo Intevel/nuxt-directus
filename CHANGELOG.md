@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.2](https://github.com/intevel/nuxt-directus/compare/v3.0.1...v3.0.2) (2022-09-04)
+
+
+### Bug Fixes
+
+* **module:** autoimport hook deprecated ([38eb525](https://github.com/intevel/nuxt-directus/commit/38eb52506ac038b11a2ede23a7c5f8dbf6542aef))
+
 ### [3.0.1](https://github.com/intevel/nuxt-directus/compare/v3.0.0...v3.0.1) (2022-09-04)
 
 
