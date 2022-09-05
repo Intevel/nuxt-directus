@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.0.3](https://github.com/intevel/nuxt-directus/compare/v3.0.2...v3.0.3) (2022-09-05)
+
+
+### Bug Fixes
+
+* **module:** error 500 when meta isnt defined ([f84f0a9](https://github.com/intevel/nuxt-directus/commit/f84f0a9226103f20f60c5df074c17db0f10e2256))
+
 ### [3.0.2](https://github.com/intevel/nuxt-directus/compare/v3.0.1...v3.0.2) (2022-09-04)
 
 
