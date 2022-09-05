@@ -21,7 +21,7 @@ export const useDirectusItems = () => {
       params: data.params
     })
 
-    if (data.params.meta) {
+    if (items.meta) {
       return { meta: items.meta, data: items.data }
     } else {
       return items.data
