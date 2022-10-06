@@ -134,3 +134,13 @@ export interface DirectusCollectionUpdate {
   collection: string;
   meta: DirectusCollectionMeta;
 }
+
+export interface DirectusRevision {
+  id: number;
+  activity?: any;
+  collection: string;
+  item?: string;
+  data?: Object;
+  delta?: Object;
+  parent?: any;
+}

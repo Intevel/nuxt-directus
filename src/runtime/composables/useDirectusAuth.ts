@@ -42,13 +42,14 @@ export const useDirectusAuth = () => {
           )
         }
         if (config.directus.fetchUserParams) {
-          var res = await directus<{ data: DirectusUser }>('/users/me', {
+          const res = await directus<{ data: DirectusUser }>('/users/me', {
             params: config.directus.fetchUserParams
           })
+          setUser(res.data)
         } else {
-          var res = await directus<{ data: DirectusUser }>('/users/me')
+          const res = await directus<{ data: DirectusUser }>('/users/me')
+          setUser(res.data)
         }
-        setUser(res.data)
       } catch (e) {
         setToken(null)
       }
