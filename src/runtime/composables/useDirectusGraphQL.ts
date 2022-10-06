@@ -1,14 +1,14 @@
-import { useDirectusUrl } from "./useDirectusUrl";
-import type { FetchError, FetchOptions } from "ohmyfetch";
+import type { FetchError, FetchOptions } from 'ohmyfetch'
+import { useDirectusUrl } from './useDirectusUrl'
 
 export const useDirectusGraphQL = (query: any, variables?: object) => {
-  let url = useDirectusUrl();
+  let url = useDirectusUrl()
 
   // strip trailing slash
-  url = url.replace(/\/$/, "");
+  url = url.replace(/\/$/, '')
 
   return $fetch(`${url}/graphql`, {
-    method: "POST",
-    body: JSON.stringify({ query, ...(variables && { variables }) }),
-  });
-};
+    method: 'POST',
+    body: JSON.stringify({ query, ...(variables && { variables }) })
+  })
+}

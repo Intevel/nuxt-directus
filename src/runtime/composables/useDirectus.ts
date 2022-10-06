@@ -1,22 +1,22 @@
-import type { FetchError, FetchOptions } from "ohmyfetch";
-import { useNuxtApp, useRuntimeConfig } from "#app";
-import { useDirectusUrl } from "./useDirectusUrl";
-import { useDirectusToken } from "./useDirectusToken";
+import type { FetchError, FetchOptions } from 'ohmyfetch'
+import { useDirectusUrl } from './useDirectusUrl'
+import { useDirectusToken } from './useDirectusToken'
+import { useNuxtApp, useRuntimeConfig } from '#app'
 
 export const useDirectus = () => {
-  const nuxt = useNuxtApp();
-  const baseURL = useDirectusUrl();
+  const nuxt = useNuxtApp()
+  const baseURL = useDirectusUrl()
   const config = useRuntimeConfig()
-  var token = useDirectusToken();
-  
+  const token = useDirectusToken()
+
   return async <T>(
     url: string,
     fetchOptions: FetchOptions = {}
   ): Promise<T> => {
-    const headers: HeadersInit = {};
+    const headers: HeadersInit = {}
 
     if (token && token.value) {
-      headers.Authorization = `Bearer ${token.value}`;
+      headers.Authorization = `Bearer ${token.value}`
     } else if (config.directus.token) {
       headers.Authorization = `Bearer ${config.directus.token}`
     }
@@ -27,11 +27,11 @@ export const useDirectus = () => {
         ...fetchOptions,
         headers: {
           ...headers,
-          ...fetchOptions.headers,
-        },
-      });
+          ...fetchOptions.headers
+        }
+      })
     } catch (err: any) {
-      console.error("[Directus Error]: " + err);
+      console.error('[Directus Error]: ' + err)
     }
-  };
-};
+  }
+}

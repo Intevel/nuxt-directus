@@ -1,6 +1,6 @@
-import { useRuntimeConfig } from "#app";
+import { useRuntimeConfig } from '#app'
 
 export const useDirectusUrl = (): string => {
-  const config = useRuntimeConfig();
-  return config.directus.url;
-};
+  const config = useRuntimeConfig()
+  return config.directus.url
+}
