@@ -45,7 +45,7 @@ const router = useRouter();
 
 const fetchCollection = async () => {
   const collectionParams = { collection: "Page" };
-  const collection = await getCollections(collectionParams);
+  const collection = await getCollection(collectionParams);
 };
 </script>
 ```
