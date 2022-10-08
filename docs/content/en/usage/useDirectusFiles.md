@@ -23,8 +23,8 @@ const { getFiles } = useDirectusFiles();
 const router = useRouter();
 
 const fetchFiles = async () => {
-  var filter = { content: "testcontent", title: "Test1" };
-  var files = await getFiles({
+  const filter = { content: "testcontent", title: "Test1" };
+  const files = await getFiles({
     params: {
       filter,
     },

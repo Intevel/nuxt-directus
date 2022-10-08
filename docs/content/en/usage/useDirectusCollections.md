@@ -23,7 +23,7 @@ const { getCollections } = useDirectusCollections();
 const router = useRouter();
 
 const fetchCollections = async () => {
-  var collections = await getCollections();
+  const collections = await getCollections();
 };
 </script>
 ```
@@ -44,8 +44,8 @@ const { getCollections } = useDirectusCollections();
 const router = useRouter();
 
 const fetchCollection = async () => {
-  var collectionParams = { collection: "Page" };
-  var collection = await getCollections(collectionParams);
+  const collectionParams = { collection: "Page" };
+  const collection = await getCollections(collectionParams);
 };
 </script>
 ```

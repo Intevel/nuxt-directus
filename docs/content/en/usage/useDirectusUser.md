@@ -11,6 +11,6 @@ If you are logged in you can access the user everywhere, if you are not logged i
 <script setup>
 const user = useDirectusUser();
 
-var email = user.value.email;
+const email = user.value.email;
 </script>
 ```

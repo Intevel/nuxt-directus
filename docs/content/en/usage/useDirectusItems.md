@@ -31,8 +31,8 @@ interface Article {
 
 const fetchArticles = async () => {
   try {
-    var filters = { content: "testcontent", title: "Test1" };
-    var items = await getItems<Article>({
+    const filters = { content: "testcontent", title: "Test1" };
+    const items = await getItems<Article>({
       collection: "News",
       params: {
         filter: filters,
@@ -64,7 +64,7 @@ interface Imprint {
 
 const fetchArticle: Article[] = async () => {
   try {
-    var item = await getSingletonItem<Imprint>({
+    const item = await getSingletonItem<Imprint>({
       collection: "Imprint",
     });
   } catch (e) {}
@@ -88,7 +88,7 @@ const { getItemById } = useDirectusItems();
 
 const fetchArticle = async () => {
   try {
-    var item = await getItemById({
+    const item = await getItemById({
       collection: "News",
       id: "4776864a-75ee-4746-9ef4-bd5c2e38cc66",
     });
@@ -122,7 +122,7 @@ interface Article {
 
 const createArticles: Article[] = async () => {
   try {
-    var items: Article[] = [
+    const items: Article[] = [
       {
         title: "testitem",
         content: "testcontent",
@@ -156,7 +156,7 @@ const { deleteItems } = useDirectusItems();
 
 const deleteArticles: void = async () => {
   try {
-    var items = ["15", "20", "22"];
+    const items = ["15", "20", "22"];
     await deleteItems({ collection: "News", items });
   } catch (e) {}
 };
@@ -186,7 +186,7 @@ interface Article {
 
 const updateArticles: Article[] = async () => {
   try {
-    var newItem = { title: "This Item was updated" };
+    const newItem = { title: "This Item was updated" };
     await updateItem<Article>({
       collection: "News",
       id: "itemid",

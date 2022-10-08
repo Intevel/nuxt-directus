@@ -22,7 +22,7 @@ Search for notifications, [`global search querys`](https://docs.directus.io/refe
 const { getNotifications } = useDirectusNotifications();
 const router = useRouter();
 
-var notifications = await getNotifications({
+const notifications = await getNotifications({
   params: {
     filter: { subject: "Directus is great!" },
   },
@@ -44,7 +44,7 @@ Get notifications by primary id key.
 <script setup lang="ts">
 const { getNotificationByKey } = useDirectusNotifications();
 
-var notification = await getNotificationByKey({
+const notification = await getNotificationByKey({
   id: "2",
 });
 </script>
@@ -87,7 +87,7 @@ Delete one or multiple notifications, provide notification id's.
 <script setup lang="ts">
 const { deleteNotifications } = useDirectusNotifications();
 
-var notifications = ["15", "20", "22"];
+const notifications = ["15", "20", "22"];
 
 await deleteNotifications({ notifications });
 </script>

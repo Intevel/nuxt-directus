@@ -57,7 +57,7 @@ const router = useRouter();
 
 const onSubmit = async () => {
   try {
-    var newUser = await createUser({ email: "", password: "" });
+    const newUser = await createUser({ email: "", password: "" });
   } catch (e) {}
 };
 </script>
