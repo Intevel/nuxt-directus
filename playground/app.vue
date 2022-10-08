@@ -53,7 +53,7 @@ const onSubmit = async () => {
   } catch (e) { }
 }
 
-const logUser = async () => {
+const logUser = () => {
   try {
     console.log(user)
     console.log(user.value.email)
