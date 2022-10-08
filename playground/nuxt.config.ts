@@ -1,9 +1,8 @@
-import { defineNuxtConfig } from "nuxt";
-import NuxtDirectus from "..";
+import NuxtDirectus from '..'
 
 export default defineNuxtConfig({
   modules: [NuxtDirectus],
   directus: {
-    url: "https://swyi1ut9.directus.app/",
-  },
-});
+    url: 'https://swyi1ut9.directus.app/'
+  }
+})
