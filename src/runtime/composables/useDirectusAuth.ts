@@ -1,3 +1,5 @@
+import { useRuntimeConfig } from '#app'
+
 import type { Ref } from 'vue'
 import type {
   DirectusAuthResponse,
@@ -7,11 +9,11 @@ import type {
   DirectusPasswordResetCredentials,
   DirectusRegisterCredentials
 } from '../types'
+
 import { useDirectus } from './useDirectus'
 import { useDirectusUser } from './useDirectusUser'
 import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectusToken } from './useDirectusToken'
-import { useRuntimeConfig } from '#app'
 
 export const useDirectusAuth = () => {
   const url = useDirectusUrl()

@@ -1,4 +1,8 @@
-import { DirectusQueryParams, DirectusNotificationObject } from '../types'
+import type {
+  DirectusQueryParams,
+  DirectusNotificationObject
+} from '../types'
+
 import { useDirectus } from './useDirectus'
 
 export const useDirectusNotifications = () => {
