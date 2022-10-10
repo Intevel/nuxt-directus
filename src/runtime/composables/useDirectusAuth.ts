@@ -1,5 +1,6 @@
 import { useRuntimeConfig } from '#app'
 
+import type { Ref } from 'vue'
 import type {
   DirectusAuthResponse,
   DirectusAuthCredentials,
@@ -14,22 +15,22 @@ import { useDirectusUser } from './useDirectusUser'
 import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectusToken } from './useDirectusToken'
 
-export const useDirectusAuth = () => {
+export const useDirectusAuth = <User = DirectusUser>() => {
   const url = useDirectusUrl()
   const config = useRuntimeConfig()
   const directus = useDirectus()
-  const user = useDirectusUser()
+  const user = useDirectusUser<User>()
   const token = useDirectusToken()
 
-  const setToken = (value: string | null) => {
+  const setToken = (value: string | null): void => {
     token.value = value
   }
 
-  const setUser = (value: DirectusUser) => {
+  const setUser = (value: User): void => {
     user.value = value
   }
 
-  const fetchUser = async () => {
+  const fetchUser = async (): Promise<Ref<User>> => {
     if (token.value && !user.value) {
       try {
         if (config.directus.fetchUserParams?.filter) {
@@ -43,12 +44,12 @@ export const useDirectusAuth = () => {
           )
         }
         if (config.directus.fetchUserParams) {
-          const res = await directus<{ data: DirectusUser }>('/users/me', {
+          const res = await directus<{ data: User }>('/users/me', {
             params: config.directus.fetchUserParams
           })
           setUser(res.data)
         } else {
-          const res = await directus<{ data: DirectusUser }>('/users/me')
+          const res = await directus<{ data: User }>('/users/me')
           setUser(res.data)
         }
       } catch (e) {
@@ -58,11 +59,13 @@ export const useDirectusAuth = () => {
     return user
   }
 
-  const login = async (data: DirectusAuthCredentials) => {
+  const login = async (
+    data: DirectusAuthCredentials
+  ): Promise<DirectusAuthResponse<User>> => {
     setToken(null)
 
     const response: {
-      data: DirectusAuthResponse;
+      data: DirectusAuthResponse<User>;
     } = await directus('/auth/login', {
       method: 'POST',
       body: data
@@ -80,21 +83,27 @@ export const useDirectusAuth = () => {
     }
   }
 
-  const createUser = async (data: DirectusRegisterCredentials) => {
-    return await directus<DirectusUser>('/users', {
+  const createUser = async (
+    data: DirectusRegisterCredentials
+  ): Promise<User> => {
+    return await directus<User>('/users', {
       method: 'POST',
       body: data
     })
   }
 
-  const requestPasswordReset = async (data: DirectusPasswordForgotCredentials) => {
+  const requestPasswordReset = async (
+    data: DirectusPasswordForgotCredentials
+  ): Promise<void> => {
     await directus('/auth/password/request', {
       method: 'POST',
       body: data
     })
   }
 
-  const resetPassword = async (data: DirectusPasswordResetCredentials) => {
+  const resetPassword = async (
+    data: DirectusPasswordResetCredentials
+  ): Promise<void> => {
     await directus('/auth/password/reset', {
       method: 'POST',
       body: data
