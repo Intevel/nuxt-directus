@@ -97,8 +97,7 @@ const createArticles = async () => {
         {
           title: 'testitem',
           content: 'testcontent',
-          status: 'published',
-          isdsds: 'test'
+          status: 'published'
         },
         {
           title: 'testitem2',
