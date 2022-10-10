@@ -110,7 +110,7 @@ export const useDirectusAuth = <User = DirectusUser>() => {
     })
   }
 
-  const logout = () => {
+  const logout = (): void => {
     // https://docs.directus.io/reference/authentication/#logout todo: implement this
     setToken(null)
     setUser(null)
