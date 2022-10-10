@@ -42,6 +42,7 @@ interface News {
   status: string;
 }
 
+// TODO: I cannot reach the backend at this moment, so I cannot check what Collections exist in there
 interface Books {
   id?: string | number;
   title: string;
