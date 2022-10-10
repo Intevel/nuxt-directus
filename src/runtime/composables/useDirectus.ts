@@ -13,7 +13,7 @@ export const useDirectus = () => {
   return async <T>(
     url: string,
     fetchOptions: FetchOptions = {}
-  ) => {
+  ): Promise<T> => {
     const headers: HeadersInit = {}
 
     if (token && token.value) {
