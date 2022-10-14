@@ -80,7 +80,9 @@ const onSubmit = async () => {
     })
 
     router.push('/authenticated-page')
-  } catch (e) { }
+  } catch (e) {
+    console.log(e.data)
+  }
 }
 
 const logUser = () => {

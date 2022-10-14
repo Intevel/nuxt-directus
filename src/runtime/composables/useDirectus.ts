@@ -34,6 +34,7 @@ export const useDirectus = () => {
     } catch (err: any) {
       // eslint-disable-next-line no-console
       console.error('[Directus Error]: ' + err)
+      throw err
     }
   }
 }
