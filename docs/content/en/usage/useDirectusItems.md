@@ -7,21 +7,8 @@ category: "Usage"
 
 > Check out the Directus [Items](https://docs.directus.io/reference/items/) documentation.
 
-### `getItems`
-
-Search for items in a specific collection, [`global search querys`](https://docs.directus.io/reference/query/) can be used
-
-- **Arguments:**
-
-  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
-
-- **Returns:** `Array<T>`
-
-```vue [pages/articles.vue]
-<script setup lang="ts">
-const { getItems } = useDirectusItems();
-const router = useRouter();
-
+In all the examples below, the following types are used:
+```ts
 interface Article {
   id?: string | number;
   title: string;
@@ -29,13 +16,40 @@ interface Article {
   status: string;
 }
 
+interface Imprint {
+  id?: string | number;
+  content: string;
+}
+
+interface Collections {
+  news: Article;
+  imprint: Imprint;
+}
+```
+
+### `getItems`
+
+Search for items in a specific collection, [`global search querys`](https://docs.directus.io/reference/query/) can be used
+
+- **Arguments:**
+  - collection [`keyof Collections`]
+  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L92)
+
+- **Returns:** `Array`
+
+```vue [pages/articles.vue]
+<script setup lang="ts">
+const { getItems } = useDirectusItems<Collections>();
+const router = useRouter();
+
 const fetchArticles = async () => {
   try {
-    const filters = { content: "testcontent", title: "Test1" };
-    const items = await getItems<Article>({
-      collection: "News",
+    const items = await getItems("news", {
       params: {
-        filter: filters,
+        filter: {
+          content: "testcontent",
+          title: "Test1"
+        },
       },
     });
   } catch (e) {}
@@ -48,25 +62,18 @@ const fetchArticles = async () => {
 Get object from Singleton marked collection
 
 - **Arguments:**
+  - collection [`keyof Collections`]
+  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L92)
 
-  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
-
-- **Returns:** `Object<T>`
+- **Returns:** `Object`
 
 ```vue [pages/imprint.vue]
 <script setup lang="ts">
-const { getSingletonItem } = useDirectusItems();
+const { getSingletonItem } = useDirectusItems<Collections>();
 
-interface Imprint {
-  id?: string | number;
-  content: string;
-}
-
-const fetchArticle: Article[] = async () => {
+const fetchImprint = async () => {
   try {
-    const item = await getSingletonItem<Imprint>({
-      collection: "Imprint",
-    });
+    const item = await getSingletonItem("imprint");
   } catch (e) {}
 };
 </script>
@@ -77,20 +84,19 @@ const fetchArticle: Article[] = async () => {
 Search for an item by id in a specific collection
 
 - **Arguments:**
+  - collection [`keyof Collections`]
+  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L92)
 
-  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
-
-- **Returns:** `Array`
+- **Returns:** `Object`
 
 ```vue [pages/article.vue]
 <script setup lang="ts">
-const { getItemById } = useDirectusItems();
+const { getItemById } = useDirectusItems<Collections>();
 
 const fetchArticle = async () => {
   try {
-    const item = await getItemById({
-      collection: "News",
-      id: "4776864a-75ee-4746-9ef4-bd5c2e38cc66",
+    const item = await getItemById("news", {
+      id: "4776864a-75ee-4746-9ef4-bd5c2e38cc66"
     });
   } catch (e) {}
 };
@@ -104,37 +110,31 @@ Create one or multiple items in a specific collection
 _Items don't have a pre-defined schema. The format depends completely on how you configured your collections and fields in Directus._
 
 - **Arguments:**
+  - collection [`keyof Collections`]
+  - data: [`DirectusItemCreation`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#105)
 
-  - data: [`DirectusItemCreation`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#32)
-
-- **Returns:** `Array<T>`
+- **Returns:** `Array`
 
 ```vue [pages/articles.vue]
 <script setup lang="ts">
-const { createItems } = useDirectusItems();
+const { createItems } = useDirectusItems<Collections>();
 
-interface Article {
-  id?: string | number;
-  title: string;
-  content: string;
-  status: string;
-}
-
-const createArticles: Article[] = async () => {
+const createArticles = async () => {
   try {
-    const items: Article[] = [
-      {
-        title: "testitem",
-        content: "testcontent",
-        status: "published",
-      },
-      {
-        title: "testitem2",
-        content: "testcontent2",
-        status: "published",
-      },
-    ];
-    await createItems<Article>({ collection: "News", items });
+    await createItems("news", {
+      items: [
+        {
+          title: "testitem",
+          content: "testcontent",
+          status: "published"
+        },
+        {
+          title: "testitem2",
+          content: "testcontent2",
+          status: "published"
+        }
+      ]
+    });
   } catch (e) {}
 };
 </script>
@@ -145,19 +145,20 @@ const createArticles: Article[] = async () => {
 Delete one or multiple items in a specific collection
 
 - **Arguments:**
+  - collection [`keyof Collections`]
+  - data: [`DirectusItemDeletion`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#118)
 
-  - data: [`DirectusItemDeletion`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#42)
-
-- **Returns:** `Empty body`
+- **Returns:** `void`
 
 ```vue [pages/articles.vue]
 <script setup lang="ts">
-const { deleteItems } = useDirectusItems();
+const { deleteItems } = useDirectusItems<Collections>();
 
-const deleteArticles: void = async () => {
+const deleteArticles = async () => {
   try {
-    const items = ["15", "20", "22"];
-    await deleteItems({ collection: "News", items });
+    await deleteItems("news", {
+      items: ["15", "20", "22"]
+    });
   } catch (e) {}
 };
 </script>
@@ -168,29 +169,22 @@ const deleteArticles: void = async () => {
 Update item in a specific collection
 
 - **Arguments:**
+  - collection [`keyof Collections`]
+  - data: [`DirectusItemUpdate`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#111)
 
-  - data: [`DirectusItemUpdate`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#37)
-
-- **Returns:** `Array<T>`
+- **Returns:** `Array`
 
 ```vue [pages/articles.vue]
 <script setup lang="ts">
-const { updateItem } = useDirectusItems();
+const { updateItem } = useDirectusItems<Collections>();
 
-interface Article {
-  id?: string | number;
-  title: string;
-  content: string;
-  status: string;
-}
-
-const updateArticles: Article[] = async () => {
+const updateArticles = async () => {
   try {
-    const newItem = { title: "This Item was updated" };
-    await updateItem<Article>({
-      collection: "News",
+    await updateItem("news", {
       id: "itemid",
-      item: newItem,
+      item: {
+        title: "This Item was updated"
+      },
     });
   } catch (e) {}
 };

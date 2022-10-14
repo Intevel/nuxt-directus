@@ -93,7 +93,7 @@ const { deleteCollection } = useDirectusCollections();
 
 const deleteArticles: void = async () => {
   try {
-    await deleteCollection({ collection: "Articles" });
+    await deleteCollection("articles");
   } catch (e) {}
 };
 </script>
@@ -113,13 +113,12 @@ Update collection metadata. _Note: only meta data is updatable._
 <script setup lang="ts">
 const { updateCollection } = useDirectusCollections();
 
-const updateCollection: Collection = async () => {
+const updateCollection = async () => {
   try {
-    await updateCollection<Collection>({ 
-      collection: "News", 
+    await updateCollection("news", {
       meta: {
-        icon: 'page'
-      } 
+        icon: "page"
+      }
     });
   } catch (e) {}
 };
