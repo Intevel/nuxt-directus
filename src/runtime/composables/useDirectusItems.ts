@@ -15,23 +15,35 @@ import { useDirectus } from './useDirectus'
 export const useDirectusItems = <Collections extends DirectusCollections>() => {
   const directus = useDirectus()
 
-  async function getItems <Data extends DirectusItemRequest<Collections> & {
-    params: {
-      meta: DirectusQueryParams['meta'];
-    };
-  }> (
-    data: Data
+  async function getItems <
+    C extends keyof Collections,
+    D extends DirectusItemRequest<Collections>[C] & {
+      params: {
+        meta: DirectusQueryParams['meta'];
+      };
+    }
+  > (
+    collection: C,
+    data: D
   ): Promise<{
     meta: DirectusQueryParamsMeta;
-    data: Collections[Data['collection']][];
+    data: Collections[C][];
   }>;
 
-  async function getItems <Data extends DirectusItemRequest<Collections>> (
-    data: Data
-  ): Promise<Collections[Data['collection']][]>;
+  async function getItems <
+    C extends keyof Collections,
+    D extends DirectusItemRequest<Collections>
+  > (
+    collection: C,
+    data: D
+  ): Promise<Collections[C][]>;
 
-  async function getItems <Data extends DirectusItemRequest<Collections>> (
-    data: Data
+  async function getItems <
+    C extends keyof Collections,
+    D extends DirectusItemRequest<Collections>[C]
+  > (
+    collection: C,
+    data: D
   ) {
     if (data.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter)
@@ -44,8 +56,8 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
     // TODO: 'params.fields' is an array or strings that we can use to improve the return type
     const items = await directus<{
       meta?: DirectusQueryParamsMeta;
-      data: Collections[Data['collection']][];
-    }>(`/items/${data.collection as string}`, {
+      data: Collections[C][];
+    }>(`/items/${collection as string}`, {
       method: 'GET',
       params: data.params
     })
@@ -57,9 +69,13 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
     }
   }
 
-  async function getSingletonItem <Data extends DirectusItemRequest<Collections>> (
-    data: Data
-  ): Promise<Collections[Data['collection']]> {
+  async function getSingletonItem <
+    C extends keyof Collections,
+    D extends DirectusItemRequest<Collections>[C]
+  > (
+    collection: C,
+    data: D
+  ): Promise<Collections[C]> {
     if (data.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter)
     }
@@ -70,8 +86,8 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
 
     // TODO: 'params.fields' is an array or strings that we can use to improve the return type
     const item = await directus<{
-      data: Collections[Data['collection']];
-    }>(`/items/${data.collection as string}`, {
+      data: Collections[C];
+    }>(`/items/${collection as string}`, {
       method: 'GET',
       params: data.params
     })
@@ -79,9 +95,13 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
     return item.data
   }
 
-  async function getItemById <Data extends DirectusItemRequest<Collections>> (
-    data: Data
-  ): Promise<Collections[Data['collection']]> {
+  async function getItemById <
+    C extends keyof Collections,
+    D extends DirectusItemRequest<Collections>[C]
+  > (
+    collection: C,
+    data: D
+  ): Promise<Collections[C]> {
     if (data.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter)
     }
@@ -92,8 +112,8 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
 
     // TODO: 'params.fields' is an array or strings that we can use to improve the return type
     const item = await directus<{
-      data: Collections[Data['collection']];
-    }>(`/items/${data.collection as string}/${data.id}`, {
+      data: Collections[C];
+    }>(`/items/${collection as string}/${data.id}`, {
       method: 'GET',
       params: data.params
     })
@@ -101,12 +121,16 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
     return item.data
   }
 
-  async function createItems <Data extends DirectusItemCreation<Collections>> (
-    data: Data
-  ): Promise<Collections[Data['collection']][]> {
+  async function createItems <
+    C extends keyof Collections,
+    D extends DirectusItemCreation<Collections>[C]
+  > (
+    collection: C,
+    data: D
+  ): Promise<Collections[C][]> {
     const items = await directus<{
-      data: Collections[Data['collection']][];
-    }>(`/items/${data.collection as string}`, {
+      data: Collections[C][];
+    }>(`/items/${collection as string}`, {
       method: 'POST',
       body: data.items
     })
@@ -114,21 +138,29 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
     return items.data
   }
 
-  async function deleteItems <Data extends DirectusItemDeletion<Collections>> (
-    data: Data
+  async function deleteItems <
+    C extends keyof Collections,
+    D extends DirectusItemDeletion<Collections>[C]
+  > (
+    collection: C,
+    data: D
   ): Promise<void> {
-    await directus<void>(`/items/${data.collection as string}`, {
+    await directus<void>(`/items/${collection as string}`, {
       method: 'DELETE',
       body: data.items
     })
   }
 
-  async function updateItem <Data extends DirectusItemUpdate<Collections>> (
-    data: Data
-  ): Promise<Collections[Data['collection']]> {
+  async function updateItem <
+    C extends keyof Collections,
+    D extends DirectusItemUpdate<Collections>[C]
+  > (
+    collection: C,
+    data: D
+  ): Promise<Collections[C]> {
     const item = await directus<{
-      data: Collections[Data['collection']];
-    }>(`/items/${data.collection as string}/${data.id}`, {
+      data: Collections[C];
+    }>(`/items/${collection as string}/${data.id}`, {
       method: 'PATCH',
       body: data.item
     })

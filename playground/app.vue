@@ -60,6 +60,10 @@ type DirectusCollections = {
     collection?: string;
     field?: string;
   };
+  directus_users: {
+    id?: number;
+    email?: string;
+  };
 };
 
 type AllCollections = Collections & DirectusCollections;
@@ -92,8 +96,7 @@ const logUser = () => {
 
 const createArticles = async () => {
   try {
-    await createItems({
-      collection: 'news',
+    await createItems('news', {
       items: [
         {
           title: 'testitem',
@@ -112,8 +115,7 @@ const createArticles = async () => {
 
 const deleteArticles = async () => {
   try {
-    await deleteItems({
-      collection: 'news',
+    await deleteItems('news', {
       items: [
         'c7480ee3-4be1-4562-87af-9dfa692a56bb',
         'a2f6b5e7-b151-42a1-9d9b-b6ccf1ae87ff'
@@ -124,8 +126,7 @@ const deleteArticles = async () => {
 
 const fetchArticles = async () => {
   try {
-    const items = await getItems({
-      collection: 'news',
+    const items = await getItems('news', {
       params: {
         filter: {
           content: 'yyeeet',
@@ -142,8 +143,7 @@ const fetchArticles = async () => {
 
 const fetchArticle = async () => {
   try {
-    const item = await getItemById({
-      collection: 'news',
+    const item = await getItemById('news', {
       id: '4776864a-75ee-4746-9ef4-bd5c2e38cc66'
     })
     console.log(item)
@@ -163,8 +163,8 @@ const fetchCollections = async () => {
 
 const fetchCollection = async () => {
   try {
-    const collection = await getCollection({ collection: 'news' })
-    console.log(collection)
+    const collection = await getCollection('news')
+    console.log(collection.meta.collection)
 
     router.push('/d')
   } catch (e) { }
