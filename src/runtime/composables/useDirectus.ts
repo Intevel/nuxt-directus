@@ -32,6 +32,7 @@ export const useDirectus = () => {
       })
     } catch (err: any) {
       console.error('[Directus Error]: ' + err)
+      throw err
     }
   }
 }
