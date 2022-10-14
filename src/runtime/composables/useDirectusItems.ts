@@ -6,7 +6,6 @@ import type {
   DirectusItemCreation,
   DirectusItemDeletion,
   DirectusItemUpdate,
-  DirectusQueryParams,
   DirectusQueryParamsMeta
 } from '../types'
 
@@ -19,7 +18,8 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
     C extends keyof Collections,
     D extends DirectusItemRequest<Collections>[C] & {
       params: {
-        meta: DirectusQueryParams['meta'];
+        // TODO: Somehow, 'meta: undefined | null' still results in this overload.
+        meta: NonNullable<D['params']['meta']>;
       };
     }
   > (
@@ -32,10 +32,10 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
 
   async function getItems <
     C extends keyof Collections,
-    D extends DirectusItemRequest<Collections>
+    D extends DirectusItemRequest<Collections>[C]
   > (
     collection: C,
-    data: D
+    data?: D
   ): Promise<Collections[C][]>;
 
   async function getItems <
@@ -43,13 +43,13 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
     D extends DirectusItemRequest<Collections>[C]
   > (
     collection: C,
-    data: D
+    data?: D
   ) {
-    if (data.params?.filter) {
+    if (data?.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter)
     }
 
-    if (data.params?.deep) {
+    if (data?.params?.deep) {
       (data.params.deep as unknown) = JSON.stringify(data.params.deep)
     }
 
@@ -59,7 +59,7 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
       data: Collections[C][];
     }>(`/items/${collection as string}`, {
       method: 'GET',
-      params: data.params
+      params: data?.params
     })
 
     if ('meta' in items) {
@@ -74,13 +74,13 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
     D extends DirectusItemRequest<Collections>[C]
   > (
     collection: C,
-    data: D
+    data?: D
   ): Promise<Collections[C]> {
-    if (data.params?.filter) {
+    if (data?.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter)
     }
 
-    if (data.params?.deep) {
+    if (data?.params?.deep) {
       (data.params.deep as unknown) = JSON.stringify(data.params.deep)
     }
 
@@ -89,7 +89,7 @@ export const useDirectusItems = <Collections extends DirectusCollections>() => {
       data: Collections[C];
     }>(`/items/${collection as string}`, {
       method: 'GET',
-      params: data.params
+      params: data?.params
     })
 
     return item.data

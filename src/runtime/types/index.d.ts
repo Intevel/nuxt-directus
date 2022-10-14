@@ -54,7 +54,7 @@ export interface DirectusQueryParamsMeta {
 export type DirectusQueryParamsMetaAll = '*';
 
 export interface DirectusQueryParams {
-  fields?: Array<string>;
+  fields?: string[];
   sort?: ArrayOfOrSingle<string>;
   filter?: Record<string, unknown>;
   limit?: number;
