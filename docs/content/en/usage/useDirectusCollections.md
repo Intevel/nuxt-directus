@@ -40,12 +40,12 @@ Retrieve a specific collection by [`name`](https://docs.directus.io/reference/sy
 
 ```vue [pages/collections.vue]
 <script setup lang="ts">
-const { getCollections } = useDirectusCollections();
+const { getCollection } = useDirectusCollections();
 const router = useRouter();
 
 const fetchCollection = async () => {
   var collectionParams = { collection: "Page" };
-  var collection = await getCollections(collectionParams);
+  var collection = await getCollection(collectionParams);
 };
 </script>
 ```
