@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.2.0](https://github.com/intevel/nuxt-directus/compare/v3.1.0...v3.2.0) (2022-11-06)
+
+
+### Features
+
+* throw err on $fetch ([ae10524](https://github.com/intevel/nuxt-directus/commit/ae10524e6908066769c00fedfd9e9fd0dccaebfb))
+
+
+### Bug Fixes
+
+* small bugs ([5080140](https://github.com/intevel/nuxt-directus/commit/508014038771340115a5ffa9b024e410174b49c5))
+
 ## [3.1.0](https://github.com/intevel/nuxt-directus/compare/v3.0.3...v3.1.0) (2022-10-06)
 
 
