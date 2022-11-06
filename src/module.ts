@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
-import defu from 'defu'
+import { defu } from 'defu'
 import { defineNuxtModule, addPlugin, addAutoImportDir } from '@nuxt/kit'
 import { DirectusQueryParams } from './runtime/types'
 export interface ModuleOptions {
@@ -42,15 +42,26 @@ export default defineNuxtModule<ModuleOptions>({
     autoFetch: true
   },
   setup (options, nuxt) {
-    nuxt.options.runtimeConfig.public.directus = defu(
-      nuxt.options.runtimeConfig.public.directus,
-      {
-        url: options.url,
-        autoFetch: options.autoFetch,
-        fetchUserParams: options.fetchUserParams,
-        token: options.token
-      }
-    )
+    // Nuxt 2 / Bridge
+    if (!nuxt?.options?.runtimeConfig?.public?.directus) {
+      nuxt.options.publicRuntimeConfig.directus = defu(
+        nuxt.options.publicRuntimeConfig.directus,
+        {
+          url: options.url,
+          autoFetch: options.autoFetch,
+          fetchUserParams: options.fetchUserParams,
+          token: options.token
+        }
+      )
+    }
+
+    // Nuxt 3
+    nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.directus, {
+      url: options.url,
+      autoFetch: options.autoFetch,
+      fetchUserParams: options.fetchUserParams,
+      token: options.token
+    })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)

@@ -22,14 +22,8 @@ export const useDirectusCollections = () => {
   const getCollection = async <T>(
     data: DirectusCollectionRequest
   ): Promise<T> => {
-    let connectionName = ''
-
-    if (data.name) {
-      connectionName = data.name
-    }
-
     const collection = await directus<{ data: T }>(
-      `/collections/${connectionName}`,
+      `/collections/${data.collection}`,
       {
         method: 'GET'
       }
@@ -51,7 +45,7 @@ export const useDirectusCollections = () => {
     data: DirectusCollectionUpdate
   ): Promise<T> => {
     const collection = await directus<{ data: T }>(
-      `/collections/${data.name}`,
+      `/collections/${data.collection}`,
       {
         method: 'PATCH',
         body: {
@@ -65,7 +59,7 @@ export const useDirectusCollections = () => {
   const deleteCollection = async <T>(
     data: DirectusCollectionRequest
   ): Promise<void> => {
-    await directus<{ data: T }>(`/collections/${data.name}`, {
+    await directus<{ data: T }>(`/collections/${data.collection}`, {
       method: 'DELETE'
     })
   }
