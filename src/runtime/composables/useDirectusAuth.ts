@@ -1,4 +1,5 @@
 import type { Ref } from 'vue'
+import { useRuntimeConfig } from '#app'
 import type {
   DirectusAuthResponse,
   DirectusAuthCredentials,
@@ -11,7 +12,6 @@ import { useDirectus } from './useDirectus'
 import { useDirectusUser } from './useDirectusUser'
 import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectusToken } from './useDirectusToken'
-import { useRuntimeConfig } from '#app'
 
 export const useDirectusAuth = () => {
   const url = useDirectusUrl()
@@ -29,7 +29,7 @@ export const useDirectusAuth = () => {
   }
 
   const fetchUser = async (): Promise<Ref<DirectusUser>> => {
-    if (token.value && !user.value) {
+    if (token.value) {
       try {
         if (config.directus.fetchUserParams?.filter) {
           (config.directus.fetchUserParams.filter as unknown) = JSON.stringify(
@@ -94,6 +94,7 @@ export const useDirectusAuth = () => {
   // Alias for createUser
   const register = async (
     data: DirectusRegisterCredentials
+  // eslint-disable-next-line require-await
   ): Promise<DirectusUser> => {
     return createUser(data)
   }
@@ -116,10 +117,11 @@ export const useDirectusAuth = () => {
     })
   }
 
-  const logout = (): void => {
+  const logout = async (): Promise<void> => {
     // https://docs.directus.io/reference/authentication/#logout todo: implement this
     setToken(null)
     setUser(null)
+    await fetchUser()
   }
 
   return {
