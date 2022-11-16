@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, addAutoImportDir } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImportsDir } from '@nuxt/kit'
 import { DirectusQueryParams } from './runtime/types'
 export interface ModuleOptions {
   /**
@@ -67,7 +67,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.build.transpile.push(runtimeDir)
 
     addPlugin(resolve(runtimeDir, 'plugin'))
-    addAutoImportDir(resolve(runtimeDir, 'composables'))
+    addImportsDir(resolve(runtimeDir, 'composables'))
   }
 })
 
