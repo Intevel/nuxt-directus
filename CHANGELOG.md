@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [3.2.2](https://github.com/intevel/nuxt-directus/compare/v3.2.1...v3.2.2) (2022-11-17)
+
+### [3.2.1](https://github.com/intevel/nuxt-directus/compare/v3.2.0...v3.2.1) (2022-11-07)
+
+
+### Bug Fixes
+
+* **auth:** bug on switching accounts ([620d312](https://github.com/intevel/nuxt-directus/commit/620d312e4bd946fcf6cee299bf0430b66a3e6166))
+
+## [3.2.0](https://github.com/intevel/nuxt-directus/compare/v3.1.0...v3.2.0) (2022-11-06)
+
+
+### Features
+
+* throw err on $fetch ([ae10524](https://github.com/intevel/nuxt-directus/commit/ae10524e6908066769c00fedfd9e9fd0dccaebfb))
+
+
+### Bug Fixes
+
+* small bugs ([5080140](https://github.com/intevel/nuxt-directus/commit/508014038771340115a5ffa9b024e410174b49c5))
+
 ## [3.1.0](https://github.com/intevel/nuxt-directus/compare/v3.0.3...v3.1.0) (2022-10-06)
 
 

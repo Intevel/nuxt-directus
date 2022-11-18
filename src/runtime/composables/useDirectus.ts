@@ -1,8 +1,7 @@
-import { useNuxtApp, useRuntimeConfig } from '#app'
-
-import type { FetchError, FetchOptions } from 'ohmyfetch'
+import type { FetchOptions } from 'ohmyfetch'
 import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectusToken } from './useDirectusToken'
+import { useNuxtApp, useRuntimeConfig } from '#app'
 
 export const useDirectus = () => {
   const nuxt = useNuxtApp()
