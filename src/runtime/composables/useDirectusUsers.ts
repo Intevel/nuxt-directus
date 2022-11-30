@@ -28,20 +28,6 @@ export const useDirectusUsers = () => {
     }
   };
 
-  const getSingletonUser = async <T>(data: DirectusUserRequest): Promise<T> => {
-    if (data.params?.filter) {
-      (data.params.filter as unknown) = JSON.stringify(data.params.filter);
-    }
-    if (data.params?.deep) {
-      (data.params.deep as unknown) = JSON.stringify(data.params.deep);
-    }
-    const items = await directus<{ data: T }>(`/users`, {
-      method: "GET",
-      params: data.params,
-    });
-    return items.data;
-  };
-
   const getUserById = async <T>(data: DirectusUserRequest): Promise<T> => {
     if (data.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter);
@@ -49,7 +35,7 @@ export const useDirectusUsers = () => {
     if (data.params?.deep) {
       (data.params.deep as unknown) = JSON.stringify(data.params.deep);
     }
-    const users = await directus<{ data: T[] }>(`/users/${data.id}`, {
+    const users = await directus<{ data: T }>(`/users/${data.id}`, {
       method: "GET",
       params: data.params,
     });
@@ -81,7 +67,6 @@ export const useDirectusUsers = () => {
 
   return {
     getUsers,
-    getSingletonUser,
     getUserById,
     createUsers,
     deleteUsers,

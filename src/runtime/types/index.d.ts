@@ -1,3 +1,5 @@
+export type DirectusUser = object | null;
+
 export interface DirectusAuthCredentials {
   email: string;
   password: string;
@@ -5,7 +7,7 @@ export interface DirectusAuthCredentials {
 }
 
 export interface DirectusAuthResponse {
-  user: Object;
+  user: DirectusUser;
   access_token: string;
   expires: number;
   refresh_token?: string;
