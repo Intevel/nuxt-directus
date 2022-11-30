@@ -1,5 +1,3 @@
-export type DirectusUser = object | null;
-
 export interface DirectusAuthCredentials {
   email: string;
   password: string;
@@ -7,7 +5,7 @@ export interface DirectusAuthCredentials {
 }
 
 export interface DirectusAuthResponse {
-  user: DirectusUser;
+  user: Object;
   access_token: string;
   expires: number;
   refresh_token?: string;
@@ -55,6 +53,25 @@ export interface DirectusItemUpdate {
 export interface DirectusItemDeletion {
   collection: string;
   items: Array<string> | string;
+}
+
+// User Interfaces
+export interface DirectusUserRequest {
+  id?: string;
+  params?: DirectusQueryParams;
+}
+
+export interface DirectusUserCreation {
+  users: Array<Object> | Object;
+}
+
+export interface DirectusUserUpdate {
+  id: string;
+  user: Object;
+}
+
+export interface DirectusUserDeletion {
+  users: Array<string> | string;
 }
 
 export type DirectusThumbnailFormat = 'jpg' | 'png' | 'webp' | 'tiff';
