@@ -4,6 +4,9 @@
     <button style="margin-top: 25px" @click="onSubmit">
       Login with Directus
     </button>
+    <button style="margin-top: 25px" @click="fetchSingleArticle">
+      Fetch Single Article
+    </button>
     <button style="margin-top: 25px" @click="fetchArticles">
       Fetch Articles
     </button>
@@ -20,13 +23,37 @@
       Log User
     </button>
     <div style="margin-top: 25px">
-      <img :src="img(fileId, { width: 300, height: 300, fit: 'cover' })" alt="square thumbnail">
+      <img
+        :src="img(fileId, { width: 300, height: 300, fit: 'cover' })"
+        alt="square thumbnail"
+      >
       <img :src="img(fileId, { width: 300, format: 'webp' })" alt="webp">
+    </div>
+
+    <div>
+      <!-- User Composable Tests -->
+      <button :disabled="(createdUserId !== '')" style="margin-top: 25px" @click="createUser">
+        Create User
+      </button>
+      <button :disabled="!(createdUserId !== '')" style="margin-top: 25px" @click="updateCreatedUser">
+        Update User
+      </button>
+      <button :disabled="!(createdUserId !== '')" style="margin-top: 25px" @click="fetchSingleUser">
+        Fetch Single User
+      </button>
+      <button :disabled="!(createdUserId !== '')" style="margin-top: 25px" @click="deleteUser">
+        Delete User
+      </button>
+      <button style="margin-top: 25px" @click="fetchAllUsers">
+        Fetch All Users
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { DirectusUserRequest, DirectusUserUpdate } from '../src/runtime/types'
+
 const { login } = useDirectusAuth()
 const user = useDirectusUser()
 const { getItems, getItemById, createItems, deleteItems } = useDirectusItems()
@@ -35,6 +62,14 @@ const router = useRouter()
 const fileId = 'da8e7c7b-d115-40cd-a88c-d4aedd7eea6c'
 const { getThumbnail: img } = useDirectusFiles()
 
+const {
+  createUsers,
+  deleteUsers,
+  getUserById,
+  getUsers,
+  updateUser
+} = useDirectusUsers()
+
 interface Article {
   id?: string | number;
   title: string;
@@ -42,11 +77,13 @@ interface Article {
   status: string;
 }
 
+let articleIds: (string | number | undefined)[] = []
+
 const onSubmit = async () => {
   try {
     await login({
-      email: 'testuser@gmail.com',
-      password: 'test123'
+      email: 'admin@example.com',
+      password: 'CUUpF9TkMg3o'
     })
 
     router.push('/authenticated-page')
@@ -59,7 +96,7 @@ const logUser = async () => {
   try {
     console.log(user)
     console.log(user.value.email)
-  } catch (e) { }
+  } catch (e) {}
 }
 
 const createArticles = async () => {
@@ -76,31 +113,36 @@ const createArticles = async () => {
         status: 'published'
       }
     ]
-    await createItems<Article>({ collection: 'News', items })
-  } catch (e) { }
+    const articles = await createItems<Article>({ collection: 'Articles', items })
+    articleIds = articles.map(article => article.id)
+  } catch (e) {}
 }
 
 const deleteArticles = async () => {
   try {
-    const items = [
-      'c7480ee3-4be1-4562-87af-9dfa692a56bb',
-      'a2f6b5e7-b151-42a1-9d9b-b6ccf1ae87ff'
-    ]
-    await deleteItems({ collection: 'News', items })
-  } catch (e) { }
+    await deleteItems({ collection: 'Articles', items: articleIds })
+  } catch (e) {}
 }
 
 const fetchArticles = async () => {
   try {
-    const filters = { content: 'yyeeet', title: 'Test1' }
-    const items = await getItemById<Article>({
-      collection: 'News',
-      id: '4776864a-75ee-4746-9ef4-bd5c2e38cc66'
+    const items = await getItems<Article>({
+      collection: 'Articles'
     })
     console.log(items)
 
     router.push('/d')
-  } catch (e) { }
+  } catch (e) {}
+}
+
+const fetchSingleArticle = async () => {
+  try {
+    const items = await getItemById<Article>({
+      collection: 'Articles',
+      id: articleIds[0]
+    })
+    console.log(items)
+  } catch (e) {}
 }
 
 const fetchCollections = async () => {
@@ -109,6 +151,68 @@ const fetchCollections = async () => {
     console.log(collections)
 
     router.push('/d')
-  } catch (e) { }
+  } catch (e) {}
 }
+
+// User Composable Tests
+
+interface User {
+  id?: string | number;
+  email: string;
+  password: string;
+  first_name: string;
+  last_name: string;
+  status: string;
+}
+
+const createdUserId = ref('')
+
+const createUser = async () => {
+  const userResponse = await createUsers<User>({
+    users: [
+      {
+        email: 'abraham@lincoln.gov',
+        password: 'password',
+        first_name: 'Abraham',
+        last_name: 'Lincoln'
+      }
+    ]
+  })
+  console.log(userResponse)
+  createdUserId.value = (userResponse as User[])[0].id as string
+}
+
+const updateCreatedUser = async () => {
+  const request: DirectusUserUpdate = {
+    id: createdUserId.value,
+    user: {
+      first_name: 'John'
+    }
+  }
+
+  const userResponse = await updateUser<User>(request)
+  console.log(userResponse)
+}
+
+const fetchSingleUser = async () => {
+  const request: DirectusUserRequest = {
+    id: createdUserId.value
+  }
+
+  const userResponse = await getUserById<User>(request)
+  console.log(userResponse)
+}
+
+const deleteUser = async () => {
+  try {
+    await deleteUsers({ users: [createdUserId.value] })
+    createdUserId.value = ''
+  } catch (e) { console.error(e) }
+}
+
+const fetchAllUsers = async () => {
+  const userResponse = await getUsers<User>()
+  console.log(userResponse)
+}
+
 </script>

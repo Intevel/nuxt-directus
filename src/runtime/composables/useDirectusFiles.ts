@@ -1,3 +1,4 @@
+import { useRuntimeConfig } from '#app'
 import {
   DirectusThumbnailOptions,
   DirectusItemRequest,
@@ -6,7 +7,6 @@ import {
 import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectus } from './useDirectus'
 import { useDirectusToken } from './useDirectusToken'
-import { useRuntimeConfig } from '#app'
 
 export const useDirectusFiles = () => {
   const config = useRuntimeConfig()
