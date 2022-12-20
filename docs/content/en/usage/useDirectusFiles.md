@@ -13,7 +13,7 @@ Search for files, [`global search querys`](https://docs.directus.io/reference/qu
 
 - **Arguments:**
 
-  - data: [`DirectusFileRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L78)
+  - data: [`DirectusFileRequest`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L81)
 
 - **Returns:** `Array<T>`
 
@@ -36,12 +36,12 @@ const fetchFiles = async () => {
 ### `getThumbnail`
 
 Generate image url from file id  
-Directus will generate the image with the given [`parameters`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L61) on the server and deliver you an optimized image
+Directus will generate the image with the given [`parameters`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L64) on the server and deliver you an optimized image
 
 - **Arguments:**
 
   - fileId: `String`
-  - options: [`DirectusThumbnailOptions`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L61)
+  - options: [`DirectusThumbnailOptions`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L64)
 
 - **Returns:** `String`
 

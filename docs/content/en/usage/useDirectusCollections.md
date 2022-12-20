@@ -34,7 +34,7 @@ Retrieve a specific collection by [`name`](https://docs.directus.io/reference/sy
 
 - **Arguments:**
 
-  - data: [`DirectusCollectionRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L95)
+  - data: [`DirectusCollectionRequest`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L98)
 
 - **Returns:** `<T>`
 
@@ -56,7 +56,7 @@ Create a new collection.
 
 - **Arguments:**
 
-  - data: [`DirectusCollectionCreation`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#122)
+  - data: [`DirectusCollectionCreation`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#125)
 
 - **Returns:** `<T>`
 
@@ -83,7 +83,7 @@ Delete a specific collection
 
 - **Arguments:**
 
-  - data: [`DirectusCollectionRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#95)
+  - data: [`DirectusCollectionRequest`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#98)
 
 - **Returns:** `Empty body`
 
@@ -105,7 +105,7 @@ Update collection metadata. _Note: only meta data is updatable._
 
 - **Arguments:**
 
-  - data: [`DirectusCollectionUpdate`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#131)
+  - data: [`DirectusCollectionUpdate`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#134)
 
 - **Returns:** `<T>`
 

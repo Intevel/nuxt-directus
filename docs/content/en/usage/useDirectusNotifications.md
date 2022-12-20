@@ -13,7 +13,7 @@ Search for notifications, [`global search querys`](https://docs.directus.io/refe
 
 - **Arguments:**
 
-  - data: [`params`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L47)
+  - data: [`params`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L29)
 
 - **Returns:** `Array<T>`
 
@@ -36,7 +36,7 @@ Get notifications by primary id key.
 
 - **Arguments:**
 
-  - data: [`id, params`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L47)
+  - data: [`id, params`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L29)
 
 - **Returns:** `Object<T>`
 
@@ -58,9 +58,9 @@ _Partial notification object can be provided_
 
 - **Arguments:**
 
-  - data: [`DirectusNotificationObject`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#83)
+  - data: [`DirectusNotificationObject`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#86)
 
-- **Returns:** [`DirectusNotificationObject`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#83)
+- **Returns:** [`DirectusNotificationObject`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#86)
 
 ```vue [pages/notifications.vue]
 <script setup lang="ts">

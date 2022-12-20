@@ -12,8 +12,8 @@ category: "Usage"
 Authentication is submitted with email and password of the user to the given directus server. Sets [`user`](/usage/useDirectusUser) and [`token`](/usage/useDirectusToken).
 
 - **Arguments:**
-  - data: [`DirectusAuthCredentials`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L3)
-- **Returns:** [`Promise<DirectusAuthResponse>`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L9)
+  - data: [`DirectusAuthCredentials`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L3)
+- **Returns:** [`Promise<DirectusAuthResponse>`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L9)
 
 ```vue [pages/login.vue]
 <script setup lang="ts">
@@ -47,7 +47,7 @@ const onSubmit = async () => {
 Create a new Directus user, can also be used as `register()`. **Email and password are required**, partial user object is given.
 
 - **Arguments:**
-  - data: [`DirectusRegisterCredentials`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L70)
+  - data: [`DirectusRegisterCredentials`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L74)
 - **Returns:** [`Promise<DirectusUser>`](https://docs.directus.io/reference/system/users/#the-user-object)
 
 ```vue [pages/register.vue]
@@ -68,7 +68,7 @@ const onSubmit = async () => {
 Password Request is submitted with email of the user to the given directus server.
 
 - **Arguments:**
-  - data: [`DirectusPasswordForgotCredentials`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L16)
+  - data: [`DirectusPasswordForgotCredentials`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L16)
 - **Returns:** `Promise<void>`
 
 ```vue
@@ -89,7 +89,7 @@ const onSubmit = async () => {
 Password reset is submitted with token of reset email & the new password to the given directus server.
 
 - **Arguments:**
-  - data: [`DirectusPasswordResetCredentials`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L21)
+  - data: [`DirectusPasswordResetCredentials`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L21)
 - **Returns:** `Promise<void>`
 
 ```vue
