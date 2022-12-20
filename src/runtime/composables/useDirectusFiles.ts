@@ -41,6 +41,7 @@ export const useDirectusFiles = () => {
       if (options.withoutEnlargement) { url.searchParams.append('withoutEnlargement', 'true') }
       if (options.fit) { url.searchParams.append('fit', options.fit) }
       if (options.format) { url.searchParams.append('format', options.format) }
+      if (options.key) { url.searchParams.append('key', options.key) }
     }
     if (token && token.value) {
       url.searchParams.append('access_token', token.value)
