@@ -9,7 +9,7 @@ category: "Usage"
 
 ### `login`
 
-Authentication is submitted with email and password of the user to the given directus server. Sets [`user`](/usage/useDirectusUser) and [`token`](/usage#useDirectusToken).
+Authentication is submitted with email and password of the user to the given directus server. Sets [`user`](/usage/useDirectusUser) and [`token`](/usage/useDirectusToken).
 
 - **Arguments:**
   - data: [`DirectusAuthCredentials`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L3)
@@ -30,7 +30,7 @@ const onSubmit = async () => {
 
 ### `logout`
 
-Reset [`user`](/usage/useDirectusUser) and [`token`](/usage#useDirectusToken).
+Reset [`user`](/usage/useDirectusUser) and [`token`](/usage/useDirectusToken).
 
 ```vue [pages/home.vue]
 <script setup lang="ts">
