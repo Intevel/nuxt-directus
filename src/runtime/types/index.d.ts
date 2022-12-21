@@ -68,6 +68,7 @@ export interface DirectusThumbnailOptions {
   fit?: DirectusThumbnailFit;
   format?: DirectusThumbnailFormat;
   withoutEnlargement?: boolean;
+  key?: string;
 }
 
 export interface DirectusRegisterCredentials {

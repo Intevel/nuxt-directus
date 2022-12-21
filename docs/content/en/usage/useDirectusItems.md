@@ -13,7 +13,7 @@ Search for items in a specific collection, [`global search querys`](https://docs
 
 - **Arguments:**
 
-  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
+  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L39)
 
 - **Returns:** `Array<T>`
 
@@ -49,7 +49,7 @@ Get object from Singleton marked collection
 
 - **Arguments:**
 
-  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
+  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L39)
 
 - **Returns:** `Object<T>`
 
@@ -78,7 +78,7 @@ Search for an item by id in a specific collection
 
 - **Arguments:**
 
-  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#L26)
+  - data: [`DirectusItemRequest`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L39)
 
 - **Returns:** `Array`
 
@@ -105,7 +105,7 @@ _Items don't have a pre-defined schema. The format depends completely on how you
 
 - **Arguments:**
 
-  - data: [`DirectusItemCreation`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#32)
+  - data: [`DirectusItemCreation`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#45)
 
 - **Returns:** `Array<T>`
 
@@ -146,7 +146,7 @@ Delete one or multiple items in a specific collection
 
 - **Arguments:**
 
-  - data: [`DirectusItemDeletion`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#42)
+  - data: [`DirectusItemDeletion`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#55)
 
 - **Returns:** `Empty body`
 
@@ -169,7 +169,7 @@ Update item in a specific collection
 
 - **Arguments:**
 
-  - data: [`DirectusItemUpdate`](https://github.com/Intevel/nuxt-directus/blob/master/src/runtime/types/index.d.ts#37)
+  - data: [`DirectusItemUpdate`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#50)
 
 - **Returns:** `Array<T>`
 
