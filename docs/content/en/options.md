@@ -17,7 +17,7 @@ export default {
 };
 ```
 
-You can also set Enviroment variable `DIRECTUS_URL` to override `url`
+You can also set Environment variable `DIRECTUS_URL` to override `url`
 
 ### `token`
 
