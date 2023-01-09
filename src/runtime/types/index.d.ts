@@ -57,6 +57,25 @@ export interface DirectusItemDeletion {
   items: Array<string> | string;
 }
 
+// User Interfaces
+export interface DirectusUserRequest {
+  id?: string;
+  params?: DirectusQueryParams;
+}
+
+export interface DirectusUserCreation {
+  users: Array<Object> | Object;
+}
+
+export interface DirectusUserUpdate {
+  id: string;
+  user: Object;
+}
+
+export interface DirectusUserDeletion {
+  users: Array<string> | string;
+}
+
 export type DirectusThumbnailFormat = 'jpg' | 'png' | 'webp' | 'tiff';
 
 export type DirectusThumbnailFit = 'cover' | 'contain' | 'inside' | 'outside';

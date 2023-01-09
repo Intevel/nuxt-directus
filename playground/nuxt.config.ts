@@ -3,6 +3,6 @@ import NuxtDirectus from '..'
 export default defineNuxtConfig({
   modules: [NuxtDirectus],
   directus: {
-    url: '-'
+    url: 'http://localhost:8055/'
   }
 })
