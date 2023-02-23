@@ -28,7 +28,7 @@ export const useDirectusAuth = () => {
     user.value = value
   }
 
-  const fetchUser = async (): Promise<Ref<DirectusUser>> => {
+  const fetchUser = async (useStaticToken?: boolean): Promise<Ref<DirectusUser>> => {
     if (token.value) {
       try {
         if (config.directus.fetchUserParams?.filter) {
@@ -44,10 +44,10 @@ export const useDirectusAuth = () => {
         if (config.directus.fetchUserParams) {
           const res = await directus<{ data: DirectusUser }>('/users/me', {
             params: config.directus.fetchUserParams
-          })
+          }, useStaticToken)
           setUser(res.data)
         } else {
-          const res = await directus<{ data: DirectusUser }>('/users/me')
+          const res = await directus<{ data: DirectusUser }>('/users/me', useStaticToken)
           setUser(res.data)
         }
       } catch (e) {
@@ -58,7 +58,8 @@ export const useDirectusAuth = () => {
   }
 
   const login = async (
-    data: DirectusAuthCredentials
+    data: DirectusAuthCredentials,
+    useStaticToken?: boolean
   ): Promise<DirectusAuthResponse> => {
     setToken(null)
 
@@ -67,7 +68,8 @@ export const useDirectusAuth = () => {
       {
         method: 'POST',
         body: data
-      }
+      },
+      useStaticToken
     )
 
     if (!response.data.access_token) { throw new Error('Login failed, please check your credentials.') }
@@ -83,12 +85,13 @@ export const useDirectusAuth = () => {
   }
 
   const createUser = async (
-    data: DirectusRegisterCredentials
+    data: DirectusRegisterCredentials,
+    useStaticToken?: boolean
   ): Promise<DirectusUser> => {
     return await directus('/users', {
       method: 'POST',
       body: data
-    })
+    }, useStaticToken)
   }
 
   // Alias for createUser
@@ -100,21 +103,23 @@ export const useDirectusAuth = () => {
   }
 
   const requestPasswordReset = async (
-    data: DirectusPasswordForgotCredentials
+    data: DirectusPasswordForgotCredentials,
+    useStaticToken?: boolean
   ): Promise<void> => {
     await directus('/auth/password/request', {
       method: 'POST',
       body: data
-    })
+    }, useStaticToken)
   }
 
   const resetPassword = async (
-    data: DirectusPasswordResetCredentials
+    data: DirectusPasswordResetCredentials,
+    useStaticToken?: boolean
   ): Promise<void> => {
     await directus('/auth/password/reset', {
       method: 'POST',
       body: data
-    })
+    }, useStaticToken)
   }
 
   const logout = async (): Promise<void> => {
