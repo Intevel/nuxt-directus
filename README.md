@@ -5,17 +5,16 @@
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
 [![Github Actions CI][github-actions-ci-src]][github-actions-ci-href]
-[![Codecov][codecov-src]][codecov-href]
 [![License][license-src]][license-href]
 
-> Directus Module for [Nuxt 3](https://v3.nuxtjs.org)
+> Directus Module for [Nuxt](https://nuxt.com/)
 
 - [✨ &nbsp;Release Notes](https://github.com/intevel/nuxt-directus/releases)
 - [📖 &nbsp;Read the documentation](https://nuxt-directus.netlify.app/)
 
 ## Features
 
-- Nuxt3 ready
+- Nuxt 3 ready
 - Handle authentication
 - RESTful methods
 - TypeScript Support
@@ -43,9 +42,9 @@ export default {
 ## Development
 
 1. Clone this repository
-2. Install dependencies using `yarn install` or `npm install`
-3. Run `yarn dev:prepare` or `npm run dev:prepare`
-4. Start development server using `yarn dev` or `npm run dev`
+2. Install dependencies using `pnpm install` or `npm install`
+3. Run `pnpm dev:prepare` or `npm run dev:prepare`
+4. Start development server using `pnpm dev` or `npm run dev`
 
 ## License
 
@@ -60,7 +59,5 @@ Copyright (c) 2022 Conner Luka Bachmann
 [npm-downloads-href]: https://npmjs.com/package/nuxt-directus
 [github-actions-ci-src]: https://github.com/intevel/nuxt-directus/actions/workflows/ci.yml/badge.svg
 [github-actions-ci-href]: https://github.com/intevel/nuxt-directus/actions?query=workflow%3Aci
-[codecov-src]: https://img.shields.io/codecov/c/github/intevel/nuxt-directus.svg
-[codecov-href]: https://codecov.io/gh/intevel/nuxt-directus
 [license-src]: https://img.shields.io/npm/l/nuxt-directus.svg
 [license-href]: https://npmjs.com/package/nuxt-directus
