@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v4.0.0
+
+
+### 🚀 Enhancements
+
+  - Ability to pass custom image transformation presets and various docs fixes (#93)
+  - Rendering section added to options.md (#96)
+  - UseDirectusUsers composables to access built-in Users collection (#87)
+  - ⚠️  Switch to pnpm, maintenance, removed directus graphql composable (45e2e04)
+  - UseStaticToken options (6c17719)
+
+#### ⚠️  Breaking Changes
+
+  - ⚠️  Switch to pnpm, maintenance, removed directus graphql composable (45e2e04)
+
+### ❤️  Contributors
+
+- Conner Bachmann ([@Intevel](http://github.com/Intevel))
+- Dochoss <boclifton@gmail.com>
+- Marian Klühspies <marianklueh@gmail.com>
+- Sandros94
+
 ### [3.2.2](https://github.com/intevel/nuxt-directus/compare/v3.2.1...v3.2.2) (2022-11-17)
 
 ### [3.2.1](https://github.com/intevel/nuxt-directus/compare/v3.2.0...v3.2.1) (2022-11-07)
