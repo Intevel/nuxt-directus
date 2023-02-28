@@ -1,5 +1,26 @@
-export type DirectusUser = object | null;
-
+export type DirectusUser = {
+  auth_data?: unknown | null;
+  description?: string | null;
+  email?: string | null;
+  email_notifications?: boolean | null;
+  external_identifier?: string | null;
+  first_name?: string | null;
+  id: string;
+  language?: string | null;
+  last_access?: string | null;
+  last_name?: string | null;
+  last_page?: string | null;
+  location?: string | null;
+  password?: string | null;
+  provider: string;
+  status: string;
+  tags?: unknown | null;
+  tfa_secret?: string | null;
+  theme?: string | null;
+  title?: string | null;
+  token?: string | null;
+  [key: string]: any;
+} | null;
 export interface DirectusAuthCredentials {
   email: string;
   password: string;
@@ -95,7 +116,36 @@ export interface DirectusRegisterCredentials {
   password: string;
 }
 
-export type DirectusFile = object | null;
+export type DirectusFile = {
+  charset?: string | null;
+  description?: string | null;
+  duration?: number | null;
+  embed?: string | null;
+  filename_disk?: string | null;
+  filename_download: string;
+  filesize?: number | null;
+  folder?: string | DirectusFolders | null;
+  height?: number | null;
+  id: string;
+  location?: string | null;
+  metadata?: unknown | null;
+  modified_by?: string | DirectusUser | null;
+  modified_on: string;
+  storage: string;
+  tags?: unknown | null;
+  title?: string | null;
+  type?: string | null;
+  uploaded_by?: string | DirectusUser | null;
+  uploaded_on: string;
+  width?: number | null;
+  [key: string]: any;
+} | null;
+
+export type DirectusFolders = {
+  id: string;
+  name: string;
+  parent?: string | DirectusFolders | null;
+};
 
 export interface DirectusFileRequest {
   id?: string;
