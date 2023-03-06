@@ -84,6 +84,32 @@ export const useDirectusAuth = () => {
     }
   }
 
+  const refresh = async (
+  ): Promise<DirectusAuthResponse> => {
+    setToken(null)
+
+    const response: { data: DirectusAuthResponse } = await directus(
+      '/auth/refresh',
+      {
+        method: 'POST',
+        body: {
+          mode: 'json'
+        }
+      }
+    )
+
+    if (!response.data.access_token) { throw new Error('Login failed, you need to be connected.') }
+    setToken(response.data.access_token)
+
+    const user = await fetchUser()
+
+    return {
+      user,
+      access_token: response.data.access_token,
+      expires: response.data.expires
+    }
+  }
+
   const createUser = async (
     data: DirectusRegisterCredentials,
     useStaticToken?: boolean
@@ -134,6 +160,7 @@ export const useDirectusAuth = () => {
     setUser,
     fetchUser,
     login,
+    refresh,
     requestPasswordReset,
     resetPassword,
     logout,

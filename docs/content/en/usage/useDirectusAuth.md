@@ -28,6 +28,22 @@ const onSubmit = async () => {
 </script>
 ```
 
+### `refresh`
+
+Retrieve token after SSO login. Sets [`user`](/usage/useDirectusUser) and [`token`](/usage/useDirectusToken).
+
+- **Returns:** [`Promise<DirectusAuthResponse>`](https://github.com/Intevel/nuxt-directus/blob/main/src/runtime/types/index.d.ts#L9)
+
+```vue
+<script setup lang="ts">
+const { refresh } = useDirectusAuth();
+
+try {
+  await refresh();
+} catch (e) {}
+</script>
+```
+
 ### `logout`
 
 Reset [`user`](/usage/useDirectusUser) and [`token`](/usage/useDirectusToken).
