@@ -4,6 +4,15 @@
     <button style="margin-top: 25px" @click="onSubmit">
       Login with Directus
     </button>
+    <label for="provider">Provider
+      <input id="provider" v-model="provider" type="text" name="provider">
+    </label>
+    <a :href="provider ? SSOAuth : null" :title="provider ? '' : 'Add a provider'">
+      SSO Login
+    </a>
+    <button style="margin-top: 25px" @click="refresh">
+      Get Token after SSO Login
+    </button>
     <button style="margin-top: 25px" @click="fetchSingleArticle">
       Fetch Single Article
     </button>
@@ -54,13 +63,15 @@
 <script setup lang="ts">
 import { DirectusUserRequest, DirectusUserUpdate } from '../src/runtime/types'
 
-const { login } = useDirectusAuth()
+const { login, refresh } = useDirectusAuth()
+const url = useDirectusUrl()
 const user = useDirectusUser()
 const { getItems, getItemById, createItems, deleteItems } = useDirectusItems()
 const { getCollections } = useDirectusCollections()
 const router = useRouter()
 const fileId = 'da8e7c7b-d115-40cd-a88c-d4aedd7eea6c'
 const { getThumbnail: img } = useDirectusFiles()
+const token = useDirectusToken()
 
 const {
   createUsers,
@@ -91,6 +102,10 @@ const onSubmit = async () => {
     console.log(e.data)
   }
 }
+
+const provider = ref('')
+
+const SSOAuth = computed(() => `${url}auth/login/${provider.value}?redirect=http://localhost:3000`)
 
 const logUser = async () => {
   try {
