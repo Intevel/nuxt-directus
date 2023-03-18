@@ -1,5 +1,5 @@
 import type { FetchOptions } from 'ohmyfetch'
-import { useRuntimeConfig } from '#app'
+import { useRuntimeConfig, showError } from '#app'
 import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectusToken } from './useDirectusToken'
 
@@ -27,12 +27,21 @@ export const useDirectus = () => {
         ...fetchOptions,
         headers: {
           ...headers,
-          ...fetchOptions.headers
-        }
-      })
+          ...fetchOptions.headers,
+        },
+
+        onResponseError({ response, request }) {
+          showError({
+            statusCode: response.status,
+            statusMessage: response.statusText,
+          });
+        },
+      });
     } catch (err: any) {
-      console.error('[Directus Error]: ' + err)
-      throw err
+      if (process.dev) {
+        console.error("[Directus Error]: " + err);
+        throw err;
+      }
     }
   }
 }
