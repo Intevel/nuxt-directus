@@ -1,5 +1,6 @@
 import { useCookie, useNuxtApp, CookieRef } from '#app'
 import { DirectusAuthResponse } from '../types'
+import { useDirectusUrl } from './useDirectusUrl'
 
 export const useDirectusToken = () => {
   const nuxtApp = useNuxtApp()
