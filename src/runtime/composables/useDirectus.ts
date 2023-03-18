@@ -6,7 +6,7 @@ import { useDirectusToken } from './useDirectusToken'
 export const useDirectus = () => {
   const baseURL = useDirectusUrl()
   const config = useRuntimeConfig()
-  const token = useDirectusToken()
+  const { token } = useDirectusToken()
 
   return async <T>(
     url: string,
@@ -27,20 +27,20 @@ export const useDirectus = () => {
         ...fetchOptions,
         headers: {
           ...headers,
-          ...fetchOptions.headers,
+          ...fetchOptions.headers
         },
 
-        onResponseError({ response, request }) {
+        onResponseError ({ response, request }) {
           showError({
             statusCode: response.status,
-            statusMessage: response.statusText,
-          });
-        },
-      });
+            statusMessage: response.statusText
+          })
+        }
+      })
     } catch (err: any) {
       if (process.dev) {
-        console.error("[Directus Error]: " + err);
-        throw err;
+        console.error('[Directus Error]: ' + err)
+        throw err
       }
     }
   }

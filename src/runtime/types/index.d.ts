@@ -31,7 +31,7 @@ export interface DirectusAuthResponse {
   user: DirectusUser;
   access_token: string;
   expires: number;
-  refresh_token?: string;
+  refresh_token: string;
 }
 
 export interface DirectusPasswordForgotCredentials {

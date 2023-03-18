@@ -18,10 +18,17 @@ export const useDirectusAuth = () => {
   const config = useRuntimeConfig()
   const directus = useDirectus()
   const user = useDirectusUser()
-  const token = useDirectusToken()
+  const { token, refreshToken, expires } = useDirectusToken()
 
-  const setToken = (value: string | null) => {
+  const setToken = (value: string | null, _refreshToken?: string | null, _expires?: number | null) => {
     token.value = value
+
+    if (_refreshToken) {
+      refreshToken.value = _refreshToken
+      if (_expires) {
+        expires.value = _expires
+      }
+    }
   }
 
   const setUser = (value: DirectusUser) => {
@@ -73,7 +80,7 @@ export const useDirectusAuth = () => {
     )
 
     if (!response.data.access_token) { throw new Error('Login failed, please check your credentials.') }
-    setToken(response.data.access_token)
+    setToken(response.data.access_token, response.data.refresh_token, response.data.expires)
 
     const user = await fetchUser()
 
@@ -123,8 +130,11 @@ export const useDirectusAuth = () => {
   }
 
   const logout = async (): Promise<void> => {
-    // https://docs.directus.io/reference/authentication/#logout todo: implement this
-    setToken(null)
+    await directus('/auth/logout', {
+      method: 'POST',
+      body: { refresh_token: refreshToken.value }
+    })
+    setToken(null, null, null)
     setUser(null)
     await fetchUser()
   }
