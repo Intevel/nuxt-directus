@@ -2,6 +2,33 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.1.0
+
+
+### 🚀 Enhancements
+
+  - Changelog (313a5a2)
+  - Add types for DirectusUser, DirectusFile and DirectusFolders (#113)
+  - Improved error management (#120)
+  - Add refresh token support (2898e0e)
+
+### 🩹 Fixes
+
+  - **chore:** Release command (f6e02fb)
+  - **chore:** Add push arg to changelogen (5fbda08)
+
+### 🏡 Chore
+
+  - **readme:** Small improvements (#117)
+  - **readme:** Update banner (94b6900)
+
+### ❤️  Contributors
+
+- Conner Bachmann ([@Intevel](http://github.com/Intevel))
+- Matt 
+- Conner ([@Intevel](http://github.com/Intevel))
+- Sébastien Chopin <seb@nuxtlabs.com>
+
 ## v5.0.0
 
 
