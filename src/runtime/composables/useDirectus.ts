@@ -31,12 +31,9 @@ export const useDirectus = () => {
         },
 
         onResponseError({ response, request }) {
-          let message = response.statusText;
-          let httpCode = response.status;
-
           showError({
-            statusCode: httpCode,
-            statusMessage: message,
+            statusCode: response.status,
+            statusMessage: response.statusText,
           });
         },
       });
