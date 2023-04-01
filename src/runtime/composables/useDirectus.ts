@@ -1,5 +1,5 @@
 import type { FetchOptions } from "ohmyfetch";
-import { useRuntimeConfig, createError, createError } from "#app";
+import { useRuntimeConfig, createError } from "#app";
 import { useDirectusUrl } from "./useDirectusUrl";
 import { useDirectusToken } from "./useDirectusToken";
 
