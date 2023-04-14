@@ -17,8 +17,8 @@ export const useDirectus = () => {
 
     if (token && token.value) {
       headers.Authorization = `Bearer ${token.value}`;
-    } else if (config.directus.token && useStaticToken) {
-      headers.Authorization = `Bearer ${config.directus.token}`;
+    } else if (config.public.directus.token && useStaticToken) {
+      headers.Authorization = `Bearer ${config.public.directus.token}`;
     }
 
     try {
