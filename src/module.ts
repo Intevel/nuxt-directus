@@ -57,7 +57,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Nuxt 3
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
-    nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.directus, {
+    nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus, {
       url: options.url,
       autoFetch: options.autoFetch,
       fetchUserParams: options.fetchUserParams,
