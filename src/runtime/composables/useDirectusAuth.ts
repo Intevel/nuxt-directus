@@ -38,19 +38,19 @@ export const useDirectusAuth = () => {
   const fetchUser = async (useStaticToken?: boolean): Promise<Ref<DirectusUser>> => {
     if (token.value) {
       try {
-        if (config.directus.fetchUserParams?.filter) {
-          (config.directus.fetchUserParams.filter as unknown) = JSON.stringify(
-            config.directus.fetchUserParams.filter
+        if (config.public.directus.fetchUserParams?.filter) {
+          (config.public.directus.fetchUserParams.filter as unknown) = JSON.stringify(
+            config.public.directus.fetchUserParams.filter
           )
         }
-        if (config.directus.fetchUserParams?.deep) {
-          (config.directus.fetchUserParams.deep as unknown) = JSON.stringify(
-            config.directus.fetchUserParams.deep
+        if (config.public.directus.fetchUserParams?.deep) {
+          (config.public.directus.fetchUserParams.deep as unknown) = JSON.stringify(
+            config.public.directus.fetchUserParams.deep
           )
         }
-        if (config.directus.fetchUserParams) {
+        if (config.public.directus.fetchUserParams) {
           const res = await directus<{ data: DirectusUser }>('/users/me', {
-            params: config.directus.fetchUserParams
+            params: config.public.directus.fetchUserParams
           }, useStaticToken)
           setUser(res.data)
         } else {

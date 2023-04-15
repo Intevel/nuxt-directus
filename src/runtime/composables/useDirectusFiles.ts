@@ -45,8 +45,8 @@ export const useDirectusFiles = () => {
     }
     if (token && token.value) {
       url.searchParams.append('access_token', token.value)
-    } else if (config.directus.token) {
-      url.searchParams.append('access_token', config.directus.token)
+    } else if (config.public.directus.token) {
+      url.searchParams.append('access_token', config.public.directus.token)
     }
     return url.href
   }
