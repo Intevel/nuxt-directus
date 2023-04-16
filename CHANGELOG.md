@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.1.2
+
+
+### 🩹 Fixes
+
+  - Use createError instead of showError (#124)
+
+### ❤️  Contributors
+
+- Matt
+
 ## v5.1.1
 
 
