@@ -23,6 +23,11 @@ export const useDirectusAuth = () => {
   const setToken = (value: string | null, _refreshToken?: string | null, _expires?: number | null) => {
     token.value = value
 
+    if (value === null) {
+      expires.value = null
+      refreshToken.value = null
+    }
+
     if (_refreshToken) {
       refreshToken.value = _refreshToken
       if (_expires) {
