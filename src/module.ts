@@ -6,7 +6,7 @@ import { DirectusQueryParams } from './runtime/types'
 export interface ModuleOptions {
   /**
    * Directus API URL
-   * @default process.env.DIRECTUS_URL
+   * @default process.env.NUXT_DIRECTUS_URL
    * @type string
    */
   url?: string;
@@ -38,7 +38,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   defaults: {
-    url: process.env.DIRECTUS_URL,
+    url: process.env.NUXT_DIRECTUS_URL,
     autoFetch: true
   },
   setup (options, nuxt) {
