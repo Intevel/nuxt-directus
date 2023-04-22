@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.1.3
+
+
+### 🩹 Fixes
+
+  - Env variable is not used in production (87f1a5e)
+  - RefreshTokens is not reset after logout (35024ed)
+
+### ❤️  Contributors
+
+- Conner Bachmann ([@Intevel](http://github.com/Intevel))
+
 ## v5.1.2
 
 
