@@ -2,27 +2,29 @@ import {
   DirectusUserRequest,
   DirectusUserCreation,
   DirectusUserUpdate,
-  DirectusUserDeletion
+  DirectusUserDeletion,
+  Items,
+  DirectusUser
 } from '../types'
 import { useDirectus } from './useDirectus'
 
 export const useDirectusUsers = () => {
   const directus = useDirectus()
 
-  const getUsers = async <T>(data?: DirectusUserRequest): Promise<T> => {
+  const getUsers = async <T extends DirectusUser>(data?: DirectusUserRequest): Promise<Items<T> | T[]> => {
     if (data?.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter)
     }
     if (data?.params?.deep) {
       (data.params.deep as unknown) = JSON.stringify(data.params.deep)
     }
-    const users = await directus('/users', {
+    const users = await directus<Items<T>>('/users', {
       method: 'GET',
       params: data?.params
     })
 
     if (users?.meta) {
-      return { meta: users.meta, data: users.data }
+      return users
     } else {
       return users?.data
     }

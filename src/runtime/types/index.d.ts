@@ -214,3 +214,17 @@ export interface DirectusRevision {
   delta?: Object;
   parent?: any;
 }
+
+export interface ItemMetadata {
+  total_count?: number;
+  filter_count?: number;
+};
+
+export interface Items<T> {
+  data: NonNullable<T[]>;
+  meta?: ItemMetadata;
+};
+
+export interface Item<T> {
+  data: NonNullable<T>;
+};
