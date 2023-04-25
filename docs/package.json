@@ -1,18 +1,23 @@
 {
-  "name": "docs",
+  "name": "nuxt-directus-docs",
   "version": "1.0.0",
   "private": true,
+  "description": "Documentation of Nuxt Directus",
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate"
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "generate": "nuxi build",
+    "preview": "nuxi preview"
+  },
+  "author": "Conner Bachmann <github@conner-bachmann.de>",
+  "license": "MIT",
+  "devDependencies": {
+    "@nuxt-themes/docus": "^1.8.1",
+    "@nuxthq/studio": "^0.7.2",
+    "@types/uuid": "^9.0.1",
+    "nuxt": "^3.2.0"
   },
   "dependencies": {
-    "@nuxt/content-theme-docs": "^0.11.1",
-    "nuxt": "^2.15.8"
-  },
-  "devDependencies": {
-    "vue-plausible": "^1.3.2"
+    "uuid": "^9.0.0"
   }
 }
