@@ -1,0 +1,1 @@
+# New Directus Nuxt Module Docs
