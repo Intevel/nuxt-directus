@@ -26,6 +26,16 @@ export interface ModuleOptions {
    * @type string
    */
   token?: string;
+  /**
+   * Token Cookie Name
+   */
+  cookieNameToken?: string;
+  /**
+   * Refresh Token Cookie Name
+   * @type string
+   * @default 'directus_refresh_token'
+   */
+  cookieNameRefreshToken?: string;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -39,7 +49,9 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     url: process.env.NUXT_DIRECTUS_URL,
-    autoFetch: true
+    autoFetch: true,
+    cookieNameToken: 'directus_token',
+    cookieNameRefreshToken: 'directus_refresh_token'
   },
   setup (options, nuxt) {
     // Nuxt 2 / Bridge
@@ -50,7 +62,9 @@ export default defineNuxtModule<ModuleOptions>({
           url: options.url,
           autoFetch: options.autoFetch,
           fetchUserParams: options.fetchUserParams,
-          token: options.token
+          token: options.token,
+          cookieNameToken: options.cookieNameToken,
+          cookieNameRefreshToken: options.cookieNameRefreshToken
         }
       )
     }
@@ -61,7 +75,9 @@ export default defineNuxtModule<ModuleOptions>({
       url: options.url,
       autoFetch: options.autoFetch,
       fetchUserParams: options.fetchUserParams,
-      token: options.token
+      token: options.token,
+      cookieNameToken: options.cookieNameToken,
+      cookieNameRefreshToken: options.cookieNameRefreshToken
     })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))

@@ -5,26 +5,27 @@ import { useDirectusUrl } from './useDirectusUrl'
 export const useDirectusToken = () => {
   const nuxtApp = useNuxtApp()
   const baseUrl = useDirectusUrl()
+  const config = useRuntimeConfig().public
 
   const token = (): CookieRef<string | null> => {
     nuxtApp._cookies = nuxtApp._cookies || {}
-    if (nuxtApp._cookies.directus_token) {
-      return nuxtApp._cookies.directus_token
+    if (nuxtApp._cookies[config.directus.cookieNameToken]) {
+      return nuxtApp._cookies[config.directus.cookieNameToken]
     }
 
-    const cookie = useCookie<string | null>('directus_token')
-    nuxtApp._cookies.directus_token = cookie
+    const cookie = useCookie<string | null>(config.directus.cookieNameToken)
+    nuxtApp._cookies[config.directus.cookieNameToken] = cookie
     return cookie
   }
 
   const refreshToken = (): CookieRef<string | null> => {
     nuxtApp._cookies = nuxtApp._cookies || {}
-    if (nuxtApp._cookies.directus_refresh_token) {
-      return nuxtApp._cookies.directus_refresh_token
+    if (nuxtApp._cookies[config.directus.cookieNameRefreshToken]) {
+      return nuxtApp._cookies[config.directus.cookieNameRefreshToken]
     }
 
-    const cookie = useCookie<string | null>('directus_refresh_token')
-    nuxtApp._cookies.directus_refresh_token = cookie
+    const cookie = useCookie<string | null>(config.directus.cookieNameRefreshToken)
+    nuxtApp._cookies[config.directus.cookieNameRefreshToken] = cookie
     return cookie
   }
 
