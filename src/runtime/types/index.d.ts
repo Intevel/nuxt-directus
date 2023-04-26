@@ -215,16 +215,16 @@ export interface DirectusRevision {
   parent?: any;
 }
 
-export interface ItemMetadata {
+export interface DirectusItemMetadata {
   total_count?: number;
   filter_count?: number;
 };
 
-export interface Items<T> {
+export interface DirectusItems<T> {
   data: NonNullable<T[]>;
-  meta?: ItemMetadata;
+  meta?: DirectusItemMetadata;
 };
 
-export interface Item<T> {
+export interface DirectusItem<T> {
   data: NonNullable<T>;
 };
