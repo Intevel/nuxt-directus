@@ -12,7 +12,7 @@ export const useDirectusFiles = () => {
   const config = useRuntimeConfig()
   const directusUrl = useDirectusUrl()
   const directus = useDirectus()
-  const token = useDirectusToken()
+  const { token } = useDirectusToken()
 
   const getFiles = async <T>(data: DirectusFileRequest): Promise<T[]> => {
     if (data.params?.filter) {

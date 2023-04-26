@@ -59,7 +59,7 @@ export const useDirectusAuth = () => {
           }, useStaticToken)
           setUser(res.data)
         } else {
-          const res = await directus<{ data: DirectusUser }>('/users/me', useStaticToken)
+          const res = await directus<{ data: DirectusUser }>('/users/me', {}, useStaticToken)
           setUser(res.data)
         }
       } catch (e) {
@@ -90,9 +90,10 @@ export const useDirectusAuth = () => {
     const user = await fetchUser()
 
     return {
-      user,
+      user: user.value,
       access_token: response.data.access_token,
-      expires: response.data.expires
+      expires: response.data.expires,
+      refresh_token: response.data.refresh_token
     }
   }
 
