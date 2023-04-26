@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.2.0
+
+
+### 🚀 Enhancements
+
+  - Make auth cookie names configurable (6193e2e)
+  - Integrated directus admin dashboard to devtools (#138)
+
+### 🩹 Fixes
+
+  - Missing type & incorrect usage (bf04ac3)
+  - Linting (21f542d)
+  - Return response on Errors, fixed linting (ac5fd4e)
+
+### 📖 Documentation
+
+  - Add new documentation (#134)
+
+### ❤️  Contributors
+
+- Conner Bachmann ([@Intevel](http://github.com/Intevel))
+- Conner ([@Intevel](http://github.com/Intevel))
+
 ## v5.1.3
 
 
