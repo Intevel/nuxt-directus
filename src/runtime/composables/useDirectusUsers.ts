@@ -24,7 +24,7 @@ export const useDirectusUsers = () => {
     })
 
     if (users?.meta) {
-      return users
+      return { meta: users.meta, data: users.data }
     } else {
       return users?.data
     }
