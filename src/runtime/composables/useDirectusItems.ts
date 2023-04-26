@@ -3,22 +3,22 @@ import {
   DirectusItemCreation,
   DirectusItemDeletion,
   DirectusItemUpdate,
-  Items,
-  Item
+  DirectusItems,
+  DirectusItem
 } from '../types'
 import { useDirectus } from './useDirectus'
 
 export const useDirectusItems = () => {
   const directus = useDirectus()
 
-  const getItems = async <T>(data: DirectusItemRequest): Promise<Items<T> | T[]> => {
+  const getItems = async <T>(data: DirectusItemRequest): Promise<DirectusItems<T> | T[]> => {
     if (data.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter)
     }
     if (data.params?.deep) {
       (data.params.deep as unknown) = JSON.stringify(data.params.deep)
     }
-    const items = await directus<Items<T>>(`/items/${data.collection}`, {
+    const items = await directus<DirectusItems<T>>(`/items/${data.collection}`, {
       method: 'GET',
       params: data.params
     })
@@ -51,7 +51,7 @@ export const useDirectusItems = () => {
     if (data.params?.deep) {
       (data.params.deep as unknown) = JSON.stringify(data.params.deep)
     }
-    const items = await directus<Item<T>>(
+    const items = await directus<DirectusItem<T>>(
       `/items/${data.collection}/${data.id}`,
       {
         method: 'GET',
