@@ -22,13 +22,6 @@
     <button style="margin-top: 25px" @click="logUser">
       Log User
     </button>
-    <div style="margin-top: 25px">
-      <img
-        :src="img(fileId, { width: 300, height: 300, fit: 'cover' })"
-        alt="square thumbnail"
-      >
-      <img :src="img(fileId, { width: 300, format: 'webp' })" alt="webp">
-    </div>
 
     <div>
       <!-- User Composable Tests -->
@@ -59,8 +52,7 @@ const user = useDirectusUser()
 const { getItems, getItemById, createItems, deleteItems } = useDirectusItems()
 const { getCollections } = useDirectusCollections()
 const router = useRouter()
-const fileId = 'da8e7c7b-d115-40cd-a88c-d4aedd7eea6c'
-const { getThumbnail: img } = useDirectusFiles()
+const { token } = useDirectusToken()
 
 const {
   createUsers,
@@ -83,12 +75,12 @@ const onSubmit = async () => {
   try {
     await login({
       email: 'admin@example.com',
-      password: 'CUUpF9TkMg3o'
+      password: 'd1r3ctu5'
     })
 
     router.push('/authenticated-page')
   } catch (e) {
-    console.log(e.data)
+    console.log(e)
   }
 }
 

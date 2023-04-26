@@ -10,30 +10,24 @@ import type {
 } from '../types'
 import { useDirectus } from './useDirectus'
 import { useDirectusUser } from './useDirectusUser'
-import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectusToken } from './useDirectusToken'
 
 export const useDirectusAuth = () => {
-  const url = useDirectusUrl()
   const config = useRuntimeConfig()
   const directus = useDirectus()
   const user = useDirectusUser()
   const { token, refreshToken, expires } = useDirectusToken()
 
-  const setToken = (value: string | null, _refreshToken?: string | null, _expires?: number | null) => {
-    token.value = value
+  const setAuthCookies = (_token: string, _refreshToken: string, _expires: number) => {
+    token.value = _token
+    refreshToken.value = _refreshToken
+    expires.value = _expires
+  }
 
-    if (value === null) {
-      expires.value = null
-      refreshToken.value = null
-    }
-
-    if (_refreshToken) {
-      refreshToken.value = _refreshToken
-      if (_expires) {
-        expires.value = _expires
-      }
-    }
+  const removeTokens = () => {
+    token.value = null
+    expires.value = null
+    refreshToken.value = null
   }
 
   const setUser = (value: DirectusUser) => {
@@ -63,7 +57,7 @@ export const useDirectusAuth = () => {
           setUser(res.data)
         }
       } catch (e) {
-        setToken(null)
+        console.error("Couldn't fetch user", e)
       }
     }
     return user
@@ -73,7 +67,7 @@ export const useDirectusAuth = () => {
     data: DirectusAuthCredentials,
     useStaticToken?: boolean
   ): Promise<DirectusAuthResponse> => {
-    setToken(null)
+    removeTokens()
 
     const response: { data: DirectusAuthResponse } = await directus(
       '/auth/login',
@@ -85,7 +79,7 @@ export const useDirectusAuth = () => {
     )
 
     if (!response.data.access_token) { throw new Error('Login failed, please check your credentials.') }
-    setToken(response.data.access_token, response.data.refresh_token, response.data.expires)
+    setAuthCookies(response.data.access_token, response.data.refresh_token, response.data.expires)
 
     const user = await fetchUser()
 
@@ -140,13 +134,12 @@ export const useDirectusAuth = () => {
       method: 'POST',
       body: { refresh_token: refreshToken.value }
     })
-    setToken(null, null, null)
+    removeTokens()
     setUser(null)
     await fetchUser()
   }
 
   return {
-    setToken,
     setUser,
     fetchUser,
     login,
