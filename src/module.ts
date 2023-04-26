@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url'
 import { defu } from 'defu'
 import { defineNuxtModule, addPlugin, addImportsDir, isNuxt2 } from '@nuxt/kit'
 import { DirectusQueryParams } from './runtime/types'
+import { joinURL } from 'ufo'
+
 export interface ModuleOptions {
   /**
    * Directus API URL
@@ -26,6 +28,12 @@ export interface ModuleOptions {
    * @type string
    */
   token?: string;
+  /**
+   * Add Directus Admin Dashboard in Nuxt Devtools
+   *
+   * @default false
+   */
+  devtools?: boolean
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -39,7 +47,8 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     url: process.env.NUXT_DIRECTUS_URL,
-    autoFetch: true
+    autoFetch: true,
+    devtools: false
   },
   setup (options, nuxt) {
     // Nuxt 2 / Bridge
@@ -50,7 +59,8 @@ export default defineNuxtModule<ModuleOptions>({
           url: options.url,
           autoFetch: options.autoFetch,
           fetchUserParams: options.fetchUserParams,
-          token: options.token
+          token: options.token,
+          devtools: options.devtools
         }
       )
     }
@@ -61,7 +71,8 @@ export default defineNuxtModule<ModuleOptions>({
       url: options.url,
       autoFetch: options.autoFetch,
       fetchUserParams: options.fetchUserParams,
-      token: options.token
+      token: options.token,
+      devtools: options.devtools
     })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
@@ -69,6 +80,22 @@ export default defineNuxtModule<ModuleOptions>({
 
     addPlugin(resolve(runtimeDir, 'plugin'))
     addImportsDir(resolve(runtimeDir, 'composables'))
+
+    if (options.devtools) {
+      const adminUrl = joinURL(nuxt.options.runtimeConfig.public.directus.url, '/admin/')
+      // @ts-expect-error - private API
+      nuxt.hook('devtools:customTabs', (iframeTabs) => {
+        iframeTabs.push({
+          name: 'directus',
+          title: 'Directus',
+          icon: 'simple-icons:directus',
+          view: {
+            type: 'iframe',
+            src: adminUrl
+          }
+        })
+      })
+    }
   }
 })
 
