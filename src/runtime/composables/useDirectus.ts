@@ -1,4 +1,4 @@
-import type { FetchOptions } from "ohmyfetch";
+import type { NitroFetchOptions } from 'nitropack';
 import { useRuntimeConfig, createError } from "#app";
 import { useDirectusUrl } from "./useDirectusUrl";
 import { useDirectusToken } from "./useDirectusToken";
@@ -10,7 +10,7 @@ export const useDirectus = () => {
 
   return async <T>(
     url: string,
-    fetchOptions: FetchOptions = {},
+    fetchOptions: NitroFetchOptions<string> = {},
     useStaticToken = true
   ): Promise<T> => {
     const headers: HeadersInit = {};
