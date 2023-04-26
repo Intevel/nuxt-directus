@@ -24,7 +24,7 @@ export const useDirectusItems = () => {
     })
 
     if (items.meta) {
-      return items;
+      return items
     } else {
       return items.data
     }

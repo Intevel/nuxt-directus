@@ -2,8 +2,8 @@ import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { defu } from 'defu'
 import { defineNuxtModule, addPlugin, addImportsDir, isNuxt2 } from '@nuxt/kit'
-import { DirectusQueryParams } from './runtime/types'
 import { joinURL } from 'ufo'
+import { DirectusQueryParams } from './runtime/types'
 
 export interface ModuleOptions {
   /**
