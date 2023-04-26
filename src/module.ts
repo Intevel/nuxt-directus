@@ -3,6 +3,8 @@ import { fileURLToPath } from 'url'
 import { defu } from 'defu'
 import { defineNuxtModule, addPlugin, addImportsDir, isNuxt2 } from '@nuxt/kit'
 import { DirectusQueryParams } from './runtime/types'
+import { joinURL } from 'ufo'
+
 export interface ModuleOptions {
   /**
    * Directus API URL
@@ -27,7 +29,15 @@ export interface ModuleOptions {
    */
   token?: string;
   /**
+   * Add Directus Admin Dashboard in Nuxt Devtools
+   *
+   * @default false
+   */
+  devtools?: boolean
+  /**
    * Token Cookie Name
+   * @type string
+   @ default 'directus_token'
    */
   cookieNameToken?: string;
   /**
@@ -50,6 +60,7 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     url: process.env.NUXT_DIRECTUS_URL,
     autoFetch: true,
+    devtools: false,
     cookieNameToken: 'directus_token',
     cookieNameRefreshToken: 'directus_refresh_token'
   },
@@ -63,6 +74,7 @@ export default defineNuxtModule<ModuleOptions>({
           autoFetch: options.autoFetch,
           fetchUserParams: options.fetchUserParams,
           token: options.token,
+          devtools: options.devtools,
           cookieNameToken: options.cookieNameToken,
           cookieNameRefreshToken: options.cookieNameRefreshToken
         }
@@ -76,6 +88,7 @@ export default defineNuxtModule<ModuleOptions>({
       autoFetch: options.autoFetch,
       fetchUserParams: options.fetchUserParams,
       token: options.token,
+      devtools: options.devtools,
       cookieNameToken: options.cookieNameToken,
       cookieNameRefreshToken: options.cookieNameRefreshToken
     })
@@ -85,6 +98,22 @@ export default defineNuxtModule<ModuleOptions>({
 
     addPlugin(resolve(runtimeDir, 'plugin'))
     addImportsDir(resolve(runtimeDir, 'composables'))
+
+    if (options.devtools) {
+      const adminUrl = joinURL(nuxt.options.runtimeConfig.public.directus.url, '/admin/')
+      // @ts-expect-error - private API
+      nuxt.hook('devtools:customTabs', (iframeTabs) => {
+        iframeTabs.push({
+          name: 'directus',
+          title: 'Directus',
+          icon: 'simple-icons:directus',
+          view: {
+            type: 'iframe',
+            src: adminUrl
+          }
+        })
+      })
+    }
   }
 })
 

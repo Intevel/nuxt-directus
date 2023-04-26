@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "prepack": "nuxt-module-build",
-    "dev": "nuxi dev playground",
+    "dev": "nuxi dev playground PORT='3001'",
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "docs": "cd docs && pnpm dev",
@@ -36,13 +36,15 @@
     "@nuxt/kit": "^3.0.0"
   },
   "devDependencies": {
+    "@nuxt/devtools": "^0.4.2",
     "@nuxt/module-builder": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/node": "^18.14.1",
     "changelogen": "^0.4.1",
     "eslint": "latest",
     "nuxt": "^3.0.0",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "ufo": "^1.1.1"
   },
   "keywords": [
     "nuxt",
