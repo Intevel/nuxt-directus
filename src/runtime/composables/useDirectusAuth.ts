@@ -15,6 +15,7 @@ import { useDirectusToken } from './useDirectusToken'
 export const useDirectusAuth = () => {
   const config = useRuntimeConfig()
   const directus = useDirectus()
+  const baseUrl = useDirectusUrl()
   const user = useDirectusUser()
   const { token, refreshToken, expires } = useDirectusToken()
 
@@ -69,14 +70,11 @@ export const useDirectusAuth = () => {
   ): Promise<DirectusAuthResponse> => {
     removeTokens()
 
-    const response: { data: DirectusAuthResponse } = await directus(
-      '/auth/login',
-      {
-        method: 'POST',
-        body: data
-      },
-      useStaticToken
-    )
+    const response = await $fetch<{data: DirectusAuthResponse}>('/auth/login', {
+      baseURL: baseUrl,
+      body: data,
+      method: 'POST'
+    })
 
     if (!response.data.access_token) { throw new Error('Login failed, please check your credentials.') }
     setAuthCookies(response.data.access_token, response.data.refresh_token, response.data.expires)
@@ -130,10 +128,13 @@ export const useDirectusAuth = () => {
   }
 
   const logout = async (): Promise<void> => {
-    await directus('/auth/logout', {
-      method: 'POST',
-      body: { refresh_token: refreshToken.value }
+
+    await $fetch('/auth/logout', {
+      baseURL: baseUrl,
+      body: { refresh_token: refreshToken.value },
+      method: 'POST'
     })
+
     removeTokens()
     setUser(null)
     await fetchUser()
