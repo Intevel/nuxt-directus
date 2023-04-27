@@ -1,4 +1,4 @@
-import { useCookie, useNuxtApp, CookieRef } from '#app'
+import { useCookie, useNuxtApp, CookieRef, useRuntimeConfig } from '#app'
 import { DirectusAuthResponse } from '../types'
 import { useDirectusUrl } from './useDirectusUrl'
 
