@@ -59,5 +59,16 @@ export const useDirectusToken = () => {
     }
   }
 
-  return { token: token(), refreshToken: refreshToken(), refreshTokens, expires: expires() }
+  const token_expires_in = computed(() => Math.max(0, (expires().value ?? 0) - new Date().getTime()));
+
+  const token_expired = computed(() => !token().value || token_expires_in.value == 0);
+
+  return {
+    token: token(),
+    refreshToken: refreshToken(),
+    expires: expires(),
+    token_expires_in,
+    token_expired,
+    refreshTokens
+  }
 }
