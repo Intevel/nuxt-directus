@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.2.1
+
+
+### 🩹 Fixes
+
+  - UseDirectusToken.ts #140 (#140)
+
+### ❤️  Contributors
+
+- Casualmatt <matteo@rezzin.ch>
+
 ## v5.2.0
 
 
