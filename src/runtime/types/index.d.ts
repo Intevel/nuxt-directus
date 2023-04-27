@@ -97,7 +97,7 @@ export interface DirectusUserDeletion {
   users: Array<string> | string;
 }
 
-export type DirectusThumbnailFormat = 'jpg' | 'png' | 'webp' | 'tiff';
+export type DirectusThumbnailFormat = 'jpg' | 'png' | 'webp' | 'tiff' | 'avif';
 
 export type DirectusThumbnailFit = 'cover' | 'contain' | 'inside' | 'outside';
 
