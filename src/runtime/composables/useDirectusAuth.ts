@@ -17,6 +17,7 @@ export const useDirectusAuth = () => {
   const directus = useDirectus()
   const baseUrl = useDirectusUrl()
   const user = useDirectusUser()
+  const route = useRoute();
   const { token, refreshToken, expires } = useDirectusToken()
 
   const setAuthCookies = (_token: string, _refreshToken: string, _expires: number) => {
@@ -89,6 +90,14 @@ export const useDirectusAuth = () => {
     }
   }
 
+  const loginWithProvider = async (
+    provider: string,
+  ) => {
+    removeTokens()
+    const redirect = `${window.location.origin}${config.public.directus.redirectOnLogin ?? route.fullPath}`;
+    await navigateTo(`${baseUrl}/auth/login/${provider}?redirect=${encodeURIComponent(redirect)}`, { external: true })
+  }
+
   const createUser = async (
     data: DirectusRegisterCredentials,
     useStaticToken?: boolean
@@ -148,6 +157,7 @@ export const useDirectusAuth = () => {
     resetPassword,
     logout,
     createUser,
-    register
+    register,
+    loginWithProvider
   }
 }

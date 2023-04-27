@@ -52,6 +52,12 @@ export interface ModuleOptions {
    * @default 'directus_refresh_token'
    */
   cookieNameRefreshToken?: string;
+
+  /**
+   * Where to redirect after logging in with an OAuth Provider.
+   * @type string
+   */
+  redirectOnLogin?: string;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -81,6 +87,7 @@ export default defineNuxtModule<ModuleOptions>({
           autoFetch: options.autoFetch,
           autoRefresh: options.autoRefresh,
           fetchUserParams: options.fetchUserParams,
+          redirectOnLogin: options.redirectOnLogin,
           token: options.token,
           devtools: options.devtools,
           cookieNameToken: options.cookieNameToken,
@@ -96,6 +103,7 @@ export default defineNuxtModule<ModuleOptions>({
       autoFetch: options.autoFetch,
       autoRefresh: options.autoRefresh,
       fetchUserParams: options.fetchUserParams,
+      redirectOnLogin: options.redirectOnLogin,
       token: options.token,
       devtools: options.devtools,
       cookieNameToken: options.cookieNameToken,
