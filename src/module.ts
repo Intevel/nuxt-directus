@@ -58,6 +58,13 @@ export interface ModuleOptions {
    * @type string
    */
   redirectOnLogin?: string;
+
+  /**
+   * The max age for the refresh token cookie in seconds.
+   * This should match your directus env key REFRESH_TOKEN_TTL
+   * @type string
+   */
+  maxAgeRefreshToken?: number;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -75,7 +82,8 @@ export default defineNuxtModule<ModuleOptions>({
     autoRefresh: false,
     devtools: false,
     cookieNameToken: 'directus_token',
-    cookieNameRefreshToken: 'directus_refresh_token'
+    cookieNameRefreshToken: 'directus_refresh_token',
+    maxAgeRefreshToken: 604800
   },
   setup (options, nuxt) {
     // Nuxt 2 / Bridge
@@ -91,7 +99,8 @@ export default defineNuxtModule<ModuleOptions>({
           token: options.token,
           devtools: options.devtools,
           cookieNameToken: options.cookieNameToken,
-          cookieNameRefreshToken: options.cookieNameRefreshToken
+          cookieNameRefreshToken: options.cookieNameRefreshToken,
+          maxAgeRefreshToken: options.maxAgeRefreshToken
         }
       )
     }
@@ -107,7 +116,8 @@ export default defineNuxtModule<ModuleOptions>({
       token: options.token,
       devtools: options.devtools,
       cookieNameToken: options.cookieNameToken,
-      cookieNameRefreshToken: options.cookieNameRefreshToken
+      cookieNameRefreshToken: options.cookieNameRefreshToken,
+      maxAgeRefreshToken: options.maxAgeRefreshToken
     })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
