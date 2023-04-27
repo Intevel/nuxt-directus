@@ -19,6 +19,12 @@ export interface ModuleOptions {
    */
   autoFetch?: boolean;
   /**
+   * Auto refesh tokens
+   * @default true
+   * @type boolean
+   */
+  autoRefresh?: boolean;
+  /**
    * fetch user params
    * @type boolean
    */
@@ -60,6 +66,7 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     url: process.env.NUXT_DIRECTUS_URL,
     autoFetch: true,
+    autoRefresh: false,
     devtools: false,
     cookieNameToken: 'directus_token',
     cookieNameRefreshToken: 'directus_refresh_token'
@@ -72,6 +79,7 @@ export default defineNuxtModule<ModuleOptions>({
         {
           url: options.url,
           autoFetch: options.autoFetch,
+          autoRefresh: options.autoRefresh,
           fetchUserParams: options.fetchUserParams,
           token: options.token,
           devtools: options.devtools,
@@ -86,6 +94,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus, {
       url: options.url,
       autoFetch: options.autoFetch,
+      autoRefresh: options.autoRefresh,
       fetchUserParams: options.fetchUserParams,
       token: options.token,
       devtools: options.devtools,
