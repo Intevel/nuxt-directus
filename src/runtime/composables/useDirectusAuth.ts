@@ -92,9 +92,10 @@ export const useDirectusAuth = () => {
 
   const loginWithProvider = async (
     provider: string,
+    redirectOnLogin?: string
   ) => {
     removeTokens()
-    const redirect = `${window.location.origin}${config.public.directus.redirectOnLogin ?? route.fullPath}`;
+    const redirect = `${window.location.origin}${redirectOnLogin ?? route.fullPath}`;
     await navigateTo(`${baseUrl}/auth/login/${provider}?redirect=${encodeURIComponent(redirect)}`, { external: true })
   }
 

@@ -54,12 +54,6 @@ export interface ModuleOptions {
   cookieNameRefreshToken?: string;
 
   /**
-   * Where to redirect after logging in with an OAuth Provider.
-   * @type string
-   */
-  redirectOnLogin?: string;
-
-  /**
    * The max age for the refresh token cookie in seconds.
    * This should match your directus env key REFRESH_TOKEN_TTL
    * @type string
