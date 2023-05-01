@@ -8,12 +8,18 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const config = useRuntimeConfig();
   const { fetchUser } = useDirectusAuth();
-  const { token, token_expired, refreshTokens } = useDirectusToken();
+  const { token, token_expired, refreshToken, refreshTokens } = useDirectusToken();
   const user = useDirectusUser();
 
   async function checkRefreshToken() {
     if (config.public.directus.autoRefresh) {
-      if (token_expired.value) await refreshTokens();
+      if (token_expired.value) {
+        try {
+          await refreshTokens();
+        } catch (e) {
+          refreshToken.value = null;
+        }
+      }
     }
   }
 

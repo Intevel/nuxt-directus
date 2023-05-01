@@ -6,7 +6,7 @@ import { useDirectusToken } from './useDirectusToken'
 export const useDirectus = () => {
   const baseURL = useDirectusUrl()
   const config = useRuntimeConfig()
-  const { token, token_expired, refreshTokens } = useDirectusToken()
+  const { token, token_expired, refreshToken, refreshTokens } = useDirectusToken()
 
   return async <T>(
     url: string,
@@ -17,7 +17,11 @@ export const useDirectus = () => {
 
     if (config.public.directus.autoRefresh) {
       if (token_expired.value) {
-        await refreshTokens();
+        try {
+          await refreshTokens();
+        } catch (e) {
+          refreshToken.value = null;
+        }
       }
     }
 
