@@ -54,6 +54,9 @@ export interface DirectusQueryParams {
   alias?: string | Array<string>;
   deep?: Record<string, unknown>;
   search?: string;
+}
+
+export interface DirectusMetaQueryParams extends DirectusQueryParams {
   meta?: 'total_count' | 'filter_count' | '*';
 }
 
@@ -61,6 +64,10 @@ export interface DirectusItemRequest {
   collection: string;
   id?: string;
   params?: DirectusQueryParams;
+}
+
+export interface DirectusItemMetaRequest extends DirectusItemRequest {
+  params?: DirectusMetaQueryParams;
 }
 
 export interface DirectusItemCreation {

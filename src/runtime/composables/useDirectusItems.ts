@@ -1,5 +1,6 @@
 import {
   DirectusItemRequest,
+  DirectusItemMetaRequest,
   DirectusItemCreation,
   DirectusItemDeletion,
   DirectusItemUpdate,
@@ -11,7 +12,9 @@ import { useDirectus } from './useDirectus'
 export const useDirectusItems = () => {
   const directus = useDirectus()
 
-  const getItems = async <T>(data: DirectusItemRequest): Promise<DirectusItems<T> | T[]> => {
+  async function getItems<T>(data: DirectusItemRequest): Promise<T[]>;
+  async function getItems<T>(data: DirectusItemMetaRequest): Promise<DirectusItems<T>>;
+  async function getItems<T>(data: DirectusItemRequest | DirectusItemMetaRequest): Promise<T[] | DirectusItems<T>> {
     if (data.params?.filter) {
       (data.params.filter as unknown) = JSON.stringify(data.params.filter)
     }
