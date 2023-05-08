@@ -8,20 +8,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const config = useRuntimeConfig();
   const { fetchUser } = useDirectusAuth();
-  const { token, token_expired, refreshToken, refreshTokens } = useDirectusToken();
+  const { token, checkAutoRefresh } = useDirectusToken();
   const user = useDirectusUser();
-
-  async function checkRefreshToken() {
-    if (config.public.directus.autoRefresh) {
-      if (token_expired.value) {
-        try {
-          await refreshTokens();
-        } catch (e) {
-          refreshToken.value = null;
-        }
-      }
-    }
-  }
 
   async function checkIfUserExists() {
     if (config.public.directus.autoFetch) {
@@ -33,14 +21,14 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   nuxtApp.hook('app:created', async () => {
     if (process.server) {
-      await checkRefreshToken();
+      await checkAutoRefresh();  
       await checkIfUserExists();
     }
   })
 
   nuxtApp.hook('page:start', async () => {
     if (process.client) {
-      await checkRefreshToken();
+      await checkAutoRefresh();
       await checkIfUserExists();
     }
   })

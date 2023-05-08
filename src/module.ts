@@ -25,6 +25,12 @@ export interface ModuleOptions {
    */
   autoRefresh?: boolean;
   /**
+   * Auto refesh tokens
+   * @default true
+   * @type boolean
+   */
+  onAutoRefreshFailure?: () => Promise<void>;
+  /**
    * fetch user params
    * @type boolean
    */
@@ -88,6 +94,7 @@ export default defineNuxtModule<ModuleOptions>({
           url: options.url,
           autoFetch: options.autoFetch,
           autoRefresh: options.autoRefresh,
+          onAutoRefreshFailure: options.onAutoRefreshFailure,
           fetchUserParams: options.fetchUserParams,
           token: options.token,
           devtools: options.devtools,
@@ -104,6 +111,7 @@ export default defineNuxtModule<ModuleOptions>({
       url: options.url,
       autoFetch: options.autoFetch,
       autoRefresh: options.autoRefresh,
+      onAutoRefreshFailure: options.onAutoRefreshFailure,
       fetchUserParams: options.fetchUserParams,
       token: options.token,
       devtools: options.devtools,

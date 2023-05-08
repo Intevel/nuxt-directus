@@ -6,7 +6,7 @@ import { useDirectusToken } from './useDirectusToken'
 export const useDirectus = () => {
   const baseURL = useDirectusUrl()
   const config = useRuntimeConfig()
-  const { token, token_expired, refreshToken, refreshTokens } = useDirectusToken()
+  const { token, token_expired, refreshToken, refreshTokens, checkAutoRefresh } = useDirectusToken()
 
   return async <T>(
     url: string,
@@ -15,15 +15,7 @@ export const useDirectus = () => {
   ): Promise<T> => {
     const headers: HeadersInit = {}
 
-    if (config.public.directus.autoRefresh) {
-      if (token_expired.value) {
-        try {
-          await refreshTokens();
-        } catch (e) {
-          refreshToken.value = null;
-        }
-      }
-    }
+    await checkAutoRefresh();
 
     if (token?.value && !token_expired.value) {
       headers.Authorization = `Bearer ${token.value}`
