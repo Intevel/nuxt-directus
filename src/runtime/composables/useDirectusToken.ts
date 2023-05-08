@@ -59,6 +59,9 @@ export const useDirectusToken = () => {
     }
   }
 
+  const token_expires_in = computed(() => Math.max(0, (expires().value ?? 0) - new Date().getTime()));
+
+  const token_expired = computed(() => !token().value || token_expires_in.value == 0);
   
   const checkAutoRefresh = async () => {
     if (config.directus.autoRefresh) {
@@ -74,10 +77,6 @@ export const useDirectusToken = () => {
       }
     }
   }
-
-  const token_expires_in = computed(() => Math.max(0, (expires().value ?? 0) - new Date().getTime()));
-
-  const token_expired = computed(() => !token().value || token_expires_in.value == 0);
 
   return {
     token: token(),
