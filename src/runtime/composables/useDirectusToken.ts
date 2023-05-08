@@ -61,14 +61,14 @@ export const useDirectusToken = () => {
 
   
   const checkAutoRefresh = async () => {
-    if (config.public.directus.autoRefresh) {
+    if (config.directus.autoRefresh) {
       if (token_expired.value) {
         try {
           await refreshTokens();
         } catch (e) {
           refreshToken().value = null;
-          if (config.public.directus.onAutoRefreshError) {
-            await config.public.directus.onAutoRefreshError();
+          if (config.directus.onAutoRefreshError) {
+            await config.directus.onAutoRefreshError();
           }
         }
       }
