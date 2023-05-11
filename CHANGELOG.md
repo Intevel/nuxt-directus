@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.3.0
+
+
+### 🚀 Enhancements
+
+  - Add Avif type support to DirectusThumbnailFormat (#141)
+
+### ❤️  Contributors
+
+- Alberto
+
 ## v5.2.1
 
 
