@@ -19,6 +19,18 @@ export interface ModuleOptions {
    */
   autoFetch?: boolean;
   /**
+   * Auto refesh tokens
+   * @default true
+   * @type boolean
+   */
+  autoRefresh?: boolean;
+  /**
+   * Auto refesh tokens
+   * @default true
+   * @type boolean
+   */
+  onAutoRefreshFailure?: () => Promise<void>;
+  /**
    * fetch user params
    * @type boolean
    */
@@ -46,6 +58,13 @@ export interface ModuleOptions {
    * @default 'directus_refresh_token'
    */
   cookieNameRefreshToken?: string;
+
+  /**
+   * The max age for the refresh token cookie in seconds.
+   * This should match your directus env key REFRESH_TOKEN_TTL
+   * @type string
+   */
+  maxAgeRefreshToken?: number;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -60,9 +79,11 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     url: process.env.NUXT_DIRECTUS_URL,
     autoFetch: true,
+    autoRefresh: false,
     devtools: false,
     cookieNameToken: 'directus_token',
-    cookieNameRefreshToken: 'directus_refresh_token'
+    cookieNameRefreshToken: 'directus_refresh_token',
+    maxAgeRefreshToken: 604800
   },
   setup (options, nuxt) {
     // Nuxt 2 / Bridge
@@ -72,11 +93,14 @@ export default defineNuxtModule<ModuleOptions>({
         {
           url: options.url,
           autoFetch: options.autoFetch,
+          autoRefresh: options.autoRefresh,
+          onAutoRefreshFailure: options.onAutoRefreshFailure,
           fetchUserParams: options.fetchUserParams,
           token: options.token,
           devtools: options.devtools,
           cookieNameToken: options.cookieNameToken,
-          cookieNameRefreshToken: options.cookieNameRefreshToken
+          cookieNameRefreshToken: options.cookieNameRefreshToken,
+          maxAgeRefreshToken: options.maxAgeRefreshToken
         }
       )
     }
@@ -86,11 +110,14 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus, {
       url: options.url,
       autoFetch: options.autoFetch,
+      autoRefresh: options.autoRefresh,
+      onAutoRefreshFailure: options.onAutoRefreshFailure,
       fetchUserParams: options.fetchUserParams,
       token: options.token,
       devtools: options.devtools,
       cookieNameToken: options.cookieNameToken,
-      cookieNameRefreshToken: options.cookieNameRefreshToken
+      cookieNameRefreshToken: options.cookieNameRefreshToken,
+      maxAgeRefreshToken: options.maxAgeRefreshToken
     })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))

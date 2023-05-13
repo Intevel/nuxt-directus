@@ -24,7 +24,7 @@ export const useDirectusToken = () => {
       return nuxtApp._cookies[config.directus.cookieNameRefreshToken]
     }
 
-    const cookie = useCookie<string | null>(config.directus.cookieNameRefreshToken)
+    const cookie = useCookie<string | null>(config.directus.cookieNameRefreshToken, { maxAge: config.directus.maxAgeRefreshToken })
     nuxtApp._cookies[config.directus.cookieNameRefreshToken] = cookie
     return cookie
   }
@@ -59,5 +59,32 @@ export const useDirectusToken = () => {
     }
   }
 
-  return { token: token(), refreshToken: refreshToken(), refreshTokens, expires: expires() }
+  const token_expires_in = computed(() => Math.max(0, (expires().value ?? 0) - new Date().getTime()));
+
+  const token_expired = computed(() => !token().value || token_expires_in.value == 0);
+  
+  const checkAutoRefresh = async () => {
+    if (config.directus.autoRefresh) {
+      if (token_expired.value) {
+        try {
+          await refreshTokens();
+        } catch (e) {
+          refreshToken().value = null;
+          if (config.directus.onAutoRefreshError) {
+            await config.directus.onAutoRefreshError();
+          }
+        }
+      }
+    }
+  }
+
+  return {
+    token: token(),
+    refreshToken: refreshToken(),
+    expires: expires(),
+    token_expires_in,
+    token_expired,
+    refreshTokens,
+    checkAutoRefresh
+  }
 }

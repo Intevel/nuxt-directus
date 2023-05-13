@@ -4,6 +4,12 @@
     <button style="margin-top: 25px" @click="onSubmit">
       Login with Directus
     </button>
+    <button style="margin-top: 25px" @click="loginWithProvider('discord')">
+      Login with OAuth
+    </button>
+    <button style="margin-top: 25px" @click="logout">
+      Logout
+    </button>
     <button style="margin-top: 25px" @click="fetchSingleArticle">
       Fetch Single Article
     </button>
@@ -47,7 +53,7 @@
 <script setup lang="ts">
 import { DirectusUserRequest, DirectusUserUpdate } from '../src/runtime/types'
 
-const { login } = useDirectusAuth()
+const { login, loginWithProvider, logout } = useDirectusAuth()
 const user = useDirectusUser()
 const { getItems, getItemById, createItems, deleteItems } = useDirectusItems()
 const { getCollections } = useDirectusCollections()

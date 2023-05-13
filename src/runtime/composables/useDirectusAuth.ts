@@ -15,7 +15,9 @@ import { useDirectusToken } from './useDirectusToken'
 export const useDirectusAuth = () => {
   const config = useRuntimeConfig()
   const directus = useDirectus()
+  const baseUrl = useDirectusUrl()
   const user = useDirectusUser()
+  const route = useRoute();
   const { token, refreshToken, expires } = useDirectusToken()
 
   const setAuthCookies = (_token: string, _refreshToken: string, _expires: number) => {
@@ -69,14 +71,11 @@ export const useDirectusAuth = () => {
   ): Promise<DirectusAuthResponse> => {
     removeTokens()
 
-    const response: { data: DirectusAuthResponse } = await directus(
-      '/auth/login',
-      {
-        method: 'POST',
-        body: data
-      },
-      useStaticToken
-    )
+    const response = await $fetch<{data: DirectusAuthResponse}>('/auth/login', {
+      baseURL: baseUrl,
+      body: data,
+      method: 'POST'
+    })
 
     if (!response.data.access_token) { throw new Error('Login failed, please check your credentials.') }
     setAuthCookies(response.data.access_token, response.data.refresh_token, response.data.expires)
@@ -89,6 +88,15 @@ export const useDirectusAuth = () => {
       expires: response.data.expires,
       refresh_token: response.data.refresh_token
     }
+  }
+
+  const loginWithProvider = async (
+    provider: string,
+    redirectOnLogin?: string
+  ) => {
+    removeTokens()
+    const redirect = `${window.location.origin}${redirectOnLogin ?? route.fullPath}`;
+    await navigateTo(`${baseUrl}/auth/login/${provider}?redirect=${encodeURIComponent(redirect)}`, { external: true })
   }
 
   const createUser = async (
@@ -130,10 +138,13 @@ export const useDirectusAuth = () => {
   }
 
   const logout = async (): Promise<void> => {
-    await directus('/auth/logout', {
-      method: 'POST',
-      body: { refresh_token: refreshToken.value }
+
+    await $fetch('/auth/logout', {
+      baseURL: baseUrl,
+      body: { refresh_token: refreshToken.value },
+      method: 'POST'
     })
+
     removeTokens()
     setUser(null)
     await fetchUser()
@@ -147,6 +158,7 @@ export const useDirectusAuth = () => {
     resetPassword,
     logout,
     createUser,
-    register
+    register,
+    loginWithProvider
   }
 }
