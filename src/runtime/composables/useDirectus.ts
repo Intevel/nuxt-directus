@@ -15,7 +15,7 @@ export const useDirectus = () => {
   ): Promise<T> => {
     const headers: HeadersInit = {}
 
-    await checkAutoRefresh();
+    await checkAutoRefresh()
 
     if (token?.value && !token_expired.value) {
       headers.Authorization = `Bearer ${token.value}`
@@ -46,7 +46,8 @@ export const useDirectus = () => {
       }
       throw createError({
         statusCode: err.response?.status,
-        statusMessage: err.response?._data
+        statusMessage: err.response?.statusText,
+        data: err.response?._data
       })
     }
   }
