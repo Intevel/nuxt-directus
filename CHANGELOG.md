@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.4.0
+
+
+### 🚀 Enhancements
+
+  - Add computed values for token expiration. (4195895)
+  - Modify plugin to fetch data when needed on app/page load. (764d02e)
+  - Add auto-refreshing tokens to plugin and directus handler. (570fbdf)
+  - Login with provider. (50370f7)
+  - Allow maxAge for the refresh token to be set. (c9fa234)
+  - Remove the refresh token, if it fails to refresh. (336e3a9)
+  - Add auto-refresh failure function (0e709d8)
+
+### 🩹 Fixes
+
+  - Missing uuid dependancy (cb800ce)
+  - Login/logout to not use the directus handler. (43e896e)
+  - Missing uuid dependancy" (71c7357)
+  - Invalid key path for maxAge (25efffd)
+  - Remove setting default config, for keys that no longer exist. (2b0ec0c)
+  - Config defaults to public inside useTokens (ddaaa65)
+  - Move after token_expired as it's used within. (9ff4c19)
+  - Error throwing (26a8b0a)
+
+### ❤️  Contributors
+
+- Conner ([@Intevel](http://github.com/Intevel))
+- Cory <cory@codiam.co.uk>
+
 ## v5.3.0
 
 
