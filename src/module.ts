@@ -86,26 +86,6 @@ export default defineNuxtModule<ModuleOptions>({
     maxAgeRefreshToken: 604800
   },
   setup (options, nuxt) {
-    // Nuxt 2 / Bridge
-    if (isNuxt2() && !nuxt?.options?.runtimeConfig?.public?.directus) {
-      // @ts-ignore
-      nuxt.options.publicRuntimeConfig.directus = defu(nuxt.options.publicRuntimeConfig.directus,
-        {
-          url: options.url,
-          autoFetch: options.autoFetch,
-          autoRefresh: options.autoRefresh,
-          onAutoRefreshFailure: options.onAutoRefreshFailure,
-          fetchUserParams: options.fetchUserParams,
-          token: options.token,
-          devtools: options.devtools,
-          cookieNameToken: options.cookieNameToken,
-          cookieNameRefreshToken: options.cookieNameRefreshToken,
-          maxAgeRefreshToken: options.maxAgeRefreshToken
-        }
-      )
-    }
-
-    // Nuxt 3
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus, {
       url: options.url,
