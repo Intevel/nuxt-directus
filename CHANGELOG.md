@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.4.1
+
+
+### 🩹 Fixes
+
+  - Computed import (65c1cdf)
+
+### ❤️  Contributors
+
+- Conner ([@Intevel](http://github.com/Intevel))
+
 ## v5.4.0
 
 
