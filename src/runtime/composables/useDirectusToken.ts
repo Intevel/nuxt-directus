@@ -1,4 +1,5 @@
 import { useCookie, useNuxtApp, CookieRef, useRuntimeConfig } from '#app'
+import { computed } from 'vue'
 import { DirectusAuthResponse } from '../types'
 import { useDirectusUrl } from './useDirectusUrl'
 
@@ -59,19 +60,19 @@ export const useDirectusToken = () => {
     }
   }
 
-  const token_expires_in = computed(() => Math.max(0, (expires().value ?? 0) - new Date().getTime()));
+  const token_expires_in = computed(() => Math.max(0, (expires().value ?? 0) - new Date().getTime()))
 
-  const token_expired = computed(() => !token().value || token_expires_in.value == 0);
-  
+  const token_expired = computed(() => !token().value || token_expires_in.value === 0)
+
   const checkAutoRefresh = async () => {
     if (config.directus.autoRefresh) {
       if (token_expired.value) {
         try {
-          await refreshTokens();
+          await refreshTokens()
         } catch (e) {
-          refreshToken().value = null;
-          if (config.directus.onAutoRefreshError) {
-            await config.directus.onAutoRefreshError();
+          refreshToken().value = null
+          if (config.directus.onAutoRefreshFailure) {
+            await config.directus.onAutoRefreshFailure()
           }
         }
       }
