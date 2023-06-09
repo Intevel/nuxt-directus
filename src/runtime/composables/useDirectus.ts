@@ -1,12 +1,14 @@
+/* eslint-disable no-console */
 import type { NitroFetchOptions } from 'nitropack'
 import { useRuntimeConfig, createError } from '#app'
+import { joinURL } from 'ufo'
 import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectusToken } from './useDirectusToken'
 
 export const useDirectus = () => {
   const baseURL = useDirectusUrl()
   const config = useRuntimeConfig()
-  const { token, token_expired, refreshToken, refreshTokens, checkAutoRefresh } = useDirectusToken()
+  const { token, token_expired, checkAutoRefresh } = useDirectusToken()
 
   return async <T>(
     url: string,
@@ -24,8 +26,7 @@ export const useDirectus = () => {
     }
 
     try {
-      return await $fetch<T>(url, {
-        baseURL,
+      return await $fetch<T>(joinURL(baseURL, url), {
         ...fetchOptions,
         headers: {
           ...headers,
