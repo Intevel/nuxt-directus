@@ -1,5 +1,5 @@
 import type { Ref } from 'vue'
-import { useRuntimeConfig } from '#app'
+import { useRuntimeConfig, useRoute } from '#app'
 import type {
   DirectusAuthResponse,
   DirectusAuthCredentials,
