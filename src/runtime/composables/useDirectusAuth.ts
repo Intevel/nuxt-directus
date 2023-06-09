@@ -11,13 +11,14 @@ import type {
 import { useDirectus } from './useDirectus'
 import { useDirectusUser } from './useDirectusUser'
 import { useDirectusToken } from './useDirectusToken'
+import { useDirectusUrl } from './useDirectusUrl'
 
 export const useDirectusAuth = () => {
   const config = useRuntimeConfig()
   const directus = useDirectus()
   const baseUrl = useDirectusUrl()
   const user = useDirectusUser()
-  const route = useRoute();
+  const route = useRoute()
   const { token, refreshToken, expires } = useDirectusToken()
 
   const setAuthCookies = (_token: string, _refreshToken: string, _expires: number) => {
@@ -95,7 +96,7 @@ export const useDirectusAuth = () => {
     redirectOnLogin?: string
   ) => {
     removeTokens()
-    const redirect = `${window.location.origin}${redirectOnLogin ?? route.fullPath}`;
+    const redirect = `${window.location.origin}${redirectOnLogin ?? route.fullPath}`
     await navigateTo(`${baseUrl}/auth/login/${provider}?redirect=${encodeURIComponent(redirect)}`, { external: true })
   }
 
@@ -138,7 +139,6 @@ export const useDirectusAuth = () => {
   }
 
   const logout = async (): Promise<void> => {
-
     await $fetch('/auth/logout', {
       baseURL: baseUrl,
       body: { refresh_token: refreshToken.value },
