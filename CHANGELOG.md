@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.4.4
+
+
+### 🩹 Fixes
+
+  - 'token_expired' always 'true'. #157 (#157)
+
+### 📖 Documentation
+
+  - Add autoRefresh (f85c44c)
+  - Add onAutoRefreshFailure (01dd6cd)
+  - Added maxAgeRefreshToken (39597cf)
+  - #149 useAsyncData (#149)
+
+### 🏡 Chore
+
+  - **release:** V5.4.1 (19610b2)
+
+### ❤️  Contributors
+
+- Matt 
+- Conner ([@Intevel](http://github.com/Intevel))
+
 ## v5.4.3
 
 
