@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.4.3
+
+
+### 🩹 Fixes
+
+  - UseRoute is undefined (1c95841)
+
+### ❤️  Contributors
+
+- Conner Bachmann ([@Intevel](http://github.com/Intevel))
+
+## v5.4.2
+
+
+### 🩹 Fixes
+
+  - Invalid url parsing (b7cba7a)
+  - UseDirectusUrl is not defined (3001e9b)
+
+### ❤️  Contributors
+
+- Conner Bachmann ([@Intevel](http://github.com/Intevel))
+
 ## v5.4.1
 
 
