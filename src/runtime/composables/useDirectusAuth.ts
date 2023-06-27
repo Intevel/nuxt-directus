@@ -1,7 +1,7 @@
 import type {
   DirectusAuthCredentials,
   DirectusAuthResponse,
-  DirectusInviteAccept,
+  DirectusAcceptInvite,
   DirectusInviteCreation,
   DirectusPasswordForgotCredentials,
   DirectusPasswordResetCredentials,
@@ -134,8 +134,8 @@ export const useDirectusAuth = () => {
     })
   }
 
-  const inviteAccept = async(
-    data: DirectusInviteAccept
+  const acceptInvite = async(
+    data: DirectusAcceptInvite
   ): Promise<void> => {
     return await directus('/users/invite/accept', {
       method: 'POST',

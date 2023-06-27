@@ -242,7 +242,7 @@ export interface DirectusInviteCreation {
   invite_url?: string
 };
 
-export interface DirectusInviteAccept {
+export interface DirectusAcceptInvite {
   token: string;
   password: string
 };
