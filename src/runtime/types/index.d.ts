@@ -235,3 +235,14 @@ export interface DirectusItems<T> {
 export interface DirectusItem<T> {
   data: NonNullable<T>;
 };
+
+export interface DirectusInviteCreation {
+  email: string;
+  role: string;
+  invite_url?: string
+};
+
+export interface DirectusInviteAccept {
+  token: string;
+  password: string
+};
