@@ -3,7 +3,6 @@ import type {
   DirectusAuthResponse,
   DirectusInviteAccept,
   DirectusInviteCreation,
-  DirectusInviteResponse,
   DirectusPasswordForgotCredentials,
   DirectusPasswordResetCredentials,
   DirectusRegisterCredentials,
