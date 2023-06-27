@@ -1,17 +1,20 @@
-import type { Ref } from 'vue'
-import { useRuntimeConfig, useRoute } from '#app'
 import type {
-  DirectusAuthResponse,
   DirectusAuthCredentials,
-  DirectusUser,
+  DirectusAuthResponse,
+  DirectusAcceptInvite,
+  DirectusInviteCreation,
   DirectusPasswordForgotCredentials,
   DirectusPasswordResetCredentials,
-  DirectusRegisterCredentials
+  DirectusRegisterCredentials,
+  DirectusUser
 } from '../types'
+import { useRoute, useRuntimeConfig } from '#app'
+
+import type { Ref } from 'vue'
 import { useDirectus } from './useDirectus'
-import { useDirectusUser } from './useDirectusUser'
 import { useDirectusToken } from './useDirectusToken'
 import { useDirectusUrl } from './useDirectusUrl'
+import { useDirectusUser } from './useDirectusUser'
 
 export const useDirectusAuth = () => {
   const config = useRuntimeConfig()
@@ -122,6 +125,24 @@ export const useDirectusAuth = () => {
     return createUser(data)
   }
 
+  const inviteUser = async (
+    data: DirectusInviteCreation
+  ): Promise<void> => {
+    return await directus('/users/invite', {
+      method: 'POST',
+      body: data
+    })
+  }
+
+  const acceptInvite = async(
+    data: DirectusAcceptInvite
+  ): Promise<void> => {
+    return await directus('/users/invite/accept', {
+      method: 'POST',
+      body: data
+    })
+  }
+
   const requestPasswordReset = async (
     data: DirectusPasswordForgotCredentials,
     useStaticToken?: boolean
@@ -163,6 +184,8 @@ export const useDirectusAuth = () => {
     logout,
     createUser,
     register,
+    inviteUser,
+    inviteAccept,
     loginWithProvider
   }
 }
