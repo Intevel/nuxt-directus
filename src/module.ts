@@ -65,6 +65,20 @@ export interface ModuleOptions {
    * @type string
    */
   maxAgeRefreshToken?: number;
+
+  /**
+   * The SameSite attribute for the refresh token cookie.
+   * @type string
+   * @default 'strict'
+   */
+  sameSiteRefreshToken?: 'strict' | 'lax' | 'none' | undefined;
+
+  /**
+   * The Secure attribute for the refresh token cookie.
+   * @type boolean
+   * @default true
+   */
+  isSecureRefreshToken?: boolean;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -83,7 +97,11 @@ export default defineNuxtModule<ModuleOptions>({
     devtools: false,
     cookieNameToken: 'directus_token',
     cookieNameRefreshToken: 'directus_refresh_token',
-    maxAgeRefreshToken: 604800
+
+    // Nuxt Cookies Docs @ https://nuxt.com/docs/api/composables/use-cookie
+    maxAgeRefreshToken: 604800,
+    sameSiteRefreshToken: 'lax',
+    isSecureRefreshToken: false
   },
   setup (options, nuxt) {
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
@@ -97,7 +115,9 @@ export default defineNuxtModule<ModuleOptions>({
       devtools: options.devtools,
       cookieNameToken: options.cookieNameToken,
       cookieNameRefreshToken: options.cookieNameRefreshToken,
-      maxAgeRefreshToken: options.maxAgeRefreshToken
+      maxAgeRefreshToken: options.maxAgeRefreshToken,
+      sameSiteRefreshToken: options.sameSiteRefreshToken,
+      isSecureRefreshToken: options.isSecureRefreshToken
     })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))

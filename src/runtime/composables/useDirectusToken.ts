@@ -8,37 +8,36 @@ export const useDirectusToken = () => {
   const baseUrl = useDirectusUrl()
   const config = useRuntimeConfig().public
 
-  const token = (): CookieRef<string | null> => {
+  /**
+   * Get or set cookie.
+   * @param name
+   * @private
+   */
+  const _getOrSetCookie = (name: string) => {
     nuxtApp._cookies = nuxtApp._cookies || {}
-    if (nuxtApp._cookies[config.directus.cookieNameToken]) {
-      return nuxtApp._cookies[config.directus.cookieNameToken]
+    if (nuxtApp._cookies[name]) {
+      return nuxtApp._cookies[name]
     }
 
-    const cookie = useCookie<string | null>(config.directus.cookieNameToken)
-    nuxtApp._cookies[config.directus.cookieNameToken] = cookie
+    const cookie = useCookie<string | null>(name, {
+      maxAge: config.directus.maxAgeRefreshToken,
+      sameSite: config.directus.sameSiteRefreshToken,
+      secure: config.directus.isSecureRefreshToken
+    })
+    nuxtApp._cookies[name] = cookie
     return cookie
+  }
+
+  const token = (): CookieRef<string | null> => {
+    return _getOrSetCookie(config.directus.cookieNameToken)
   }
 
   const refreshToken = (): CookieRef<string | null> => {
-    nuxtApp._cookies = nuxtApp._cookies || {}
-    if (nuxtApp._cookies[config.directus.cookieNameRefreshToken]) {
-      return nuxtApp._cookies[config.directus.cookieNameRefreshToken]
-    }
-
-    const cookie = useCookie<string | null>(config.directus.cookieNameRefreshToken, { maxAge: config.directus.maxAgeRefreshToken })
-    nuxtApp._cookies[config.directus.cookieNameRefreshToken] = cookie
-    return cookie
+    return _getOrSetCookie(config.directus.cookieNameRefreshToken)
   }
 
   const expires = (): CookieRef<number | null> => {
-    nuxtApp._cookies = nuxtApp._cookies || {}
-    if (nuxtApp._cookies.directus_token_expired_at) {
-      return nuxtApp._cookies.directus_token_expired_at
-    }
-
-    const cookie = useCookie<number | null>('directus_token_expired_at')
-    nuxtApp._cookies.directus_token_expired_at = cookie
-    return cookie
+    return _getOrSetCookie('directus_token_expired_at')
   }
 
   const refreshTokens = async (): Promise<DirectusAuthResponse | null> => {
@@ -46,7 +45,7 @@ export const useDirectusToken = () => {
       const body = {
         refresh_token: refreshToken().value
       }
-      const data = await $fetch<{data: DirectusAuthResponse}>('/auth/refresh', {
+      const data = await $fetch<{ data: DirectusAuthResponse }>('/auth/refresh', {
         baseURL: baseUrl,
         body,
         method: 'POST'
