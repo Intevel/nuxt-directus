@@ -60,25 +60,26 @@ export interface ModuleOptions {
   cookieNameRefreshToken?: string;
 
   /**
-   * The max age for the refresh token cookie in seconds.
+   * The max age for auth cookies in seconds.
    * This should match your directus env key REFRESH_TOKEN_TTL
    * @type string
+   * @default 604800
    */
-  maxAgeRefreshToken?: number;
+  cookieMaxAge?: number;
 
   /**
-   * The SameSite attribute for the refresh token cookie.
+   * The SameSite attribute for auth cookies.
    * @type string
-   * @default 'strict'
+   * @default 'lax'
    */
-  sameSiteRefreshToken?: 'strict' | 'lax' | 'none' | undefined;
+  cookieSameSite?: 'strict' | 'lax' | 'none' | undefined;
 
   /**
-   * The Secure attribute for the refresh token cookie.
+   * The Secure attribute for auth cookies.
    * @type boolean
-   * @default true
+   * @default false
    */
-  isSecureRefreshToken?: boolean;
+  cookieSecure?: boolean;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -99,9 +100,9 @@ export default defineNuxtModule<ModuleOptions>({
     cookieNameRefreshToken: 'directus_refresh_token',
 
     // Nuxt Cookies Docs @ https://nuxt.com/docs/api/composables/use-cookie
-    maxAgeRefreshToken: 604800,
-    sameSiteRefreshToken: 'lax',
-    isSecureRefreshToken: false
+    cookieMaxAge: 604800,
+    cookieSameSite: 'lax',
+    cookieSecure: false
   },
   setup (options, nuxt) {
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
@@ -115,9 +116,9 @@ export default defineNuxtModule<ModuleOptions>({
       devtools: options.devtools,
       cookieNameToken: options.cookieNameToken,
       cookieNameRefreshToken: options.cookieNameRefreshToken,
-      maxAgeRefreshToken: options.maxAgeRefreshToken,
-      sameSiteRefreshToken: options.sameSiteRefreshToken,
-      isSecureRefreshToken: options.isSecureRefreshToken
+      cookieMaxAge: options.cookieMaxAge,
+      cookieSameSite: options.cookieSameSite,
+      cookieSecure: options.cookieSecure
     })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))

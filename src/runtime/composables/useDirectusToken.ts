@@ -20,9 +20,9 @@ export const useDirectusToken = () => {
     }
 
     const cookie = useCookie<string | null>(name, {
-      maxAge: config.directus.maxAgeRefreshToken,
-      sameSite: config.directus.sameSiteRefreshToken,
-      secure: config.directus.isSecureRefreshToken
+      maxAge: config.directus.cookieMaxAge,
+      sameSite: config.directus.cookieSameSite,
+      secure: config.directus.cookieSecure
     })
     nuxtApp._cookies[name] = cookie
     return cookie
