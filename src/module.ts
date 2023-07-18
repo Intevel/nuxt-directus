@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, addImportsDir, isNuxt2 } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImportsDir } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import { DirectusQueryParams } from './runtime/types'
 
@@ -68,6 +68,14 @@ export interface ModuleOptions {
   cookieMaxAge?: number;
 
   /**
+   * The max age for auth cookies in seconds.
+   * This should match your directus env key REFRESH_TOKEN_TTL
+   * @type string
+   * @default 604800
+   */
+  maxAgeRefreshToken?: number;
+
+  /**
    * The SameSite attribute for auth cookies.
    * @type string
    * @default 'lax'
@@ -104,28 +112,35 @@ export default defineNuxtModule<ModuleOptions>({
     cookieSameSite: 'lax',
     cookieSecure: false
   },
-  setup (options, nuxt) {
-    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
-    nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus, {
-      url: options.url,
-      autoFetch: options.autoFetch,
-      autoRefresh: options.autoRefresh,
-      onAutoRefreshFailure: options.onAutoRefreshFailure,
-      fetchUserParams: options.fetchUserParams,
-      token: options.token,
-      devtools: options.devtools,
-      cookieNameToken: options.cookieNameToken,
-      cookieNameRefreshToken: options.cookieNameRefreshToken,
-      cookieMaxAge: options.cookieMaxAge,
-      cookieSameSite: options.cookieSameSite,
-      cookieSecure: options.cookieSecure
-    })
-
+  setup(options, nuxt) {
+    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {};
+    nuxt.options.runtimeConfig.public.directus = defu(
+      nuxt.options.runtimeConfig.public.directus,
+      {
+        url: options.url,
+        autoFetch: options.autoFetch,
+        autoRefresh: options.autoRefresh,
+        onAutoRefreshFailure: options.onAutoRefreshFailure,
+        fetchUserParams: options.fetchUserParams,
+        token: options.token,
+        devtools: options.devtools,
+        cookieNameToken: options.cookieNameToken,
+        cookieNameRefreshToken: options.cookieNameRefreshToken,
+        cookieMaxAge: options.cookieMaxAge || options.maxAgeRefreshToken,
+        cookieSameSite: options.cookieSameSite,
+        cookieSecure: options.cookieSecure
+      })
+      
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
     addPlugin(resolve(runtimeDir, 'plugin'))
     addImportsDir(resolve(runtimeDir, 'composables'))
+    if (options.maxAgeRefreshToken) {
+      console.warn(
+        'maxAgeRefreshToken is deprecated, please use cookieMaxAge instead'
+        );
+      }
 
     if (options.devtools) {
       const adminUrl = joinURL(nuxt.options.runtimeConfig.public.directus.url, '/admin/')
