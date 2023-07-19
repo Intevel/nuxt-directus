@@ -21,6 +21,7 @@ export type DirectusUser = {
   token?: string | null;
   [key: string]: any;
 } | null;
+
 export interface DirectusAuthCredentials {
   email: string;
   password: string;
