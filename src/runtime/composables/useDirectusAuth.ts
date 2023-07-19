@@ -1,4 +1,4 @@
-import { useRoute, useRuntimeConfig } from '#app'
+import { useRoute, useRuntimeConfig, navigateTo } from '#app'
 
 import type { Ref } from 'vue'
 import type {
@@ -21,7 +21,6 @@ export const useDirectusAuth = () => {
   const directus = useDirectus()
   const baseUrl = useDirectusUrl()
   const user = useDirectusUser()
-  const route = useRoute()
   const { token, refreshToken, expires } = useDirectusToken()
 
   const setAuthCookies = (_token: string, _refreshToken: string, _expires: number) => {
@@ -103,6 +102,7 @@ export const useDirectusAuth = () => {
     redirectOnLogin?: string
   ) => {
     removeTokens()
+    const route = useRoute()
     const redirect = `${window.location.origin}${redirectOnLogin ?? route.fullPath}`
     await navigateTo(`${baseUrl}/auth/login/${provider}?redirect=${encodeURIComponent(redirect)}`, { external: true })
   }
