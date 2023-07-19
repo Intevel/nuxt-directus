@@ -29,7 +29,7 @@
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "docs": "cd docs && pnpm dev",
-    "release": "nuxt-module-build && changelogen --release --push && yarn publish",
+    "release": "nuxt-module-build && changelogen --release --push && pnpm publish",
     "lint": "eslint --ext .js,.ts,.vue"
   },
   "dependencies": {
