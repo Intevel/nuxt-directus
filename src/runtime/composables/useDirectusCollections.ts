@@ -1,15 +1,12 @@
 import {
   DirectusCollectionCreation,
-  DirectusCollectionMeta,
   DirectusCollectionRequest,
   DirectusCollectionUpdate
 } from '../types'
 
 import { useDirectus } from './useDirectus'
-import { useDirectusUrl } from './useDirectusUrl'
 
 export const useDirectusCollections = () => {
-  const directusUrl = useDirectusUrl()
   const directus = useDirectus()
 
   const getCollections = async <T>(): Promise<T[]> => {

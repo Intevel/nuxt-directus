@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.5.0
+
+
+### 🚀 Enhancements
+
+  - ✨  Add inviteUser and inviteAccept (5509f7a)
+
+### 🩹 Fixes
+
+  - Linting (75a06b0)
+  - NavigateTo is undefined && middleware warning (5549ccc)
+
+### 📖 Documentation
+
+  - 📝  Add DirectusInvite types to documentation. (115cd0d)
+
+### 🏡 Chore
+
+  - Fix publish command (54477f7)
+
+### ❤️  Contributors
+
+- Conner Bachmann ([@Intevel](http://github.com/Intevel))
+- Craig Harman <craigharman@transdigital.com.au>
+
 ## v5.4.4
 
 

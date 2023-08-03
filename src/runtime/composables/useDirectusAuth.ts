@@ -1,3 +1,6 @@
+import { useRoute, useRuntimeConfig, navigateTo } from '#app'
+
+import type { Ref } from 'vue'
 import type {
   DirectusAuthCredentials,
   DirectusAuthResponse,
@@ -8,9 +11,6 @@ import type {
   DirectusRegisterCredentials,
   DirectusUser
 } from '../types'
-import { useRoute, useRuntimeConfig } from '#app'
-
-import type { Ref } from 'vue'
 import { useDirectus } from './useDirectus'
 import { useDirectusToken } from './useDirectusToken'
 import { useDirectusUrl } from './useDirectusUrl'
@@ -21,7 +21,6 @@ export const useDirectusAuth = () => {
   const directus = useDirectus()
   const baseUrl = useDirectusUrl()
   const user = useDirectusUser()
-  const route = useRoute()
   const { token, refreshToken, expires } = useDirectusToken()
 
   const setAuthCookies = (_token: string, _refreshToken: string, _expires: number) => {
@@ -84,7 +83,7 @@ export const useDirectusAuth = () => {
     if (!response.data.access_token) { throw new Error('Login failed, please check your credentials.') }
 
     // Calculate new expires date, bug fix https://github.com/Intevel/nuxt-directus/issues/157
-    const newExpires = (response.data.expires ?? 0) + new Date().getTime();
+    const newExpires = (response.data.expires ?? 0) + new Date().getTime()
 
     setAuthCookies(response.data.access_token, response.data.refresh_token, newExpires)
 
@@ -103,6 +102,7 @@ export const useDirectusAuth = () => {
     redirectOnLogin?: string
   ) => {
     removeTokens()
+    const route = useRoute()
     const redirect = `${window.location.origin}${redirectOnLogin ?? route.fullPath}`
     await navigateTo(`${baseUrl}/auth/login/${provider}?redirect=${encodeURIComponent(redirect)}`, { external: true })
   }
@@ -134,7 +134,7 @@ export const useDirectusAuth = () => {
     })
   }
 
-  const acceptInvite = async(
+  const acceptInvite = async (
     data: DirectusAcceptInvite
   ): Promise<void> => {
     return await directus('/users/invite/accept', {
@@ -186,6 +186,7 @@ export const useDirectusAuth = () => {
     register,
     inviteUser,
     acceptInvite,
+    main,
     loginWithProvider,
     setAuthCookies
   }
