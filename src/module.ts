@@ -1,9 +1,8 @@
 import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, addImportsDir, isNuxt2 } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImportsDir } from '@nuxt/kit'
 import { joinURL } from 'ufo'
-import { DirectusQueryParams } from './runtime/types'
 
 export interface ModuleOptions {
   /**
@@ -13,58 +12,12 @@ export interface ModuleOptions {
    */
   url?: string;
   /**
-   * Auto fetch user
-   * @default true
-   * @type boolean
-   */
-  autoFetch?: boolean;
-  /**
-   * Auto refesh tokens
-   * @default true
-   * @type boolean
-   */
-  autoRefresh?: boolean;
-  /**
-   * Auto refesh tokens
-   * @default true
-   * @type boolean
-   */
-  onAutoRefreshFailure?: () => Promise<void>;
-  /**
-   * fetch user params
-   * @type boolean
-   */
-  fetchUserParams?: DirectusQueryParams;
-  /**
-   * Auth Token
-   * @type string
-   */
-  token?: string;
-  /**
-   * Add Directus Admin Dashboard in Nuxt Devtools
-   *
+   * Enable Directus Devtools
    * @default false
+   * @type boolean
+   * @see https://docs.directus.io/guides/developer-tools.html
    */
-  devtools?: boolean
-  /**
-   * Token Cookie Name
-   * @type string
-   @ default 'directus_token'
-   */
-  cookieNameToken?: string;
-  /**
-   * Refresh Token Cookie Name
-   * @type string
-   * @default 'directus_refresh_token'
-   */
-  cookieNameRefreshToken?: string;
-
-  /**
-   * The max age for the refresh token cookie in seconds.
-   * This should match your directus env key REFRESH_TOKEN_TTL
-   * @type string
-   */
-  maxAgeRefreshToken?: number;
+  devtools?: boolean;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -77,27 +30,13 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   defaults: {
-    url: process.env.NUXT_DIRECTUS_URL,
-    autoFetch: true,
-    autoRefresh: false,
-    devtools: false,
-    cookieNameToken: 'directus_token',
-    cookieNameRefreshToken: 'directus_refresh_token',
-    maxAgeRefreshToken: 604800
+    url: process.env.NUXT_DIRECTUS_URL
   },
   setup (options, nuxt) {
     nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus, {
       url: options.url,
-      autoFetch: options.autoFetch,
-      autoRefresh: options.autoRefresh,
-      onAutoRefreshFailure: options.onAutoRefreshFailure,
-      fetchUserParams: options.fetchUserParams,
-      token: options.token,
-      devtools: options.devtools,
-      cookieNameToken: options.cookieNameToken,
-      cookieNameRefreshToken: options.cookieNameRefreshToken,
-      maxAgeRefreshToken: options.maxAgeRefreshToken
+      devtools: options.devtools
     })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))

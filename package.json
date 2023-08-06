@@ -33,6 +33,7 @@
     "lint": "eslint --ext .js,.ts,.vue"
   },
   "dependencies": {
+    "@directus/sdk": "^11.0.1",
     "@nuxt/kit": "^3.0.0"
   },
   "devDependencies": {
