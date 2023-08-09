@@ -5,5 +5,6 @@ export default defineNuxtConfig({
   directus: {
     url: 'http://localhost:8055/',
     devtools: true,
+    maxAgeRefreshToken: 10000,
   }
 })
