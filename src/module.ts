@@ -49,7 +49,7 @@ export interface ModuleOptions {
   /**
    * Token Cookie Name
    * @type string
-   @ default 'directus_token'
+   * @ default 'directus_token'
    */
   cookieNameToken?: string;
   /**
@@ -60,18 +60,18 @@ export interface ModuleOptions {
   cookieNameRefreshToken?: string;
 
   /**
-   * The max age for auth cookies in seconds.
+   * The max age for auth cookies in milliseconds.
    * This should match your directus env key REFRESH_TOKEN_TTL
    * @type string
-   * @default 604800
+   * @default 604800000
    */
   cookieMaxAge?: number;
 
   /**
-   * The max age for auth cookies in seconds.
+   * The max age for auth cookies in milliseconds.
    * This should match your directus env key REFRESH_TOKEN_TTL
    * @type string
-   * @default 604800
+   * @default 604800000
    */
   maxAgeRefreshToken?: number;
 
@@ -108,12 +108,12 @@ export default defineNuxtModule<ModuleOptions>({
     cookieNameRefreshToken: 'directus_refresh_token',
 
     // Nuxt Cookies Docs @ https://nuxt.com/docs/api/composables/use-cookie
-    cookieMaxAge: 604800,
+    cookieMaxAge: 604800000,
     cookieSameSite: 'lax',
     cookieSecure: false
   },
-  setup(options, nuxt) {
-    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {};
+  setup (options, nuxt) {
+    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     nuxt.options.runtimeConfig.public.directus = defu(
       nuxt.options.runtimeConfig.public.directus,
       {
@@ -130,17 +130,18 @@ export default defineNuxtModule<ModuleOptions>({
         cookieSameSite: options.cookieSameSite,
         cookieSecure: options.cookieSecure
       })
-      
+
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
     addPlugin(resolve(runtimeDir, 'plugin'))
     addImportsDir(resolve(runtimeDir, 'composables'))
     if (options.maxAgeRefreshToken) {
+      // eslint-disable-next-line no-console
       console.warn(
         'maxAgeRefreshToken is deprecated, please use cookieMaxAge instead'
-        );
-      }
+      )
+    }
 
     if (options.devtools) {
       const adminUrl = joinURL(nuxt.options.runtimeConfig.public.directus.url, '/admin/')
