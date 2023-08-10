@@ -49,7 +49,7 @@ export interface ModuleOptions {
   /**
    * Token Cookie Name
    * @type string
-   @ default 'directus_token'
+   * @ default 'directus_token'
    */
   cookieNameToken?: string;
   /**
@@ -112,8 +112,8 @@ export default defineNuxtModule<ModuleOptions>({
     cookieSameSite: 'lax',
     cookieSecure: false
   },
-  setup(options, nuxt) {
-    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {};
+  setup (options, nuxt) {
+    nuxt.options.runtimeConfig.public = nuxt.options.runtimeConfig.public || {}
     nuxt.options.runtimeConfig.public.directus = defu(
       nuxt.options.runtimeConfig.public.directus,
       {
@@ -130,17 +130,18 @@ export default defineNuxtModule<ModuleOptions>({
         cookieSameSite: options.cookieSameSite,
         cookieSecure: options.cookieSecure
       })
-      
+
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
     addPlugin(resolve(runtimeDir, 'plugin'))
     addImportsDir(resolve(runtimeDir, 'composables'))
     if (options.maxAgeRefreshToken) {
+      // eslint-disable-next-line no-console
       console.warn(
         'maxAgeRefreshToken is deprecated, please use cookieMaxAge instead'
-        );
-      }
+      )
+    }
 
     if (options.devtools) {
       const adminUrl = joinURL(nuxt.options.runtimeConfig.public.directus.url, '/admin/')
