@@ -60,18 +60,18 @@ export interface ModuleOptions {
   cookieNameRefreshToken?: string;
 
   /**
-   * The max age for auth cookies in seconds.
+   * The max age for auth cookies in milliseconds.
    * This should match your directus env key REFRESH_TOKEN_TTL
    * @type string
-   * @default 604800
+   * @default 604800000
    */
   cookieMaxAge?: number;
 
   /**
-   * The max age for auth cookies in seconds.
+   * The max age for auth cookies in milliseconds.
    * This should match your directus env key REFRESH_TOKEN_TTL
    * @type string
-   * @default 604800
+   * @default 604800000
    */
   maxAgeRefreshToken?: number;
 
@@ -108,7 +108,7 @@ export default defineNuxtModule<ModuleOptions>({
     cookieNameRefreshToken: 'directus_refresh_token',
 
     // Nuxt Cookies Docs @ https://nuxt.com/docs/api/composables/use-cookie
-    cookieMaxAge: 604800,
+    cookieMaxAge: 604800000,
     cookieSameSite: 'lax',
     cookieSecure: false
   },
