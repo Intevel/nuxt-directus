@@ -61,7 +61,8 @@ css({
     width: '100%',
     padding: '{space.20} 0',
     '@sm': {
-      padding: '{space.24} 0',
+      paddingTop: '{space.24}',
+      paddingBottom: '{space.10}',
     },
     '@lg': {
       paddingTop: '{space.32}',
