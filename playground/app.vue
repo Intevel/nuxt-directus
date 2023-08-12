@@ -1,9 +1,15 @@
 <template>
   <div>
     Nuxt module playground
-    <button @click="login">Sign in</button>
-    <button @click="signOut">Sign out</button>
-    <button @click="refreshTokens">Refresh Tokens</button>
+    <button @click="loginModule">
+      Sign in
+    </button>
+    <button @click="signOut">
+      Sign out
+    </button>
+    <button @click="refreshTokens">
+      Refresh Tokens
+    </button>
   </div>
 </template>
 
