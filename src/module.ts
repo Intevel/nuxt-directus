@@ -1,7 +1,6 @@
-import { resolve } from 'path'
 import { fileURLToPath } from 'url'
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, addImportsDir } from '@nuxt/kit'
+import { defineNuxtModule, addPlugin, addImportsDir, createResolver } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
 
@@ -41,6 +40,8 @@ export default defineNuxtModule<ModuleOptions>({
     devtools: false
   },
   setup (options, nuxt) {
+    const { resolve } = createResolver(import.meta.url)
+
     nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus, {
       url: options.url,
       staticToken: options.staticToken,
@@ -59,7 +60,9 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
-    addPlugin(resolve(runtimeDir, 'plugin'))
+    addPlugin(resolve(runtimeDir, './plugins/directus'), { append: true })
+    addPlugin(resolve(runtimeDir, './plugins/autoRefresh'), { append: true })
+
     addImportsDir(resolve(runtimeDir, 'composables'))
 
     if (options.devtools) {
