@@ -35,8 +35,8 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   defaults: {
-    url: '' as string,
-    staticToken: '' as string,
+    url: '',
+    staticToken: '',
     devtools: false
   },
   setup (options, nuxt) {
