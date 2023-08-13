@@ -1,5 +1,8 @@
 <template>
   <div>
+    <button @click="fetchUser">
+      Fetch user
+    </button>
     <pre>
       {{ user ?? 'Not logged in' }}
     </pre>
@@ -19,13 +22,12 @@
 </template>
 
 <script setup lang="ts">
-const { signIn, signOut, refreshTokens } = useDirectusAuth()
+const { fetchUser, signIn, signOut, refreshTokens } = useDirectusAuth()
+const user = useDirectusUser()
 
 const login = async () => {
   const t = await signIn('admin@example.com', 'Passw0rd!')
   // eslint-disable-next-line no-console
   console.log(t)
 }
-
-const user = await useDirectusUser()
 </script>
