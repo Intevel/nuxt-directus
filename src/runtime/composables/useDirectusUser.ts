@@ -1,4 +1,4 @@
-import { rest, readMe } from '@directus/sdk'
+import { readMe } from '@directus/sdk'
 
 export const useDirectusUser = async () => {
   const directus = useDirectusRest({
