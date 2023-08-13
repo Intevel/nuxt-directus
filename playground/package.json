@@ -9,7 +9,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "@nuxt/devtools": "^0.4.2"
+  "devDependencies": {
+    "@nuxt/devtools": "^0.4.6"
   }
 }
