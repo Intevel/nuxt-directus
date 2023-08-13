@@ -1,12 +1,14 @@
+import type {
+  DirectusClient,
+  GraphqlClient,
+  RestClient,
+  RestConfig
+} from '@directus/sdk'
 import {
-  type DirectusClient,
-  type GraphqlClient,
-  type RestClient,
-  type RestConfig,
+  useNuxtApp,
   graphql,
   rest
-} from '@directus/sdk'
-import { useNuxtApp } from '#imports'
+} from '#imports'
 
 export const useDirectus = <T extends Object>() => {
   return useNuxtApp().$directus as DirectusClient<T>

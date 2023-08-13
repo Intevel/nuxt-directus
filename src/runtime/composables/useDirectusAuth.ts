@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { login, refresh, logout } from '@directus/sdk'
+import { login, refresh, logout } from '#imports'
 
 export function useDirectusAuth () {
   const directus = useDirectusRest()

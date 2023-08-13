@@ -3,6 +3,7 @@ import { fileURLToPath } from 'url'
 import { defu } from 'defu'
 import { defineNuxtModule, addPlugin, addImportsDir } from '@nuxt/kit'
 import { joinURL } from 'ufo'
+import * as DirectusSDK from '@directus/sdk'
 
 export interface ModuleOptions {
   /**
@@ -44,6 +45,15 @@ export default defineNuxtModule<ModuleOptions>({
       url: options.url,
       staticToken: options.staticToken,
       devtools: options.devtools
+    })
+
+    nuxt.options.imports = defu(nuxt.options.imports, {
+      presets: [
+        {
+          from: '@directus/sdk',
+          imports: Object.keys(DirectusSDK)
+        }
+      ]
     })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
