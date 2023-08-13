@@ -7,7 +7,7 @@ import { joinURL } from 'ufo'
 export interface ModuleOptions {
   /**
    * Directus API URL, customizable at runtime via NUXT_PUBLIC_DIRECTUS_URL environment variable.
-   * @default 'https://localhost:8055'
+   * @default ''
    * @type string
    */
   url: string;
@@ -35,7 +35,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   defaults: {
-    url: 'http://localhost:8055' as string,
+    url: '' as string,
     staticToken: '' as string,
     devtools: false
   },
