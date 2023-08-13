@@ -2,7 +2,7 @@ import { readMe } from '#imports'
 
 export const useDirectusUser = async () => {
   const directus = useDirectusRest({
-    onRequest: (request: any) => {
+    onRequest: (request) => {
       const accessToken = useCookie('directus_access_token')
 
       if (accessToken) {
@@ -16,7 +16,7 @@ export const useDirectusUser = async () => {
     }
   })
 
-  const user = await directus.request(readMe()).catch((e: any) => {
+  const user = await directus.request(readMe()).catch((e) => {
     // eslint-disable-next-line no-console
     console.error(e)
     return undefined
