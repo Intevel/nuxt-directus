@@ -3,7 +3,7 @@
   "version": "5.5.0",
   "license": "MIT",
   "repository": "https://github.com/intevel/nuxt-directus",
-  "homepage": "https://nuxt-directus.netlify.app/",
+  "homepage": "https://nuxt-directus.site/",
   "type": "module",
   "author": {
     "name": "Conner Luka Bachmann",
