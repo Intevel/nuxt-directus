@@ -1,26 +1,5 @@
-import { readMe } from '#imports'
+import type { DirectusUser } from '@directus/sdk'
+import { type Ref, useState, readMe } from '#imports'
 
-export const useDirectusUser = async () => {
-  const directus = useDirectusRest({
-    onRequest: (request) => {
-      const accessToken = useCookie('directus_access_token')
-
-      if (accessToken) {
-        request.headers = {
-          ...request.headers,
-          authorization: `Bearer ${accessToken.value}`
-        }
-      }
-
-      return request
-    }
-  })
-
-  const user = await directus.request(readMe()).catch((e) => {
-    // eslint-disable-next-line no-console
-    console.error(e)
-    return undefined
-  })
-
-  return user
-}
+export const useDirectusUser = <T extends DirectusUser<any>>(): Ref<T | null> =>
+  useState<T | null>('directus.user')
