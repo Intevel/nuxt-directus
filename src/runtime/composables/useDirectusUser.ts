@@ -1,7 +1,7 @@
 import { rest, readMe } from '@directus/sdk'
 
 export const useDirectusUser = async () => {
-  const directus = useDirectus().with(rest({
+  const directus = useDirectusRest({
     onRequest: (request) => {
       const accessToken = useCookie('directus_access_token')
 
@@ -14,7 +14,7 @@ export const useDirectusUser = async () => {
 
       return request
     }
-  }))
+  })
 
   const user = await directus.request(readMe()).catch((e) => {
     // eslint-disable-next-line no-console

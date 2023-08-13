@@ -4,7 +4,7 @@ import { useDirectus } from './useDirectus'
 import { useDirectusCookie } from './useDirectusCookie'
 
 export function useDirectusAuth () {
-  const directus = useDirectus().with(rest())
+  const directus = useDirectusRest()
   const { accessToken, refreshToken } = useDirectusCookie()
 
   const signIn = async (identifier: string, password: string) => {
