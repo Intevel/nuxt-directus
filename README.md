@@ -1,4 +1,4 @@
-[![nuxt-directus](https://user-images.githubusercontent.com/522079/158864859-0fbeae62-9d7a-4619-b35e-f8fa5f68e0c8.png)](https://nuxt-directus.netlify.app/)
+[![nuxt-directus](https://user-images.githubusercontent.com/522079/158864859-0fbeae62-9d7a-4619-b35e-f8fa5f68e0c8.png)](https://nuxt-directus.site/)
 
 # Nuxt Directus
 
@@ -10,7 +10,7 @@
 Integrate [Directus](https://directus.io/) to your [Nuxt](https://nuxt.com/) application.
 
 - [✨ &nbsp;Release Notes](https://github.com/directus-community/nuxt-directus/releases)
-- [📖 &nbsp;Read the documentation](https://nuxt-directus.netlify.app/)
+- [📖 &nbsp;Read the documentation](https://nuxt-directus.site/)
 
 ## Features
 
