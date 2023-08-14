@@ -1,4 +1,4 @@
-[![nuxt-directus](https://github.com/Intevel/nuxt-directus/blob/c027156408fd558f7867a6e5218d2d19acea445d/docs/public/cover.png)](https://nuxt-directus.site/)
+[![nuxt-directus](https://raw.githubusercontent.com/Intevel/nuxt-directus/main/docs/public/cover.png)](https://nuxt-directus.site/)
 
 # Nuxt Directus
 
