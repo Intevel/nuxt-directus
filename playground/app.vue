@@ -72,5 +72,5 @@ const { getItemById, getItems, getSingletonItem } = useDirectusItems<Schema>()
 
 const { data: global } = await getSingletonItem('global')
 const { data: posts, pending, error, refresh } = await getItems('posts')
-const { data: singlePost } = await getItemById('posts', '1', { key: 'singlePost' })
+const { data: singlePost } = await getItemById('posts', '4002c62f-1787-4420-9805-9f1816276032')
 </script>
