@@ -21,6 +21,25 @@ export function useDirectusItems<TSchema extends Record<string, any>> () {
   })
 
   /**
+   * Get a single item from a collection.
+   * @param collection The collection name to get the item from.
+   * @param id The id of the item to get.
+   * @param options The options to use when fetching the item.
+   */
+  const getItemById = async (
+    collection: RegularCollections<TSchema>,
+    id: string | number,
+    options?: DirectusItemRequestOptions
+  ) => {
+    if (!id) { throw new Error('You must provide an id to get an item.') }
+    const { data, pending, error, refresh } = await useAsyncData(
+      options?.key ?? String(collection),
+      async () => await directus.request(readItem(collection, id, options?.query))
+    )
+    return { data, pending, error, refresh }
+  }
+
+  /**
    * Get all the items from a collection.
    * @param collection The collection name to get the items from.
    * @param options The options to use when fetching the items.
@@ -53,6 +72,7 @@ export function useDirectusItems<TSchema extends Record<string, any>> () {
   }
 
   return {
+    getItemById,
     getItems,
     getSingletonItem
   }

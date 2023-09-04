@@ -34,6 +34,16 @@
         </li>
       </ul>
     </div>
+    <div>
+      Single Post
+      <ul>
+        <li v-if="singlePost">
+          <h2>{{ singlePost.title }}</h2>
+          <sub>{{ singlePost.slug }}</sub>
+          <p>{{ singlePost.content }}</p>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -58,8 +68,9 @@ interface Schema {
   posts: Posts[]
 }
 
-const { getItems, getSingletonItem } = useDirectusItems<Schema>()
+const { getItemById, getItems, getSingletonItem } = useDirectusItems<Schema>()
 
 const { data: global } = await getSingletonItem('global')
 const { data: posts, pending, error, refresh } = await getItems('posts')
+const { data: singlePost } = await getItemById('posts', '1', { key: 'singlePost' })
 </script>
