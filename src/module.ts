@@ -1,6 +1,11 @@
 import { fileURLToPath } from 'url'
 import { defu } from 'defu'
-import { defineNuxtModule, addPlugin, addImportsDir, createResolver } from '@nuxt/kit'
+import {
+  defineNuxtModule,
+  addPlugin,
+  addImportsDir,
+  createResolver
+} from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
 
@@ -24,6 +29,18 @@ export interface ModuleOptions {
    * @see https://docs.directus.io/guides/developer-tools.html
    */
   devtools?: boolean;
+  /**
+   * Token Cookie Name
+   * @default 'directus_access_token'
+   * @type string
+   */
+  tokenCookieName?: string;
+  /**
+   * Refresh Token Cookie Name
+   * @default 'directus_refresh_token'
+   * @type string
+   */
+  refreshTokenCookieName?: string;
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -37,16 +54,23 @@ export default defineNuxtModule<ModuleOptions>({
   defaults: {
     url: '',
     staticToken: '',
-    devtools: false
+    devtools: false,
+    tokenCookieName: 'directus_access_token',
+    refreshTokenCookieName: 'directus_refresh_token'
   },
   setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
-    nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus, {
-      url: options.url,
-      staticToken: options.staticToken,
-      devtools: options.devtools
-    })
+    nuxt.options.runtimeConfig.public.directus = defu(
+      nuxt.options.runtimeConfig.public.directus,
+      {
+        url: options.url,
+        staticToken: options.staticToken,
+        devtools: options.devtools,
+        tokenCookieName: options.tokenCookieName,
+        refreshTokenCookieName: options.refreshTokenCookieName
+      }
+    )
 
     nuxt.options.imports = defu(nuxt.options.imports, {
       presets: [
@@ -66,7 +90,10 @@ export default defineNuxtModule<ModuleOptions>({
     addImportsDir(resolve(runtimeDir, 'composables'))
 
     if (options.devtools) {
-      const adminUrl = joinURL(nuxt.options.runtimeConfig.public.directus.url, '/admin/')
+      const adminUrl = joinURL(
+        nuxt.options.runtimeConfig.public.directus.url,
+        '/admin/'
+      )
       nuxt.hook('devtools:customTabs', (iframeTabs) => {
         iframeTabs.push({
           name: 'directus',
