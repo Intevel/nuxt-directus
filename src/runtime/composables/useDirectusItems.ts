@@ -49,6 +49,7 @@ export function useDirectusItems<TSchema extends Record<string, any>> () {
     options?: DirectusItemRequestOptions
   ) => {
     const { data, pending, error, refresh } = await useAsyncData(
+      // TODO: check status for https://github.com/nuxt/nuxt/issues/23000
       options?.key ?? String(collection),
       async () => await directus.request(readItems(collection, options?.query))
     )
