@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div v-if="!pending && !!global">
       <h1>{{ global.title }}</h1>
       <p>{{ global.description }}</p>
     </div>
@@ -60,6 +60,6 @@ interface Schema {
 
 const { getItems, getSingletonItem } = useDirectusItems<Schema>()
 
-const global = await getSingletonItem('global')
-const posts = await getItems('posts')
+const { data: global } = await getSingletonItem('global')
+const { data: posts, pending, error, refresh } = await getItems('posts')
 </script>
