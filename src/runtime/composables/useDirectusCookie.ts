@@ -1,32 +1,21 @@
-import { useCookie, useNuxtApp, type CookieRef } from '#imports'
+import type { CookieRef } from '#app'
+import { useCookie, useNuxtApp } from '#imports'
 
 export function useDirectusCookie () {
-  const nuxtApp = useNuxtApp()
-
-  const token = (): CookieRef<string | null> => {
-    nuxtApp._cookies = nuxtApp._cookies || {}
-    if (nuxtApp._cookies.access_token) {
-      return nuxtApp._cookies.access_token
-    }
-
-    const cookie = useCookie<string | null>('access_token')
-    nuxtApp._cookies.access_token = cookie
+  const accessToken = (T?: number | undefined): CookieRef<string | null> => {
+    // TODO make prefix editable
+    const cookie = useCookie<string | null>('directus_access_token', { maxAge: T })
     return cookie
   }
 
-  const refreshToken = (): CookieRef<string | null> => {
-    nuxtApp._cookies = nuxtApp._cookies || {}
-    if (nuxtApp._cookies.refresh_token) {
-      return nuxtApp._cookies.refresh_token
-    }
-
-    const cookie = useCookie<string | null>('refresh_token')
-    nuxtApp._cookies.refresh_token = cookie
+  const refreshToken = (T?: number | undefined): CookieRef<string | null> => {
+    // TODO make prefix editable
+    const cookie = useCookie<string | null>('directus_refresh_token', { maxAge: T })
     return cookie
   }
 
   return {
-    token,
+    accessToken,
     refreshToken
   }
 }
