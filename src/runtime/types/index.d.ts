@@ -43,4 +43,8 @@ export interface ModuleOptions {
 export interface DirectusItemRequestOptions {
   query?: DirectusQueryParams;
   key?: string;
+  /* Some useAsyncData options */
+  server?: boolean;
+  immediate?: boolean;
+  pick?: string[]
 }
