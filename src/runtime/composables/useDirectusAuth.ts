@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+import { type DirectusUser } from '@directus/sdk'
 import { login, refresh, logout, readMe } from '#imports'
 
 export function useDirectusAuth () {
@@ -17,7 +17,7 @@ export function useDirectusAuth () {
     }
   })
 
-  const setUser = (value: any) => {
+  const setUser = <T extends object>(value: DirectusUser<T>) => {
     user.value = value
   }
 
@@ -36,15 +36,24 @@ export function useDirectusAuth () {
 
   const signIn = async (identifier: string, password: string) => {
     try {
-      const { access_token, expires, refresh_token, expires_at } = await directus.request(login(identifier, password, {}))
+      const authResponse = await directus.request(
+        login(identifier, password, {})
+      )
       /* the following `if` is required to avoid a type error
-      *  because the type of expires is number | null
-      *  while maxAge for useCookie is number | undefined
-      */
-      if (expires !== null) { refreshToken(expires).value = refresh_token }
-      accessToken().value = access_token
+       *  because the type of expires is number | null
+       *  while maxAge for useCookie is number | undefined
+       */
+      if (authResponse.expires !== null) {
+        refreshToken(authResponse.expires).value = authResponse.refresh_token
+      }
+      accessToken().value = authResponse.access_token
 
-      return { access_token, refresh_token, expires_at, expires }
+      return {
+        accessToken: authResponse.access_token,
+        refreshToken: authResponse.refresh_token,
+        expiresAt: authResponse.expires_at,
+        expires: authResponse.expires
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
@@ -53,18 +62,25 @@ export function useDirectusAuth () {
 
   const refreshTokens = async () => {
     try {
-      const { access_token, expires, refresh_token, expires_at } = await directus.request(refresh(refreshToken().value!))
+      const authResponse =
+        await directus.request(refresh(refreshToken().value!))
       // check previous note about type error
-      if (expires !== null) { refreshToken(expires).value = refresh_token }
-      accessToken().value = access_token
+      if (authResponse.expires !== null) {
+        refreshToken(authResponse.expires).value = authResponse.refresh_token
+      }
+      accessToken().value = authResponse.access_token
 
-      return { access_token, refresh_token, expires_at, expires }
+      return {
+        accessToken: authResponse.access_token,
+        refreshToken: authResponse.refresh_token,
+        expiresAt: authResponse.expires_at,
+        expires: authResponse.expires
+      }
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error(error)
     }
   }
-
   const signOut = async () => {
     try {
       await directus.request(logout(refreshToken().value!))
