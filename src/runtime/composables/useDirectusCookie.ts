@@ -4,13 +4,13 @@ import { useCookie } from '#imports'
 export function useDirectusCookie () {
   const config = useRuntimeConfig()
 
-  const accessToken = (T?: number | undefined): CookieRef<string | null> => {
-    const cookie = useCookie<string | null>(config.public.directus.tokenCookieName, { maxAge: T })
+  const accessToken = (maxAge?: number | undefined): CookieRef<string | null> => {
+    const cookie = useCookie<string | null>(config.public.directus.tokenCookieName, { maxAge })
     return cookie
   }
 
-  const refreshToken = (T?: number | undefined): CookieRef<string | null> => {
-    const cookie = useCookie<string | null>(config.public.directus.refreshTokenCookieName, { maxAge: T })
+  const refreshToken = (maxAge?: number | undefined): CookieRef<string | null> => {
+    const cookie = useCookie<string | null>(config.public.directus.refreshTokenCookieName, { maxAge })
     return cookie
   }
 
