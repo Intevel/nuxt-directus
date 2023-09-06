@@ -6,7 +6,6 @@ import type {
 import { useAsyncData, readItem, readItems } from '#imports'
 
 export function useDirectusItems<TSchema extends Record<string, any>> () {
-  const { accessToken } = useDirectusCookie()
   const directus = useDirectusRest<TSchema>()
 
   /**

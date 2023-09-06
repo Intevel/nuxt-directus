@@ -16,15 +16,16 @@ export const useDirectus = <T extends Object>() => {
 }
 
 export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
-  const { accessToken } = useDirectusCookie()
+  const { accessToken, refreshToken } = useDirectusCookie()
 
   // TODO: add configs for oFetch once the following it's implemented
   // https://github.com/directus/directus/issues/19592
   const defaultConfig: RestConfig = {
-    // TODO: fix request for public content when accessToken is expired
+    // TODO: fix request for public content when accessToken is invalid.
+    // Current workaround check for refreshToken too to fallback to auto/manual refresh.
     // @ts-ignore
     onRequest: (request) => {
-      if (accessToken() && accessToken().value) {
+      if (accessToken() && accessToken().value && refreshToken() && refreshToken().value) {
         request.headers = {
           ...request.headers,
           authorization: `Bearer ${accessToken().value}`

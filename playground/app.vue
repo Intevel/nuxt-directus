@@ -4,6 +4,7 @@
       <h1>{{ global.title }}</h1>
       <p>{{ global.description }}</p>
     </div>
+    <hr>
     <div>
       <button @click="fetchUser">
         Fetch user
@@ -24,6 +25,7 @@
         Refresh Tokens
       </button>
     </div>
+    <hr>
     <div>
       Posts
       <ul>
