@@ -1,4 +1,4 @@
-import { type DirectusUser } from '@directus/sdk'
+import type { DirectusUser } from '../types'
 import { login, refresh, logout, readMe } from '#imports'
 
 export function useDirectusAuth () {
