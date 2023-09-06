@@ -4,18 +4,7 @@ import { login, refresh, logout, readMe } from '#imports'
 export function useDirectusAuth () {
   const { accessToken, refreshToken } = useDirectusCookie()
   const user = useDirectusUser()
-  const directus = useDirectusRest({
-    onRequest: (request) => {
-      if (accessToken() && accessToken().value) {
-        request.headers = {
-          ...request.headers,
-          authorization: `Bearer ${accessToken().value}`
-        }
-      }
-
-      return request
-    }
-  })
+  const directus = useDirectusRest()
 
   const setUser = <T extends object>(value: DirectusUser<T>) => {
     user.value = value

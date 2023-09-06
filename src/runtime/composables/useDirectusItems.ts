@@ -7,18 +7,7 @@ import { useAsyncData, readItem, readItems } from '#imports'
 
 export function useDirectusItems<TSchema extends Record<string, any>> () {
   const { accessToken } = useDirectusCookie()
-  const directus = useDirectusRest<TSchema>({
-    onRequest: (request) => {
-      if (accessToken() && accessToken().value) {
-        request.headers = {
-          ...request.headers,
-          authorization: `Bearer ${accessToken().value}`
-        }
-      }
-
-      return request
-    }
-  })
+  const directus = useDirectusRest<TSchema>()
 
   /**
    * Get a single item from a collection.

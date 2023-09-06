@@ -9,13 +9,35 @@ import {
   graphql,
   rest
 } from '#imports'
+import defu from 'defu'
 
 export const useDirectus = <T extends Object>() => {
   return useNuxtApp().$directus as DirectusClient<T>
 }
 
 export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
-  return useNuxtApp().$directus.with(rest(config)) as RestClient<T>
+  const { accessToken } = useDirectusCookie()
+
+  // TODO: add configs for oFetch once the following it's implemented
+  // https://github.com/directus/directus/issues/19592
+  const defaultConfig: RestConfig = {
+    // TODO: fix request for public content when accessToken is expired
+    // @ts-ignore
+    onRequest: (request) => {
+      if (accessToken() && accessToken().value) {
+        request.headers = {
+          ...request.headers,
+          authorization: `Bearer ${accessToken().value}`
+        }
+      }
+
+      return request
+    }
+  }
+
+  const options = defu(config, defaultConfig)
+
+  return useNuxtApp().$directus.with(rest(options)) as RestClient<T>
 }
 
 export const useDirectusGraphql = <T extends Object>() => {
