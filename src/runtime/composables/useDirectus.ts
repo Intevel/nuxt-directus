@@ -17,6 +17,7 @@ export const useDirectus = <T extends Object>() => {
 
 export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
   const { accessToken, refreshToken } = useDirectusCookie()
+  const staticToken = useRuntimeConfig().public.directus.staticToken
 
   // TODO: add configs for oFetch once the following it's implemented
   // https://github.com/directus/directus/issues/19592
@@ -29,6 +30,11 @@ export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
         request.headers = {
           ...request.headers,
           authorization: `Bearer ${accessToken().value}`
+        }
+      } else if (staticToken) {
+        request.headers = {
+          ...request.headers,
+          authorization: `Bearer ${staticToken}`
         }
       }
 
