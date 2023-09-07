@@ -1,3 +1,5 @@
+import type { AsyncDataOptions } from '#imports';
+
 export * from "@directus/sdk";
 
 export interface ModuleOptions {
@@ -43,8 +45,6 @@ export interface ModuleOptions {
 export interface DirectusItemRequestOptions {
   query?: DirectusQueryParams;
   key?: string;
-  /* Some useAsyncData options */
-  server?: boolean;
-  immediate?: boolean;
-  pick?: string[]
+  /* useAsyncData options */
+  params?: AsyncDataOptions<RegularCollections<TSchema>>;
 }

@@ -20,11 +20,11 @@ export function useDirectusItems<TSchema extends Record<string, any>> () {
     options?: DirectusItemRequestOptions
   ) => {
     if (!id) { throw new Error('You must provide an id to get an item.') }
-    const { data, pending, error, refresh } = await useAsyncData(
+    const { data, pending, refresh, execute, error, status } = await useAsyncData(
       options?.key ?? `${String(collection)}_${id}`,
-      async () => await directus.request(readItem(collection, id, options?.query))
+      async () => await directus.request(readItem(collection, id, options?.query)), options?.params
     )
-    return { data, pending, error, refresh }
+    return { data, pending, refresh, execute, error, status }
   }
 
   /**
@@ -36,12 +36,12 @@ export function useDirectusItems<TSchema extends Record<string, any>> () {
     collection: RegularCollections<TSchema>,
     options?: DirectusItemRequestOptions
   ) => {
-    const { data, pending, error, refresh } = await useAsyncData(
+    const { data, pending, refresh, execute, error, status } = await useAsyncData(
       // TODO: Following https://github.com/nuxt/nuxt/issues/23000 we could customize the random key via `optimization.keyedComposables`
       options?.key ?? String(collection),
-      async () => await directus.request(readItems(collection, options?.query))
+      async () => await directus.request(readItems(collection, options?.query)), options?.params
     )
-    return { data, pending, error, refresh }
+    return { data, pending, refresh, execute, error, status }
   }
 
   /**
@@ -53,11 +53,11 @@ export function useDirectusItems<TSchema extends Record<string, any>> () {
     collection: SingletonCollections<TSchema>,
     options?: DirectusItemRequestOptions
   ) => {
-    const { data, pending, error, refresh } = await useAsyncData(
+    const { data, pending, refresh, execute, error, status } = await useAsyncData(
       options?.key ?? String(collection),
-      async () => await directus.request(readSingleton(collection, options?.query))
+      async () => await directus.request(readSingleton(collection, options?.query)), options?.params
     )
-    return { data, pending, error, refresh }
+    return { data, pending, refresh, execute, error, status }
   }
 
   return {
