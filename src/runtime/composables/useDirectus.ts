@@ -5,6 +5,7 @@ import type {
   RestConfig
 } from '@directus/sdk'
 import {
+  useRuntimeConfig,
   useNuxtApp,
   graphql,
   rest
@@ -24,7 +25,6 @@ export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
   const defaultConfig: RestConfig = {
     // TODO: fix request for public content when accessToken is invalid.
     // Current workaround check for refreshToken too to fallback to auto/manual refresh.
-    // @ts-ignore
     onRequest: (request) => {
       if (accessToken() && accessToken().value && refreshToken() && refreshToken().value) {
         request.headers = {
