@@ -1,5 +1,4 @@
-import { createDirectus } from '@directus/sdk'
-import { defineNuxtPlugin, useRuntimeConfig } from '#app'
+import { defineNuxtPlugin } from '#imports'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   const { fetchUser, refreshTokens } = useDirectusAuth()
@@ -13,7 +12,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   }
 
   async function checkIfUserExists () {
-    if (!user.value && accessToken().value) {
+    if (!user.value && accessToken().value && refreshToken().value) {
       await fetchUser()
     }
   }
