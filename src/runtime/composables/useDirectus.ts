@@ -44,9 +44,9 @@ export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
 
   const options = defu(config, defaultConfig)
 
-  return useNuxtApp().$directus.with(rest(options)) as RestClient<T>
+  return useDirectus().with(rest(options)) as RestClient<T>
 }
 
 export const useDirectusGraphql = <T extends Object>() => {
-  return useNuxtApp().$directus.with(graphql()) as GraphqlClient<T>
+  return useDirectus().with(graphql()) as GraphqlClient<T>
 }
