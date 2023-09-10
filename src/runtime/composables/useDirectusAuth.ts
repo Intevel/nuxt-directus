@@ -4,7 +4,7 @@ import { login, refresh, logout, readMe } from '#imports'
 export function useDirectusAuth () {
   const { accessToken, refreshToken } = useDirectusCookie()
   const user = useDirectusUser()
-  const directus = useDirectusRest()
+  const directus = useDirectus().with(rest())
 
   const setUser = <T extends object>(value: DirectusUser<T>) => {
     user.value = value
