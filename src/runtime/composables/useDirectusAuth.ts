@@ -34,8 +34,8 @@ export function useDirectusAuth () {
        */
       if (authResponse.expires !== null) {
         refreshToken(authResponse.expires).value = authResponse.refresh_token
+        accessToken(authResponse.expires).value = authResponse.access_token
       }
-      accessToken().value = authResponse.access_token
 
       return {
         accessToken: authResponse.access_token,
@@ -56,8 +56,8 @@ export function useDirectusAuth () {
       // check previous note about type error
       if (authResponse.expires !== null) {
         refreshToken(authResponse.expires).value = authResponse.refresh_token
+        accessToken(authResponse.expires).value = authResponse.access_token
       }
-      accessToken().value = authResponse.access_token
 
       return {
         accessToken: authResponse.access_token,
