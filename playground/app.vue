@@ -27,24 +27,37 @@
     </div>
     <hr>
     <div>
-      Posts
-      <ul>
-        <li v-for="post in posts" :key="post.id">
-          <h2>{{ post.title }}</h2>
-          <sub>{{ post.slug }}</sub>
-          <p>{{ post.content }}</p>
-        </li>
-      </ul>
-    </div>
-    <div>
-      Single Post
-      <ul>
-        <li v-if="singlePost">
-          <h2>{{ singlePost.title }}</h2>
-          <sub>{{ singlePost.slug }}</sub>
-          <p>{{ singlePost.content }}</p>
-        </li>
-      </ul>
+      <h1>Posts</h1>
+      <button @click="refreshPosts()">
+        Refresh posts
+      </button>
+      <div>
+        List Posts
+        <ul>
+          <li v-for="post in posts" :key="post.id">
+            <h2>{{ post.title }}</h2>
+            <sub>{{ post.id }}</sub>
+            <p>{{ post.content }}</p>
+          </li>
+        </ul>
+      </div>
+      <div>
+        Single Post by ID:
+        <span>
+          <input type="text" v-model="postId">
+          <button @click="searchPost()">
+            Refresh posts
+          </button>
+        </span>
+        <ul>
+          <li v-if="singlePost && !Array.isArray(singlePost)">
+            <h2>{{ singlePost.title }}</h2>
+            <sub>{{ singlePost.id }}</sub>
+            <p>{{ singlePost.content }}</p>
+          </li>
+          <span v-else>No posts available</span>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -73,6 +86,8 @@ interface Schema {
 const { getItemById, getItems, getSingletonItem } = useDirectusItems<Schema>()
 
 const { data: global } = await getSingletonItem('global')
-const { data: posts, pending, error, refresh } = await getItems('posts')
-const { data: singlePost } = await getItemById('posts', '4002c62f-1787-4420-9805-9f1816276032')
+const { data: posts, pending, refresh: refreshPosts } = await getItems('posts')
+
+const postId = ref<string | number>('4002c62f-1787-4420-9805-9f1816276032')
+const { data: singlePost, error, execute: searchPost } = await getItemById('posts', postId.value)
 </script>
