@@ -6,14 +6,6 @@
     </div>
     <hr>
     <div>
-      <button @click="fetchUser">
-        Fetch user
-      </button>
-      <pre>
-        {{ user ?? 'Not logged in' }}
-      </pre>
-    </div>
-    <div>
       Nuxt module playground
       <button @click="signIn('admin@example.com', 'Passw0rd!')">
         Sign in
@@ -24,6 +16,15 @@
       <button @click="refreshTokens">
         Refresh Tokens
       </button>
+    </div>
+    <div>
+      <pre>
+        <details v-if="user">
+          <summary>Show user data</summary>
+          {{ user }}
+        </details>
+        <div v-else>Not logged in</div>
+      </pre>
     </div>
     <hr>
     <div>
@@ -63,7 +64,7 @@
 </template>
 
 <script setup lang="ts">
-const { fetchUser, signIn, signOut, refreshTokens } = useDirectusAuth()
+const { signIn, signOut, refreshTokens } = useDirectusAuth()
 const user = useDirectusUser()
 
 interface Global {
