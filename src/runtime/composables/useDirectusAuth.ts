@@ -15,10 +15,10 @@ export function useDirectusAuth () {
       try {
         const res = await useDirectusRest().request(readMe())
         setUser(res)
-      } catch (error) {
+      } catch (error: any) {
         // eslint-disable-next-line no-console
-        console.error("Couldn't fetch user", error)
-        throw error
+        console.error("Couldn't fetch user", error.errors)
+        throw error.errors
       }
     }
     return user
@@ -46,10 +46,10 @@ export function useDirectusAuth () {
         expiresAt: authResponse.expires_at,
         expires: authResponse.expires
       }
-    } catch (error) {
+    } catch (error: any) {
       // eslint-disable-next-line no-console
-      console.error("Couldn't login user", error)
-      throw error
+      console.error("Couldn't login user", error.errors)
+      throw error.errors
     }
   }
 
@@ -71,10 +71,10 @@ export function useDirectusAuth () {
         expiresAt: authResponse.expires_at,
         expires: authResponse.expires
       }
-    } catch (error) {
+    } catch (error: any) {
       // eslint-disable-next-line no-console
-      console.error("Couldn't refresh tokens", error)
-      throw error
+      console.error("Couldn't refresh tokens", error.errors)
+      throw error.errors
     }
   }
   const signOut = async () => {
@@ -83,10 +83,10 @@ export function useDirectusAuth () {
       accessToken().value = null
       refreshToken().value = null
       user.value = null
-    } catch (error) {
+    } catch (error: any) {
       // eslint-disable-next-line no-console
-      console.error("Couldn't logut user", error)
-      throw error
+      console.error("Couldn't logut user", error.errors)
+      throw error.errors
     }
   }
 

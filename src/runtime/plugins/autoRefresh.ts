@@ -5,14 +5,21 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const { accessToken, refreshToken } = useDirectusCookie()
   const user = useDirectusUser()
 
+  const errorCodes = ['TOKEN_EXPIRED', 'INVALID_TOKEN']
+
   async function checkUserAuth () {
     if (!user.value && accessToken().value) {
       await fetchUser().catch(async (e) => {
-        if (e.errors[0].extensions.code === 'TOKEN_EXPIRED') {
+        // TODO: don't rely on the first error alone
+        if (e.some((error: any) => errorCodes.includes(error.extensions.code))) {
           nuxtApp.runWithContext(async () => await refreshTokens()).catch((e) => {
-            if (e.errors[0].extensions.code === 'TOKEN_EXPIRED') {
-              accessToken().value = null
-              refreshToken().value = null
+            // TODO: don't rely on the first error alone
+            if (e.some((error: any) => errorCodes.includes(error.extensions.code))) {
+              nuxtApp.runWithContext(()=>{
+                accessToken().value = null
+                refreshToken().value = null
+                console.log('Authentication has been invalidated. Please login again.')
+              })
             }
           })
         }
