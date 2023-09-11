@@ -13,11 +13,12 @@ export function useDirectusAuth () {
   const fetchUser = async () => {
     if (accessToken().value) {
       try {
-        const res = await directus.request(readMe())
+        const res = await useDirectusRest().request(readMe())
         setUser(res)
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.error(error)
+        console.error("Couldn't fetch user", error)
+        throw error
       }
     }
     return user
@@ -36,6 +37,8 @@ export function useDirectusAuth () {
         refreshToken(authResponse.expires).value = authResponse.refresh_token
         accessToken(authResponse.expires).value = authResponse.access_token
       }
+      const res = await directus.request(withToken(authResponse.access_token!, readMe()))
+      setUser(res)
 
       return {
         accessToken: authResponse.access_token,
@@ -45,19 +48,22 @@ export function useDirectusAuth () {
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error)
+      console.error("Couldn't login user", error)
+      throw error
     }
   }
 
   const refreshTokens = async () => {
     try {
       const authResponse =
-        await directus.request(refresh(refreshToken().value!))
-      // check previous note about type error
+        await useDirectusRest().request(refresh(refreshToken().value!))
+      // check previous note in `signIn` about type error
       if (authResponse.expires !== null) {
         refreshToken(authResponse.expires).value = authResponse.refresh_token
         accessToken(authResponse.expires).value = authResponse.access_token
       }
+      const res = await directus.request(withToken(authResponse.access_token!, readMe()))
+      setUser(res)
 
       return {
         accessToken: authResponse.access_token,
@@ -67,7 +73,8 @@ export function useDirectusAuth () {
       }
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error)
+      console.error("Couldn't refresh tokens", error)
+      throw error
     }
   }
   const signOut = async () => {
@@ -78,7 +85,8 @@ export function useDirectusAuth () {
       user.value = null
     } catch (error) {
       // eslint-disable-next-line no-console
-      console.error(error)
+      console.error("Couldn't logut user", error)
+      throw error
     }
   }
 
