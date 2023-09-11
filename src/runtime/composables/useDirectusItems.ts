@@ -19,10 +19,12 @@ export function useDirectusItems<TSchema extends Record<string, any>> () {
     id: string | number,
     options?: DirectusItemRequestOptions
   ) => {
-    if (!id) { throw new Error('You must provide an id to get an item from getItemById.') }
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
       options?.key ?? `${String(collection)}_${id}`,
-      async () => await directus.request(readItem(collection, id, options?.query)), options?.params
+      async () => {
+        if (!id) { throw new Error('You must provide an id to get an item from getItemById.') }
+        return await directus.request(readItem(collection, id, options?.query))
+      }, options?.params
     )
     return { data, pending, refresh, execute, error, status }
   }
