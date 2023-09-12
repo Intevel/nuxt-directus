@@ -5,7 +5,7 @@ import type {
 } from '../types'
 import { useAsyncData, readItem, readItems } from '#imports'
 
-export function useDirectusItems<TSchema extends Record<string, any>> () {
+export function useDirectusItems<TSchema extends object> () {
   const directus = useDirectusRest<TSchema>()
 
   /**
@@ -22,8 +22,11 @@ export function useDirectusItems<TSchema extends Record<string, any>> () {
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
       options?.key ?? `${String(collection)}_${id}`,
       async () => {
-        if (!id) { throw new Error('You must provide an id to get an item from getItemById.') }
-        return await directus.request(readItem(collection, id, options?.query))
+        // TODO: if/else untill https://github.com/directus/directus/issues/19621 is fixed
+        if (!id) { throw new Error('You must provide an id to get an item with getItemById.') }
+        else {
+          return await directus.request(readItem(collection, id, options?.query))
+        }
       }, options?.params
     )
     return { data, pending, refresh, execute, error, status }
