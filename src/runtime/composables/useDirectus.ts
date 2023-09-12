@@ -26,7 +26,7 @@ export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
     // TODO: fix request for public content when accessToken is invalid.
     // Current workaround check for refreshToken too to fallback to auto/manual refresh.
     onRequest: (request) => {
-      if (accessToken() && accessToken().value && refreshToken() && refreshToken().value) {
+      if (accessToken() && accessToken().value) {
         request.headers = {
           ...request.headers,
           authorization: `Bearer ${accessToken().value}`
