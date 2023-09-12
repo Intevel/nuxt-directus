@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!pending && !!global">
+    <div v-if="!pendingPosts && !!global">
       <h1>{{ global.title }}</h1>
       <p>{{ global.description }}</p>
     </div>
@@ -50,8 +50,9 @@
             Refresh posts
           </button>
         </span>
+        <p>Selected ID: {{ postId }}</p>
         <ul>
-          <li v-if="singlePost && !Array.isArray(singlePost)">
+          <li v-if="!pendingSingle && singlePost && !Array.isArray(singlePost)" :key="singlePost.id">
             <h2>{{ singlePost.title }}</h2>
             <sub>{{ singlePost.id }}</sub>
             <p>{{ singlePost.content }}</p>
@@ -87,8 +88,18 @@ interface Schema {
 const { getItemById, getItems, getSingletonItem } = useDirectusItems<Schema>()
 
 const { data: global } = await getSingletonItem('global')
-const { data: posts, pending, refresh: refreshPosts } = await getItems('posts')
+const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await getItems('posts')
 
-const postId = ref<string | number>('4002c62f-1787-4420-9805-9f1816276032')
-const { data: singlePost, error, execute: searchPost } = await getItemById('posts', postId.value)
+const postId = ref<string | number>('')
+
+// When useAsyncData is inside a composable with a ref parameter, it doesn't refresh
+// const { data: singlePost, pending: pendingSingle, error, refresh: searchPost } = await getItemById('posts', postId.value)
+
+// This one does
+const { data: singlePost, pending: pendingSingle, error, refresh: searchPost } = await useAsyncData(`posts_${postId.value}`, async () => {
+  if (!postId.value) {throw new Error('No post ID selected')}
+  else {
+    return await useDirectusRest<Schema>().request(readItem('posts', postId.value))
+  }
+})
 </script>
