@@ -17,14 +17,12 @@ export const useDirectus = <T extends Object>() => {
 }
 
 export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
-  const { accessToken, refreshToken } = useDirectusCookie()
+  const { accessToken } = useDirectusCookie()
   const staticToken = useRuntimeConfig().public.directus.staticToken
 
   // TODO: add configs for oFetch once the following it's implemented
   // https://github.com/directus/directus/issues/19592
   const defaultConfig: RestConfig = {
-    // TODO: fix request for public content when accessToken is invalid.
-    // Current workaround check for refreshToken too to fallback to auto/manual refresh.
     onRequest: (request) => {
       if (accessToken() && accessToken().value) {
         request.headers = {

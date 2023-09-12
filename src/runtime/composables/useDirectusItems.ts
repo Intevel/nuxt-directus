@@ -20,6 +20,7 @@ export function useDirectusItems<TSchema extends object> () {
     options?: DirectusItemRequestOptions
   ) => {
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
+      // TODO: add logic to randomize key if query is present
       options?.key ?? `${String(collection)}_${id}`,
       async () => {
         // TODO: if/else untill https://github.com/directus/directus/issues/19621 is fixed
@@ -42,13 +43,12 @@ export function useDirectusItems<TSchema extends object> () {
     options?: DirectusItemRequestOptions
   ) => {
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
-      // TODO: Following https://github.com/nuxt/nuxt/issues/23000 we could customize the random key via `optimization.keyedComposables`
+      // TODO: add logic to randomize key if query is present
       options?.key ?? String(collection),
       async () => await directus.request(readItems(collection, options?.query)), options?.params
     )
     return { data, pending, refresh, execute, error, status }
   }
-
   /**
    * Get the item from a collection marked as Singleton.
    * @param collection The collection name to get the items from.
@@ -59,6 +59,7 @@ export function useDirectusItems<TSchema extends object> () {
     options?: DirectusItemRequestOptions
   ) => {
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
+      // TODO: add logic to randomize key if query is present
       options?.key ?? String(collection),
       async () => await directus.request(readSingleton(collection, options?.query)), options?.params
     )
