@@ -7,13 +7,16 @@ import type {
 import {
   useRuntimeConfig,
   useNuxtApp,
+  createDirectus,
   graphql,
   rest
 } from '#imports'
 import defu from 'defu'
 
 export const useDirectus = <T extends Object>() => {
-  return useNuxtApp().$directus as DirectusClient<T>
+  const url = useRuntimeConfig().public.directus.url
+
+  return createDirectus(url) as DirectusClient<T>
 }
 
 export const useDirectusRest = <T extends Object>(config?: RestConfig) => {

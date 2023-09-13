@@ -53,8 +53,6 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
-    addPlugin(resolve(runtimeDir, './plugins/directus'), { append: true })
-
     if (nuxt.options.runtimeConfig.public.directus.autoRefresh) {
       addPlugin(resolve(runtimeDir, './plugins/autoRefresh'), { append: true })
     }
