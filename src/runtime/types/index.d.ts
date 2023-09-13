@@ -1,6 +1,6 @@
 import type { AsyncDataOptions } from '#imports';
 
-export * from "@directus/sdk";
+export type * from "@directus/sdk";
 
 export interface ModuleOptions {
   /**
