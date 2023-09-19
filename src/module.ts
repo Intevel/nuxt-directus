@@ -78,12 +78,3 @@ export default defineNuxtModule<ModuleOptions>({
     }
   }
 })
-
-declare module '@nuxt/schema' {
-  interface ConfigSchema {
-    directus?: ModuleOptions;
-    publicRuntimeConfig?: {
-      directus?: ModuleOptions;
-    };
-  }
-}
