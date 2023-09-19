@@ -10,11 +10,17 @@ export interface ModuleOptions {
    */
   url: string;
   /**
-   * Directus static token.
+   * Directus static token that is available only server side. Customizable at runtime via NUXT_DIRECTUS_STATIC_TOKEN environment variable.
    * @default ''
    * @type string
    */
-  staticToken?: string;
+  privateStaticToken?: string;
+  /**
+   * Directus static token that is available both server and client side. Customizable at runtime via NUXT_PUBLIC_DIRECTUS_STATIC_TOKEN environment variable.
+   * @default ''
+   * @type string
+   */
+  publicStaticToken?: string;
   /**
    * Enable Directus Devtools
    * @default false

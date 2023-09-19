@@ -20,7 +20,8 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     url: '',
-    staticToken: '',
+    privateStaticToken: '',
+    publicStaticToken: '',
     devtools: false,
     tokenCookieName: 'directus_access_token',
     refreshTokenCookieName: 'directus_refresh_token',
@@ -30,11 +31,17 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     nuxt.options.runtimeConfig.public.directus = defu(
+      nuxt.options.runtimeConfig.directus,
+      {
+        staticToken: options.privateStaticToken,
+        devtools: options.devtools
+      }
+    )
+    nuxt.options.runtimeConfig.public.directus = defu(
       nuxt.options.runtimeConfig.public.directus,
       {
         url: options.url,
-        staticToken: options.staticToken,
-        devtools: options.devtools,
+        staticToken: options.publicStaticToken,
         tokenCookieName: options.tokenCookieName,
         refreshTokenCookieName: options.refreshTokenCookieName,
         autoRefresh: options.autoRefresh
