@@ -1,10 +1,12 @@
 import type { DirectusUser } from '../types'
-import { login, refresh, logout, readMe } from '#imports'
+import { readMe } from '#imports'
 
 export function useDirectusAuth () {
   const { accessToken, refreshToken } = useDirectusCookie()
   const user = useDirectusUser()
-  const directus = useDirectus().with(rest())
+  const directus = useDirectus()
+    .with(authentication('json', { credentials: 'include' }))
+    .with(rest({ credentials: 'include' }))
 
   const setUser = <T extends object>(value: DirectusUser<T>) => {
     user.value = value
@@ -26,9 +28,7 @@ export function useDirectusAuth () {
 
   const signIn = async (identifier: string, password: string) => {
     try {
-      const authResponse = await directus.request(
-        login(identifier, password, {})
-      )
+      const authResponse = await directus.login(identifier, password)
       /* the following `if` is required to avoid a type error
        *  because the type of expires is number | null
        *  while maxAge for useCookie is number | undefined
@@ -56,7 +56,7 @@ export function useDirectusAuth () {
   const refreshTokens = async () => {
     try {
       const authResponse =
-        await useDirectusRest().request(refresh(refreshToken().value!))
+        await directus.refresh()
       // check previous note in `signIn` about type error
       if (authResponse.expires !== null) {
         refreshToken(authResponse.expires).value = authResponse.refresh_token
@@ -79,7 +79,7 @@ export function useDirectusAuth () {
   }
   const signOut = async () => {
     try {
-      await directus.request(logout(refreshToken().value!))
+      await directus.logout()
       accessToken().value = null
       refreshToken().value = null
       user.value = null

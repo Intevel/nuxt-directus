@@ -6,7 +6,6 @@ import type {
 } from '@directus/sdk'
 import {
   useRuntimeConfig,
-  useNuxtApp,
   createDirectus,
   graphql,
   rest
@@ -26,6 +25,7 @@ export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
   // TODO: add configs for oFetch once the following it's implemented
   // https://github.com/directus/directus/issues/19592
   const defaultConfig: RestConfig = {
+    credentials: 'include',
     onRequest: (request) => {
       if (accessToken() && accessToken().value) {
         request.headers = {
