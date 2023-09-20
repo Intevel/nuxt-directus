@@ -30,7 +30,7 @@ export default defineNuxtModule<ModuleOptions>({
   setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
-    nuxt.options.runtimeConfig.public.directus = defu(
+    nuxt.options.runtimeConfig.directus = defu(
       nuxt.options.runtimeConfig.directus,
       {
         staticToken: options.privateStaticToken,
