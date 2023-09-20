@@ -43,22 +43,23 @@
         </ul>
       </div>
       <div>
-        Single Post by ID:
-        <span>
-          <input type="text" v-model="postId">
-          <button @click="searchPost()">
-            Refresh posts
-          </button>
-        </span>
-        <p>Selected ID: {{ postId }}</p>
-        <ul>
-          <li v-if="!pendingSingle && singlePost && !Array.isArray(singlePost)" :key="singlePost.id">
-            <h2>{{ singlePost.title }}</h2>
-            <sub>{{ singlePost.id }}</sub>
-            <p>{{ singlePost.content }}</p>
-          </li>
-          <span v-else>No posts available</span>
-        </ul>
+        <h1>Single Post</h1>
+        <input v-model="postId" placeholder="Post ID">
+        <button @click="searchPost()">
+          Search post
+        </button>
+        <div v-if="singlePostPending">
+          Searching post...
+        </div>
+        <div v-else-if="singlePostError">
+          {{ singlePostError }}
+        </div>
+        <div v-else-if="singlePost">
+          {{ singlePost }}
+        </div>
+        <div v-else>
+          No post found
+        </div>
       </div>
     </div>
   </div>
@@ -74,7 +75,7 @@ interface Global {
 }
 
 interface Posts {
-  id: string
+  id: string | number
   title: string
   slug: string
   content: string
@@ -85,12 +86,13 @@ interface Schema {
   posts: Posts[]
 }
 
-const { getItemById, getItems, getSingletonItem } = useDirectusItems<Schema>()
+const { getItems, getItemById, getSingletonItem } = useDirectusItems<Schema>()
 
 const { data: global } = await getSingletonItem('global')
 const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await getItems('posts')
 
-const postId = ref<string | number>('')
+const postId = ref<Posts['id']>('')
+const { data: singlePost, pending: singlePostPending, error: singlePostError, refresh: searchPost } = await getItemById('posts', postId)
 
 // When useAsyncData is inside a composable with a ref parameter, it doesn't refresh
 // const { data: singlePost, pending: pendingSingle, error, refresh: searchPost } = await getItemById('posts', postId.value)

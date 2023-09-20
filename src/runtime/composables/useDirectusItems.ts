@@ -15,19 +15,17 @@ export function useDirectusItems<TSchema extends object> () {
    * @param options The options to use when fetching the item.
    */
   const getItemById = async (
-    collection: RegularCollections<TSchema>,
-    id: string | number,
+    collection: Ref<RegularCollections<TSchema>> | RegularCollections<TSchema>,
+    id: Ref<string | number> | string | number,
     options?: DirectusItemRequestOptions
   ) => {
+    const collectionName = toRef(collection) as Ref<RegularCollections<TSchema>>
+    const itemId = toRef(id)
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
       // TODO: add logic to randomize key if query is present
-      options?.key ?? `${String(collection)}_${id}`,
+      options?.key ?? `${String(collectionName.value)}_${itemId.value}`,
       async () => {
-        // TODO: if/else untill https://github.com/directus/directus/issues/19621 is fixed
-        if (!id) { throw new Error('You must provide an id to get an item with getItemById.') }
-        else {
-          return await directus.request(readItem(collection, id, options?.query))
-        }
+        return await directus.request(readItem(collectionName.value, itemId.value, options?.query))
       }, options?.params
     )
     return { data, pending, refresh, execute, error, status }
@@ -39,13 +37,14 @@ export function useDirectusItems<TSchema extends object> () {
    * @param options The options to use when fetching the items.
    */
   const getItems = async (
-    collection: RegularCollections<TSchema>,
+    collection: Ref<RegularCollections<TSchema>> | RegularCollections<TSchema>,
     options?: DirectusItemRequestOptions
   ) => {
+    const collectionName = toRef(collection) as Ref<RegularCollections<TSchema>>
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
       // TODO: add logic to randomize key if query is present
-      options?.key ?? String(collection),
-      async () => await directus.request(readItems(collection, options?.query)), options?.params
+      options?.key ?? String(collectionName.value),
+      async () => await directus.request(readItems(collectionName.value, options?.query)), options?.params
     )
     return { data, pending, refresh, execute, error, status }
   }
@@ -55,13 +54,14 @@ export function useDirectusItems<TSchema extends object> () {
    * @param options The options to use when fetching the items.
    */
   const getSingletonItem = async (
-    collection: SingletonCollections<TSchema>,
+    collection: Ref<SingletonCollections<TSchema>> | SingletonCollections<TSchema>,
     options?: DirectusItemRequestOptions
   ) => {
+    const collectionName = toRef(collection) as Ref<SingletonCollections<TSchema>>
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
       // TODO: add logic to randomize key if query is present
-      options?.key ?? String(collection),
-      async () => await directus.request(readSingleton(collection, options?.query)), options?.params
+      options?.key ?? String(collectionName.value),
+      async () => await directus.request(readSingleton(collectionName.value, options?.query)), options?.params
     )
     return { data, pending, refresh, execute, error, status }
   }
