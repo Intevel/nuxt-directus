@@ -18,9 +18,15 @@ export function useDirectusAuth () {
         const res = await useDirectusRest().request(readMe())
         setUser(res)
       } catch (error: any) {
-        // eslint-disable-next-line no-console
-        console.error("Couldn't fetch user", error.errors)
-        throw error.errors
+        if (error && error.message) {
+          // eslint-disable-next-line no-console
+          console.error("Couldn't fetch user", error.errors)
+          throw error.errors
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(error)
+          throw error
+        }
       }
     }
     return user
@@ -47,9 +53,15 @@ export function useDirectusAuth () {
         expires: authResponse.expires
       }
     } catch (error: any) {
-      // eslint-disable-next-line no-console
-      console.error("Couldn't login user", error.errors)
-      throw error.errors
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't login user", error.errors)
+        throw error.errors
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+        throw error
+      }
     }
   }
 
@@ -72,9 +84,15 @@ export function useDirectusAuth () {
         expires: authResponse.expires
       }
     } catch (error: any) {
-      // eslint-disable-next-line no-console
-      console.error("Couldn't refresh tokens", error.errors)
-      throw error.errors
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't refresh tokens", error.errors)
+        throw error.errors
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+        throw error
+      }
     }
   }
   const signOut = async () => {
@@ -84,9 +102,15 @@ export function useDirectusAuth () {
       refreshToken().value = null
       user.value = null
     } catch (error: any) {
-      // eslint-disable-next-line no-console
-      console.error("Couldn't logut user", error.errors)
-      throw error.errors
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't logut user", error.errors)
+        throw error.errors
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+        throw error
+      }
     }
   }
 
