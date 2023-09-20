@@ -45,7 +45,7 @@ export interface ModuleOptions {
    * @default true
    * @type boolean
    */
-  autoRefresh?: boolean;
+  autoRefresh: boolean;
 }
 
 export interface DirectusItemRequestOptions {

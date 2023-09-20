@@ -2,10 +2,11 @@ import type { DirectusUser } from '../types'
 import { readMe } from '#imports'
 
 export function useDirectusAuth () {
+  const autoRefresh = useRuntimeConfig().public.directus.autoRefresh
   const { accessToken, refreshToken } = useDirectusCookie()
   const user = useDirectusUser()
   const directus = useDirectus()
-    .with(authentication('json', { credentials: 'include' }))
+    .with(authentication('json', { autoRefresh, credentials: 'include' }))
     .with(rest({ credentials: 'include' }))
 
   const setUser = <T extends object>(value: DirectusUser<T>) => {
