@@ -9,28 +9,24 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   async function checkUserAuth () {
     if (!accessToken().value && refreshToken().value) {
-      await refreshTokens().catch((e) => {
-        if (e && e.some((error: any) => errorCodes.includes(error.extensions.code))) {
-          nuxtApp.runWithContext(()=>{
-            accessToken().value = null
-            refreshToken().value = null
-            console.log('Authentication has been invalidated. Please login again.')
-          })
-        }
+      await refreshTokens().catch(() => {
+        nuxtApp.runWithContext(()=>{
+          accessToken().value = null
+          refreshToken().value = null
+          console.log('Authentication has been invalidated. Please login again.')
+        })
       })
     } else if (!user.value && accessToken().value) {
       nuxtApp.runWithContext(async () => await fetchUser().catch(async (e) => {
         if (e && e.some((error: any) => errorCodes.includes(error.extensions.code))) {
-          nuxtApp.runWithContext(async () => await refreshTokens()).catch((e) => {
-            if (e && e.some((error: any) => errorCodes.includes(error.extensions.code))) {
-              nuxtApp.runWithContext(()=>{
-                accessToken().value = null
-                refreshToken().value = null
-                console.log('Authentication has been invalidated. Please login again.')
-              })
-            }
+          nuxtApp.runWithContext(async () => await refreshTokens()).catch(() => {
+            nuxtApp.runWithContext(()=>{
+              accessToken().value = null
+              refreshToken().value = null
+              console.log('Authentication has been invalidated. Please login again.')
+            })
           })
-        }
+        } // TODO: consider if an else could be useful, otherwise we could remove the if
       }))
     }
   }
