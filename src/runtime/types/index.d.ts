@@ -38,13 +38,31 @@ export interface ModuleOptions {
    * @default 'directus_access_token'
    * @type string
    */
-  tokenCookieName?: string;
+  tokenCookieName: string;
   /**
    * Refresh Token Cookie Name
    * @default 'directus_refresh_token'
    * @type string
    */
-  refreshTokenCookieName?: string;
+  refreshTokenCookieName: string;
+  /**
+   * The HttpOnly attribute for auth cookies.
+   * @default false
+   * @type boolean
+   */
+  cookieHttpOnly: boolean;
+  /**
+   * The SameSite attribute for auth cookies.
+   * @default 'lax'
+   * @type true | false | 'lax' | 'strict' | 'none' | undefined
+   */
+  cookieSameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
+  /**
+   * The Secure attribute for auth cookies.
+   * @default false
+   * @type boolean
+   */
+  cookieSecure: boolean;
   /**
    * Whether to automatically refresh the access token when it expires.
    * @default true

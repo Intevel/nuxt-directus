@@ -1,10 +1,10 @@
 import { fileURLToPath } from 'url'
 import { defu } from 'defu'
 import {
+  createResolver,
   defineNuxtModule,
-  addPlugin,
   addImportsDir,
-  createResolver
+  addPlugin
 } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
@@ -25,11 +25,15 @@ export default defineNuxtModule<ModuleOptions>({
     devtools: false,
     tokenCookieName: 'directus_access_token',
     refreshTokenCookieName: 'directus_refresh_token',
+    cookieHttpOnly: false,
+    cookieSameSite: 'lax',
+    cookieSecure: false,
     autoRefresh: true,
   },
   setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
+    // Private runtimeConfig
     nuxt.options.runtimeConfig.directus = defu(
       nuxt.options.runtimeConfig.directus,
       {
@@ -37,6 +41,9 @@ export default defineNuxtModule<ModuleOptions>({
         devtools: options.devtools
       }
     )
+
+    // Public runtimeConfig
+    // TODO: understand if it is possible to fix the type mismatch of `cookieSameSite`
     nuxt.options.runtimeConfig.public.directus = defu(
       nuxt.options.runtimeConfig.public.directus,
       {
@@ -44,6 +51,9 @@ export default defineNuxtModule<ModuleOptions>({
         staticToken: options.publicStaticToken,
         tokenCookieName: options.tokenCookieName,
         refreshTokenCookieName: options.refreshTokenCookieName,
+        cookieHttpOnly: options.cookieHttpOnly,
+        cookieSameSite: options.cookieSameSite,
+        cookieSecure: options.cookieSecure,
         autoRefresh: options.autoRefresh
       }
     )
