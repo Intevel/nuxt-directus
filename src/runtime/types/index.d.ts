@@ -66,7 +66,7 @@ export interface DirectusGrafqlConfig {
    * @default true
    * @type boolean | string
    */
-  useStaticToken?: boolean | string;
+  staticToken?: boolean | string;
 }
 
 export interface DirectusRestConfig {
@@ -75,6 +75,6 @@ export interface DirectusRestConfig {
    * @default true
    * @type boolean | string
    */
-  useStaticToken?: boolean | string;
+  staticToken?: boolean | string;
   restConfig?: RestConfig;
 }
