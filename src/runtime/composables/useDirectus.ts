@@ -1,15 +1,18 @@
-import { defu } from 'defu'
 import type {
   DirectusClient,
+  DirectusGrafqlConfig,
+  DirectusRestConfig,
   GraphqlClient,
   RestClient,
   RestConfig
-} from '@directus/sdk'
+} from '../types'
+import { defu } from 'defu'
 import {
   useRuntimeConfig,
   createDirectus,
   graphql,
-  rest
+  rest,
+  ref
 } from '#imports'
 
 export const useDirectus = <T extends Object>() => {
@@ -18,8 +21,13 @@ export const useDirectus = <T extends Object>() => {
   return createDirectus(url) as DirectusClient<T>
 }
 
-export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
-  const publicStaticToken = useRuntimeConfig().public.directus.staticToken
+export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) => {
+  const publicStaticToken = ref('')
+  if (typeof config?.useStaticToken === 'string') {
+    publicStaticToken.value = config?.useStaticToken
+  } else if (config?.useStaticToken !== false) {
+    publicStaticToken.value = useRuntimeConfig().public.directus.staticToken
+  }
 
   // TODO: add configs for oFetch once the following is fixed and released
   // https://github.com/directus/directus/issues/19747
@@ -38,13 +46,18 @@ export const useDirectusRest = <T extends Object>(config?: RestConfig) => {
     }
   }
 
-  const options = defu(config, defaultConfig)
+  const options = defu(config?.restConfig, defaultConfig)
 
-  return useDirectus().with(rest(options)).with(staticToken(publicStaticToken)) as RestClient<T>
+  return useDirectus().with(rest(options)).with(staticToken(publicStaticToken.value)) as RestClient<T>
 }
 
-export const useDirectusGraphql = <T extends Object>() => {
-  const publicStaticToken = useRuntimeConfig().public.directus.staticToken
+export const useDirectusGraphql = <T extends Object>(config?: DirectusGrafqlConfig) => {
+  const publicStaticToken = ref('')
+  if (typeof config?.useStaticToken === 'string') {
+    publicStaticToken.value = config?.useStaticToken
+  } else if (config?.useStaticToken !== false) {
+    publicStaticToken.value = useRuntimeConfig().public.directus.staticToken
+  }
 
-  return useDirectus().with(graphql()).with(staticToken(publicStaticToken)) as GraphqlClient<T>
+  return useDirectus().with(graphql()).with(staticToken(publicStaticToken.value)) as GraphqlClient<T>
 }

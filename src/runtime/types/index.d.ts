@@ -1,3 +1,8 @@
+import type {
+  DirectusQueryParams,
+  RegularCollections,
+  RestConfig
+} from '@directus/sdk';
 import type { AsyncDataOptions } from '#imports';
 
 export type * from "@directus/sdk";
@@ -53,4 +58,23 @@ export interface DirectusItemRequestOptions {
   key?: string;
   /* useAsyncData options */
   params?: AsyncDataOptions<RegularCollections<TSchema>>;
+}
+
+export interface DirectusGrafqlConfig {
+  /**
+   * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
+   * @default true
+   * @type boolean | string
+   */
+  useStaticToken?: boolean | string;
+}
+
+export interface DirectusRestConfig {
+  /**
+   * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
+   * @default true
+   * @type boolean | string
+   */
+  useStaticToken?: boolean | string;
+  restConfig?: RestConfig;
 }

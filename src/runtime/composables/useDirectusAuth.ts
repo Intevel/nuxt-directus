@@ -16,7 +16,7 @@ export function useDirectusAuth () {
   const fetchUser = async () => {
     if (accessToken().value) {
       try {
-        const res = await useDirectusRest().request(readMe())
+        const res = await useDirectusRest({ useStaticToken: false }).request(readMe())
         setUser(res)
       } catch (error: any) {
         if (error && error.message) {
