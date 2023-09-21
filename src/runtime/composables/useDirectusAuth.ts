@@ -5,9 +5,8 @@ export function useDirectusAuth () {
   const autoRefresh = useRuntimeConfig().public.directus.autoRefresh
   const { accessToken, refreshToken } = useDirectusCookie()
   const user = useDirectusUser()
-  const directus = useDirectus()
-    .with(authentication('json', { autoRefresh, credentials: 'include' }))
-    .with(rest({ credentials: 'include' }))
+  const directus = useDirectus().with(authentication('json', { autoRefresh, credentials: 'include' }))
+  const directusRest = useDirectusRest({ staticToken: false })
 
   const setUser = <T extends object>(value: DirectusUser<T>) => {
     user.value = value
@@ -16,7 +15,7 @@ export function useDirectusAuth () {
   const fetchUser = async () => {
     if (accessToken().value) {
       try {
-        const res = await useDirectusRest({ staticToken: false }).request(readMe())
+        const res = await directusRest.request(readMe())
         setUser(res)
       } catch (error: any) {
         if (error && error.message) {
@@ -44,7 +43,7 @@ export function useDirectusAuth () {
         refreshToken(authResponse.expires).value = authResponse.refresh_token
         accessToken(authResponse.expires).value = authResponse.access_token
       }
-      const res = await directus.request(withToken(authResponse.access_token!, readMe()))
+      const res = await directusRest.request(withToken(authResponse.access_token!, readMe()))
       setUser(res)
 
       return {
@@ -75,7 +74,7 @@ export function useDirectusAuth () {
         refreshToken(authResponse.expires).value = authResponse.refresh_token
         accessToken(authResponse.expires).value = authResponse.access_token
       }
-      const res = await directus.request(withToken(authResponse.access_token!, readMe()))
+      const res = await directusRest.request(withToken(authResponse.access_token!, readMe()))
       setUser(res)
 
       return {
