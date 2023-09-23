@@ -1,9 +1,9 @@
+import { defu } from 'defu'
 import type {
   AuthenticationData,
   DirectusUser,
   LoginOptions
 } from '../types'
-import { defu } from 'defu'
 import { readMe } from '#imports'
 
 export function useDirectusAuth<T extends Object> () {

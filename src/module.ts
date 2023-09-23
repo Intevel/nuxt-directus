@@ -8,7 +8,7 @@ import {
 } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
-import { ModuleOptions } from './runtime/types'
+import type { ModuleOptions } from './runtime/types'
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -28,9 +28,9 @@ export default defineNuxtModule<ModuleOptions>({
       refreshTokenCookieName: 'directus_refresh_token',
       cookieHttpOnly: false,
       cookieSameSite: 'lax',
-      cookieSecure: false,
+      cookieSecure: false
     },
-    autoRefresh: true,
+    autoRefresh: true
   },
   setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
@@ -56,7 +56,7 @@ export default defineNuxtModule<ModuleOptions>({
           customCookie: options.cookieConfigs.useNuxtCookies,
           cookieHttpOnly: options.cookieConfigs.cookieHttpOnly,
           cookieSameSite: options.cookieConfigs.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
-          cookieSecure: options.cookieConfigs.cookieSecure,
+          cookieSecure: options.cookieConfigs.cookieSecure
         },
         autoRefresh: options.autoRefresh
       }

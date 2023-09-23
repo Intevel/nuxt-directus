@@ -1,10 +1,10 @@
+import { defu } from 'defu'
 import type {
   ClientOptions,
   DirectusGrafqlConfig,
   DirectusRestConfig,
   RestConfig
 } from '../types'
-import { defu } from 'defu'
 import {
   useRuntimeConfig,
   createDirectus,
