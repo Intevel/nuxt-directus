@@ -38,9 +38,10 @@ export function useDirectusAuth<T extends Object> () {
   }
 
   async function login (identifier: string, password: string, options?: LoginOptions): Promise<AuthenticationData> {
+    const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfigs
     try {
       const defaultOptions = {
-        mode: 'cookie'
+        mode: useNuxtCookies ? 'json' : 'cookie'
       }
       const params = defu(options, defaultOptions) as LoginOptions
 

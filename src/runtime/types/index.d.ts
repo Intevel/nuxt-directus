@@ -34,6 +34,43 @@ export interface ModuleOptions {
    */
   devtools?: boolean;
   /**
+  * A series of configs that let you define Nuxt as the auth cookie handler.
+  * @default Directus handles auth cookies
+  * @type object
+  */
+  cookieConfigs: {
+    /**
+    * Handle auth cookies using Nuxt instead of Directus.
+    * @default false
+    * @type boolean
+    */
+    useNuxtCookies: boolean;
+    /**
+    * Refresh Token Cookie Name
+    * @default 'directus_refresh_token'
+    * @type string | undefined
+    */
+    refreshTokenCookieName?: string | undefined;
+    /**
+    * The HttpOnly attribute for auth cookies.
+    * @default false
+    * @type boolean | undefined
+    */
+    cookieHttpOnly?: boolean | undefined;
+    /**
+    * The SameSite attribute for auth cookies.
+    * @default 'lax'
+    * @type true | false | 'lax' | 'strict' | 'none' | undefined
+    */
+    cookieSameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
+    /**
+    * The Secure attribute for auth cookies.
+    * @default false
+    * @type boolean | undefined
+    */
+    cookieSecure?: boolean | undefined;
+  }
+  /**
    * Whether to automatically refresh the access token when it expires.
    * @default true
    * @type boolean

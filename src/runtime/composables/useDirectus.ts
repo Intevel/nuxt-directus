@@ -20,7 +20,7 @@ export const useDirectus = <T extends Object>(url?: string, options?: ClientOpti
 }
 
 export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) => {
-  const { autoRefresh } = useRuntimeConfig().public.directus
+  const { autoRefresh, cookieConfigs } = useRuntimeConfig().public.directus
   const publicStaticToken = ref('')
 
   
@@ -33,7 +33,7 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
   const options = defu(config, defaultConfig)
   
   const client = useDirectus<T>().with(authentication(
-    'cookie', {
+    cookieConfigs ? 'json' : 'cookie', {
       autoRefresh,
       credentials: 'include',
       storage: useDirectusTokens()
@@ -46,18 +46,18 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
       publicStaticToken.value = useRuntimeConfig().public.directus.staticToken
     }
 
-    client.with(staticToken(publicStaticToken.value))
+    return client.with(staticToken(publicStaticToken.value))
   }
 
   return client
 }
 
 export const useDirectusGraphql = <T extends Object>(config?: DirectusGrafqlConfig) => {
-  const { autoRefresh } = useRuntimeConfig().public.directus
+  const { autoRefresh, cookieConfigs } = useRuntimeConfig().public.directus
   const publicStaticToken = ref('')
 
   const client = useDirectus<T>().with(authentication(
-    'cookie', {
+    cookieConfigs.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh,
       credentials: 'include',
       storage: useDirectusTokens()
@@ -70,7 +70,7 @@ export const useDirectusGraphql = <T extends Object>(config?: DirectusGrafqlConf
       publicStaticToken.value = useRuntimeConfig().public.directus.staticToken
     }
 
-    client.with(staticToken(publicStaticToken.value))
+    return client.with(staticToken(publicStaticToken.value))
   }
 
   return client
