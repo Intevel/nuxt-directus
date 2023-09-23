@@ -23,11 +23,6 @@ export default defineNuxtModule<ModuleOptions>({
     privateStaticToken: '',
     publicStaticToken: '',
     devtools: false,
-    tokenCookieName: 'directus_access_token',
-    refreshTokenCookieName: 'directus_refresh_token',
-    cookieHttpOnly: false,
-    cookieSameSite: 'lax',
-    cookieSecure: false,
     autoRefresh: true,
   },
   setup (options, nuxt) {
@@ -43,17 +38,11 @@ export default defineNuxtModule<ModuleOptions>({
     )
 
     // Public runtimeConfig
-    // TODO: understand if it is possible to fix the type mismatch of `cookieSameSite`
     nuxt.options.runtimeConfig.public.directus = defu(
       nuxt.options.runtimeConfig.public.directus,
       {
         url: options.url,
         staticToken: options.publicStaticToken,
-        tokenCookieName: options.tokenCookieName,
-        refreshTokenCookieName: options.refreshTokenCookieName,
-        cookieHttpOnly: options.cookieHttpOnly,
-        cookieSameSite: options.cookieSameSite,
-        cookieSecure: options.cookieSecure,
         autoRefresh: options.autoRefresh
       }
     )
