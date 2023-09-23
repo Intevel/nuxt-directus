@@ -1,22 +1,52 @@
-import type { DirectusUser } from '../types'
+import type {
+  AuthenticationData,
+  AuthenticationStorage,
+  DirectusUser,
+  LoginOptions
+} from '../types'
+import { defu } from 'defu'
 import { readMe } from '#imports'
 
-export function useDirectusAuth () {
-  const autoRefresh = useRuntimeConfig().public.directus.autoRefresh
-  const { accessToken, refreshToken } = useDirectusCookie()
-  const user = useDirectusUser()
-  const directus = useDirectus().with(authentication('json', { autoRefresh, credentials: 'include' }))
-  const directusRest = useDirectusRest({ staticToken: false })
+/**
+ * This expands the default Directus storage implementation for authenticated data. It adds a `store` named export for direct access within the Nuxt app using `useState` under the hood.
+ *
+ * @returns Directus SDK native AuthenticationStorage functions
+ * @returns `store` for direct access to the stored data
+ */
+export const useDirectusAuthStorage = (): AuthenticationStorage & { store: Ref<AuthenticationData | null> } => {
+  const store: Ref<AuthenticationData | null> = useState('directus.auth')
 
-  const setUser = <T extends object>(value: DirectusUser<T>) => {
+  return {
+    get: () => store.value,
+    set: (value: AuthenticationData | null) => {
+      store.value = value
+    },
+    store
+  }
+}
+
+export function useDirectusAuth<T extends Object> () {
+  const { autoRefresh } = useRuntimeConfig().public.directus
+  const client = useDirectus<T>().with(authentication(
+    'cookie', {
+      autoRefresh,
+      credentials: 'include',
+      storage: useDirectusAuthStorage()
+    })).with(rest({credentials: 'include'}))
+
+  const user = useDirectusUser()
+  const { store } = useDirectusAuthStorage()
+
+  const setUser = <T extends Object>(value: DirectusUser<T>) => {
     user.value = value
   }
 
   const fetchUser = async () => {
-    if (accessToken().value) {
+    if (store.value?.access_token) {
       try {
-        const res = await directusRest.request(readMe())
-        setUser(res)
+        const res = await client.request(readMe())
+        // TODO: fix types for custom fields in `directus_users`
+        setUser(res as DirectusUser<T>)
       } catch (error: any) {
         if (error && error.message) {
           // eslint-disable-next-line no-console
@@ -32,24 +62,20 @@ export function useDirectusAuth () {
     return user
   }
 
-  const signIn = async (identifier: string, password: string) => {
+  async function login (identifier: string, password: string, options?: LoginOptions): Promise<AuthenticationData> {
     try {
-      const authResponse = await directus.login(identifier, password)
-      /* the following `if` is required to avoid a type error
-       *  because the type of expires is number | null
-       *  while maxAge for useCookie is number | undefined
-       */
-      if (authResponse.expires !== null) {
-        refreshToken(authResponse.expires).value = authResponse.refresh_token
-        accessToken(authResponse.expires).value = authResponse.access_token
+      const defaultOptions = {
+        mode: 'cookie'
       }
-      const res = await directusRest.request(withToken(authResponse.access_token!, readMe()))
-      setUser(res)
+      const params = defu(options, defaultOptions) as LoginOptions
+
+      const authResponse = await client.login(identifier, password, params)
+      fetchUser()
 
       return {
-        accessToken: authResponse.access_token,
-        refreshToken: authResponse.refresh_token,
-        expiresAt: authResponse.expires_at,
+        access_token: authResponse.access_token,
+        refresh_token: authResponse.refresh_token,
+        expires_at: authResponse.expires_at,
         expires: authResponse.expires
       }
     } catch (error: any) {
@@ -65,22 +91,15 @@ export function useDirectusAuth () {
     }
   }
 
-  const refreshTokens = async () => {
+  async function refreshTokens (): Promise<AuthenticationData> {
     try {
-      const authResponse =
-        await directus.refresh()
-      // check previous note in `signIn` about type error
-      if (authResponse.expires !== null) {
-        refreshToken(authResponse.expires).value = authResponse.refresh_token
-        accessToken(authResponse.expires).value = authResponse.access_token
-      }
-      const res = await directusRest.request(withToken(authResponse.access_token!, readMe()))
-      setUser(res)
+      const authResponse = await client.refresh()
+      fetchUser()
 
       return {
-        accessToken: authResponse.access_token,
-        refreshToken: authResponse.refresh_token,
-        expiresAt: authResponse.expires_at,
+        access_token: authResponse.access_token,
+        refresh_token: authResponse.refresh_token,
+        expires_at: authResponse.expires_at,
         expires: authResponse.expires
       }
     } catch (error: any) {
@@ -95,11 +114,10 @@ export function useDirectusAuth () {
       }
     }
   }
-  const signOut = async () => {
+
+  const logout = async () => {
     try {
-      await directus.logout()
-      accessToken().value = null
-      refreshToken().value = null
+      await client.logout()
       user.value = null
     } catch (error: any) {
       if (error && error.message) {
@@ -115,10 +133,13 @@ export function useDirectusAuth () {
   }
 
   return {
+    client,
+    user,
+    store,
     setUser,
     fetchUser,
-    signIn,
+    login,
     refreshTokens,
-    signOut
+    logout
   }
 }

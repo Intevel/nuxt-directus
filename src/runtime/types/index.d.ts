@@ -87,12 +87,17 @@ export interface DirectusGrafqlConfig {
   staticToken?: boolean | string;
 }
 
-export interface DirectusRestConfig {
+export interface DirectusRestConfig extends RestConfig {
   /**
    * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
    * @default true
    * @type boolean | string
    */
   staticToken?: boolean | string;
-  restConfig?: RestConfig;
+  /**
+   * Whether to use the authenticated User token or not. If true, the token will be picked from their cookie, if false, no token will be used.
+   * @default true
+   * @type boolean
+   */
+  userToken?: boolean;
 }

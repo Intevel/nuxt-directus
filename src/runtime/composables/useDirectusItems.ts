@@ -6,7 +6,7 @@ import type {
 import { useAsyncData, readItem, readItems } from '#imports'
 
 export function useDirectusItems<TSchema extends object> () {
-  const directus = useDirectusRest<TSchema>()
+  const client = useDirectusRest<TSchema>()
 
   /**
    * Get a single item from a collection.
@@ -25,7 +25,7 @@ export function useDirectusItems<TSchema extends object> () {
       // TODO: add logic to randomize key if query is present
       options?.key ?? `${String(collectionName.value)}_${itemId.value}`,
       async () => {
-        return await directus.request(readItem(collectionName.value, itemId.value, options?.query))
+        return await client.request(readItem(collectionName.value, itemId.value, options?.query))
       }, options?.params
     )
     return { data, pending, refresh, execute, error, status }
@@ -44,7 +44,7 @@ export function useDirectusItems<TSchema extends object> () {
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
-      async () => await directus.request(readItems(collectionName.value, options?.query)), options?.params
+      async () => await client.request(readItems(collectionName.value, options?.query)), options?.params
     )
     return { data, pending, refresh, execute, error, status }
   }
@@ -61,7 +61,7 @@ export function useDirectusItems<TSchema extends object> () {
     const { data, pending, refresh, execute, error, status } = await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
-      async () => await directus.request(readSingleton(collectionName.value, options?.query)), options?.params
+      async () => await client.request(readSingleton(collectionName.value, options?.query)), options?.params
     )
     return { data, pending, refresh, execute, error, status }
   }

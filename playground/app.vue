@@ -7,14 +7,17 @@
     <hr>
     <div>
       Nuxt module playground
-      <button @click="signIn('admin@example.com', 'Passw0rd!')">
+      <button @click="login('admin@example.com', 'Passw0rd!')">
         Sign in
       </button>
-      <button @click="signOut">
+      <button @click="logout">
         Sign out
       </button>
       <button @click="refreshTokens">
         Refresh Tokens
+      </button>
+      <button @click="fetchUser">
+        Refresh User
       </button>
     </div>
     <div>
@@ -66,7 +69,7 @@
 </template>
 
 <script setup lang="ts">
-const { signIn, signOut, refreshTokens } = useDirectusAuth()
+const { login, logout, refreshTokens, fetchUser } = useDirectusAuth()
 const user = useDirectusUser()
 
 interface Global {
@@ -93,15 +96,4 @@ const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await getI
 
 const postId = ref<Posts['id']>('')
 const { data: singlePost, pending: singlePostPending, error: singlePostError, refresh: searchPost } = await getItemById('posts', postId)
-
-// When useAsyncData is inside a composable with a ref parameter, it doesn't refresh
-// const { data: singlePost, pending: pendingSingle, error, refresh: searchPost } = await getItemById('posts', postId.value)
-
-// This one does
-const { data: singlePost, pending: pendingSingle, error, refresh: searchPost } = await useAsyncData(`posts_${postId.value}`, async () => {
-  if (!postId.value) {throw new Error('No post ID selected')}
-  else {
-    return await useDirectusRest<Schema>().request(readItem('posts', postId.value))
-  }
-})
 </script>
