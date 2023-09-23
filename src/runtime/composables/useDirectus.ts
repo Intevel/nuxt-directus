@@ -33,7 +33,7 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
   const options = defu(config, defaultConfig)
   
   const client = useDirectus<T>().with(authentication(
-    'cookie', {
+    'json', {
       autoRefresh,
       credentials: 'include',
       storage: useDirectusTokens()
@@ -57,7 +57,7 @@ export const useDirectusGraphql = <T extends Object>(config?: DirectusGrafqlConf
   const publicStaticToken = ref('')
 
   const client = useDirectus<T>().with(authentication(
-    'cookie', {
+    'json', {
       autoRefresh,
       credentials: 'include',
       storage: useDirectusTokens()

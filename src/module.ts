@@ -23,6 +23,10 @@ export default defineNuxtModule<ModuleOptions>({
     privateStaticToken: '',
     publicStaticToken: '',
     devtools: false,
+    refreshTokenCookieName: 'directus_refresh_token',
+    cookieHttpOnly: false,
+    cookieSameSite: 'lax',
+    cookieSecure: false,
     autoRefresh: true,
   },
   setup (options, nuxt) {
@@ -43,6 +47,10 @@ export default defineNuxtModule<ModuleOptions>({
       {
         url: options.url,
         staticToken: options.publicStaticToken,
+        refreshTokenCookieName: options.refreshTokenCookieName,
+        cookieHttpOnly: options.cookieHttpOnly,
+        cookieSameSite: options.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
+        cookieSecure: options.cookieSecure,
         autoRefresh: options.autoRefresh
       }
     )
