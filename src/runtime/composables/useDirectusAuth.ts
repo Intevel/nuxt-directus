@@ -40,7 +40,7 @@ export function useDirectusAuth<T extends Object> () {
   async function login (identifier: string, password: string, options?: LoginOptions): Promise<AuthenticationData> {
     try {
       const defaultOptions = {
-        mode: 'json'
+        mode: 'cookie'
       }
       const params = defu(options, defaultOptions) as LoginOptions
 
