@@ -64,10 +64,4 @@ export interface DirectusRestConfig extends RestConfig {
    * @type boolean | string
    */
   staticToken?: boolean | string;
-  /**
-   * Whether to use the authenticated User token or not. If true, the token will be picked from their cookie, if false, no token will be used.
-   * @default true
-   * @type boolean
-   */
-  userToken?: boolean;
 }

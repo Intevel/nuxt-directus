@@ -1,48 +1,23 @@
 import type {
   AuthenticationData,
-  AuthenticationStorage,
   DirectusUser,
   LoginOptions
 } from '../types'
 import { defu } from 'defu'
 import { readMe } from '#imports'
 
-/**
- * This expands the default Directus storage implementation for authenticated data. It adds a `store` named export for direct access within the Nuxt app using `useState` under the hood.
- *
- * @returns Directus SDK native AuthenticationStorage functions
- * @returns `store` for direct access to the stored data
- */
-export const useDirectusAuthStorage = (): AuthenticationStorage & { store: Ref<AuthenticationData | null> } => {
-  const store: Ref<AuthenticationData | null> = useState('directus.auth')
-
-  return {
-    get: () => store.value,
-    set: (value: AuthenticationData | null) => {
-      store.value = value
-    },
-    store
-  }
-}
-
 export function useDirectusAuth<T extends Object> () {
-  const { autoRefresh } = useRuntimeConfig().public.directus
-  const client = useDirectus<T>().with(authentication(
-    'cookie', {
-      autoRefresh,
-      credentials: 'include',
-      storage: useDirectusAuthStorage()
-    })).with(rest({credentials: 'include'}))
+  const client = useDirectusRest<T>({ staticToken: false, credentials: 'include' })
 
   const user = useDirectusUser()
-  const { store } = useDirectusAuthStorage()
+  const { tokens } = useDirectusTokens()
 
   const setUser = <T extends Object>(value: DirectusUser<T>) => {
     user.value = value
   }
 
   const fetchUser = async () => {
-    if (store.value?.access_token) {
+    if (tokens.value?.access_token) {
       try {
         const res = await client.request(readMe())
         // TODO: fix types for custom fields in `directus_users`
@@ -133,9 +108,8 @@ export function useDirectusAuth<T extends Object> () {
   }
 
   return {
-    client,
     user,
-    store,
+    tokens,
     setUser,
     fetchUser,
     login,
