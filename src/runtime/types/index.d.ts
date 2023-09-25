@@ -90,7 +90,7 @@ export interface DirectusRegularItemRequestOptions<TSchema> {
 
 export interface DirectusSingletonItemRequestOptions<TSchema> {
   key?: string;
-  query?: Query<Schema, Schema[SingletonCollections<Schema>]> | undefined;
+  query?: Query<TSchema, TSchema[SingletonCollections<TSchema>]> | undefined;
   /* useAsyncData options */
   params?: AsyncDataOptions<SingletonCollections<TSchema>>;
 }
