@@ -9,13 +9,12 @@ import { useAsyncData, readItem, readItems } from '#imports'
 export function useDirectusItems<TSchema extends object> () {
   const client = useDirectusRest<TSchema>()
 
-
   /**
    * Get a single item from a collection.
    * @param collection The collection name to get the item from.
    * @param id The id of the item to get.
    * @param options The options to use when fetching the item.
-   * 
+   *
    * @returns data: returns an item object if a valid primary key was provided.
    * @returns pending: a boolean indicating whether the data is still being fetched.
    * @returns refresh/execute: a function that can be used to refresh the data returned by the handler function.
@@ -39,12 +38,11 @@ export function useDirectusItems<TSchema extends object> () {
     return { data, pending, refresh, execute, error, status }
   }
 
-
   /**
    * Get all the items from a collection.
    * @param collection The collection name to get the items from.
    * @param options The options to use when fetching the items.
-   * 
+   *
    * @returns data: an array of up to limit item objects. If no items are available, data will be an empty array.
    * @returns pending: a boolean indicating whether the data is still being fetched.
    * @returns refresh/execute: a function that can be used to refresh the data returned by the handler function.
@@ -64,12 +62,11 @@ export function useDirectusItems<TSchema extends object> () {
     return { data, pending, refresh, execute, error, status }
   }
 
-
   /**
    * Get the item from a collection marked as Singleton.
    * @param collection The collection name to get the items from.
    * @param options The options to use when fetching the items.
-   * 
+   *
    * @returns data: an item objects. If no items are available, data will be an empty object.
    * @returns pending: a boolean indicating whether the data is still being fetched.
    * @returns refresh/execute: a function that can be used to refresh the data returned by the handler function.
@@ -88,7 +85,6 @@ export function useDirectusItems<TSchema extends object> () {
     )
     return { data, pending, refresh, execute, error, status }
   }
-
 
   return {
     getItemById,
