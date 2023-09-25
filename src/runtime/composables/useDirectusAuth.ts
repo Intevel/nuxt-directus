@@ -1,27 +1,27 @@
 import { defu } from 'defu'
 import type {
-  AuthenticationData,
+  DirectusRegisterCredentials,
   DirectusUser,
   LoginOptions
 } from '../types'
 import { readMe } from '#imports'
 
-export function useDirectusAuth<T extends Object> () {
-  const client = useDirectusRest<T>({ staticToken: false, credentials: 'include' })
+export function useDirectusAuth<TSchema extends Object> () {
+  const client = useDirectusRest<TSchema>({ staticToken: false, credentials: 'include' })
 
   const user = useDirectusUser()
   const { tokens } = useDirectusTokens()
 
-  const setUser = <T extends Object>(value: DirectusUser<T>) => {
+  function setUser (value: DirectusUser<TSchema>) {
     user.value = value
   }
 
-  const fetchUser = async () => {
+  async function fetchUser () {
     if (tokens.value?.access_token) {
       try {
         const res = await client.request(readMe())
         // TODO: fix types for custom fields in `directus_users`
-        setUser(res as DirectusUser<T>)
+        setUser(res as DirectusUser<TSchema>)
       } catch (error: any) {
         if (error && error.message) {
           // eslint-disable-next-line no-console
@@ -37,7 +37,28 @@ export function useDirectusAuth<T extends Object> () {
     return user
   }
 
-  async function login (identifier: string, password: string, options?: LoginOptions): Promise<AuthenticationData> {
+  async function registerUser (params: DirectusRegisterCredentials<TSchema>) {
+    const createUserClient = useDirectusRest<TSchema>({
+      staticToken: params?.useStaticToken,
+      credentials: 'include'
+    })
+
+    try {
+      return await createUserClient.request(createUser(params.userInfo, params.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't create user", error.errors)
+        throw error.errors
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+        throw error
+      }
+    }
+  }
+
+  async function login (identifier: string, password: string, options?: LoginOptions) {
     const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfigs
     try {
       const defaultOptions = {
@@ -67,7 +88,7 @@ export function useDirectusAuth<T extends Object> () {
     }
   }
 
-  async function refreshTokens (): Promise<AuthenticationData> {
+  async function refreshTokens () {
     try {
       const authResponse = await client.refresh()
       fetchUser()
@@ -91,7 +112,7 @@ export function useDirectusAuth<T extends Object> () {
     }
   }
 
-  const logout = async () => {
+  async function logout () {
     try {
       await client.logout()
       user.value = null
@@ -113,6 +134,7 @@ export function useDirectusAuth<T extends Object> () {
     tokens,
     setUser,
     fetchUser,
+    registerUser,
     login,
     refreshTokens,
     logout

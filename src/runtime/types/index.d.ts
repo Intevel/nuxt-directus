@@ -1,6 +1,9 @@
 import type {
-  DirectusQueryParams,
+  CollectionType,
+  DirectusUser,
+  Query,
   RegularCollections,
+  SingletonCollections,
   RestConfig
 } from '@directus/sdk';
 import type { AsyncDataOptions } from '#imports';
@@ -78,11 +81,18 @@ export interface ModuleOptions {
   autoRefresh: boolean;
 }
 
-export interface DirectusItemRequestOptions {
-  query?: DirectusQueryParams;
+export interface DirectusRegularItemRequestOptions<TSchema> {
   key?: string;
+  query?: Query<TSchema, CollectionType<TSchema, RegularCollections<TSchema>>> | undefined;
   /* useAsyncData options */
   params?: AsyncDataOptions<RegularCollections<TSchema>>;
+}
+
+export interface DirectusSingletonItemRequestOptions<TSchema> {
+  key?: string;
+  query?: Query<Schema, Schema[SingletonCollections<Schema>]> | undefined;
+  /* useAsyncData options */
+  params?: AsyncDataOptions<SingletonCollections<TSchema>>;
 }
 
 export interface DirectusGrafqlConfig {
@@ -92,6 +102,12 @@ export interface DirectusGrafqlConfig {
    * @type boolean | string
    */
   staticToken?: boolean | string;
+}
+
+export interface DirectusRegisterCredentials<TSchema> {
+  userInfo: Partial<DirectusUser<TSchema>>;
+  useStaticToken?: boolean | string;
+  query?: Query<TSchema, DirectusUser<TSchema>> | undefined;
 }
 
 export interface DirectusRestConfig extends RestConfig {
