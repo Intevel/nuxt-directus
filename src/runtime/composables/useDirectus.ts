@@ -52,11 +52,11 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
   return client
 }
 
-export const useDirectusGraphql = <T extends Object>(config?: DirectusGrafqlConfig) => {
+export const useDirectusGraphql = (config?: DirectusGrafqlConfig) => {
   const { autoRefresh, cookieConfigs } = useRuntimeConfig().public.directus
   const publicStaticToken = ref('')
 
-  const client = useDirectus<T>().with(authentication(
+  const client = useDirectus().with(authentication(
     cookieConfigs.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh,
       credentials: 'include',
