@@ -92,7 +92,11 @@ interface Schema {
 const { getItems, getItemById, getSingletonItem } = useDirectusItems<Schema>()
 
 const { data: global } = await getSingletonItem('global')
-const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await getItems('posts')
+const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await getItems('posts', {
+  query: {
+    fields: ['title', 'id', 'content']
+  }
+})
 
 const postId = ref<Posts['id']>('')
 const { data: singlePost, pending: singlePostPending, error: singlePostError, refresh: searchPost } = await getItemById('posts', postId)
