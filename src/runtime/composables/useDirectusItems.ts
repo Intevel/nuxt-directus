@@ -1,8 +1,10 @@
 import type {
+  CollectionType,
   DirectusRegularItemRequestOptions,
   DirectusSingletonItemRequestOptions,
   RegularCollections,
-  SingletonCollections
+  SingletonCollections,
+  Query
 } from '../types'
 import { useAsyncData, readItem, readItems } from '#imports'
 
@@ -21,12 +23,15 @@ export function useDirectusItems<TSchema extends object> () {
    * @returns error: an error object if the data fetching failed.
    * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
    */
-  async function getItemById (
-    collection: Ref<RegularCollections<TSchema>> | RegularCollections<TSchema>,
+  async function getItemById <
+    Collection extends RegularCollections<TSchema>,
+    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
+  > (
+    collection: Ref<Collection> | Collection,
     id: Ref<string | number> | string | number,
-    options?: DirectusRegularItemRequestOptions<TSchema>
+    options?: DirectusRegularItemRequestOptions<TSchema, TQuery>
   ) {
-    const collectionName = toRef(collection) as Ref<RegularCollections<TSchema>>
+    const collectionName = toRef(collection) as Ref<Collection>
     const itemId = toRef(id)
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
@@ -46,11 +51,14 @@ export function useDirectusItems<TSchema extends object> () {
    * @returns error: an error object if the data fetching failed.
    * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
    */
-  async function getItems (
-    collection: Ref<RegularCollections<TSchema>> | RegularCollections<TSchema>,
-    options?: DirectusRegularItemRequestOptions<TSchema>
+  async function getItems <
+    Collection extends RegularCollections<TSchema>,
+    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
+  > (
+    collection: Ref<Collection> | Collection,
+    options?: DirectusRegularItemRequestOptions<TSchema, TQuery>
   ) {
-    const collectionName = toRef(collection) as Ref<RegularCollections<TSchema>>
+    const collectionName = toRef(collection) as Ref<Collection>
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
@@ -69,11 +77,14 @@ export function useDirectusItems<TSchema extends object> () {
    * @returns error: an error object if the data fetching failed.
    * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
    */
-  const getSingletonItem = async (
-    collection: Ref<SingletonCollections<TSchema>> | SingletonCollections<TSchema>,
-    options?: DirectusSingletonItemRequestOptions<TSchema>
+  const getSingletonItem = async <
+    Collection extends SingletonCollections<TSchema>,
+    TQuery extends Query<TSchema, TSchema[Collection]>
+  > (
+    collection: Ref<Collection> | Collection,
+    options?: DirectusSingletonItemRequestOptions<TSchema, TQuery>
   ) => {
-    const collectionName = toRef(collection) as Ref<SingletonCollections<TSchema>>
+    const collectionName = toRef(collection) as Ref<Collection>
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),

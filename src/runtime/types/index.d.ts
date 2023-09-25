@@ -1,5 +1,4 @@
 import type {
-  CollectionType,
   DirectusUser,
   Query,
   RegularCollections,
@@ -81,16 +80,16 @@ export interface ModuleOptions {
   autoRefresh: boolean;
 }
 
-export interface DirectusRegularItemRequestOptions<TSchema> {
+export interface DirectusRegularItemRequestOptions<TSchema, TQuery> {
   key?: string;
-  query?: Query<TSchema, CollectionType<TSchema, RegularCollections<TSchema>>> | undefined;
+  query?: TQuery | undefined;
   /* useAsyncData options */
   params?: AsyncDataOptions<RegularCollections<TSchema>>;
 }
 
-export interface DirectusSingletonItemRequestOptions<TSchema> {
+export interface DirectusSingletonItemRequestOptions<TSchema, TQuery> {
   key?: string;
-  query?: Query<TSchema, TSchema[SingletonCollections<TSchema>]> | undefined;
+  query?: TQuery | undefined;
   /* useAsyncData options */
   params?: AsyncDataOptions<SingletonCollections<TSchema>>;
 }
