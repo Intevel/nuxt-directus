@@ -36,9 +36,8 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
   const options = defu(config, defaultConfig)
   
   const client = useDirectus<T>().with(authentication(
-    cookieConfig ? 'json' : 'cookie', {
+    cookieConfig.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh: moduleConfig.autoRefresh,
-      credentials: 'include',
       storage: useDirectusTokens()
     })).with(rest(options))
 

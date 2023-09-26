@@ -25,8 +25,7 @@ import {
 export function useDirectusItems<TSchema extends object> (useStaticToken?: boolean | string) {
   const client = (useStaticToken?: boolean | string) => {
     return useDirectusRest<TSchema>({
-      useStaticToken,
-      credentials: 'include'
+      useStaticToken
     })
   }
 

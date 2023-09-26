@@ -8,7 +8,8 @@ import {
 } from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
-  const client = useDirectusRest<TSchema>({ useStaticToken: false, credentials: 'include' })
+  const client = useDirectusRest<TSchema>({ useStaticToken: false })
+  const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfig
 
   const { user } = useDirectusUser()
   const { tokens } = useDirectusTokens()
@@ -37,7 +38,6 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
 
   async function login (identifier: string, password: string, options?: LoginOptions) {
-    const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfig
     try {
       const defaultOptions = {
         mode: useNuxtCookies ? 'json' : 'cookie'

@@ -10,13 +10,13 @@
       <button @click="login('admin@example.com', 'Passw0rd!')">
         Sign in
       </button>
-      <button @click="logout">
+      <button @click="logout()">
         Sign out
       </button>
-      <button @click="refreshTokens">
+      <button @click="refreshTokens()">
         Refresh Tokens
       </button>
-      <button @click="fetchUser">
+      <button @click="readMe()">
         Refresh User
       </button>
     </div>
@@ -81,7 +81,7 @@
 </template>
 
 <script setup lang="ts">
-const { login, logout, refreshTokens, fetchUser } = useDirectusAuth()
+const { login, logout, refreshTokens, readMe } = useDirectusAuth()
 const { user } = useDirectusUser()
 
 interface Global {
