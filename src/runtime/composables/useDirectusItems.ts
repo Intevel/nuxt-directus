@@ -39,8 +39,17 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     item: Item,
     options?: DirectusReqItemOptions<TQuery>
   ) {
-    return await client(options?.useStaticToken || useStaticToken)
-      .request(sdkCreateItem(collection, item, options?.query))
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkCreateItem(collection, item, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't create item", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+      }
+    }
   }
 
   async function createItems <
@@ -52,8 +61,18 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     items: Item,
     options?: DirectusReqItemOptions<TQuery>
   ) {
-    return await client(options?.useStaticToken || useStaticToken)
-      .request(sdkCreateItems(collection, items, options?.query))
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkCreateItems(collection, items, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't create items", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
   /**
@@ -150,8 +169,18 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     item: Item,
     options?: DirectusReqItemOptions<TQuery>
   ) {
-    return await client(options?.useStaticToken || useStaticToken)
-      .request(sdkUpdateItem(collection, id, item, options?.query))
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkUpdateItem(collection, id, item, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't update item", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
   async function updateItems <
@@ -164,8 +193,18 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     item: Item,
     options?: DirectusReqItemOptions<TQuery>
   ) {
-    return await client(options?.useStaticToken || useStaticToken)
-      .request(sdkUpdateItems(collection, ids, item, options?.query))
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkUpdateItems(collection, ids, item, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't update items", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
   async function updateSingleton <
@@ -177,8 +216,18 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     item: Item,
     options?: DirectusReqItemOptions<TQuery>
   ) {
-    return await client(options?.useStaticToken || useStaticToken)
-      .request(sdkUpdateSingleton(collection, item, options?.query))
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkUpdateSingleton(collection, item, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't update singleton", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
   async function deleteItem <
@@ -189,8 +238,18 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     id: ID,
     options?: DirectusReqOptions
   ) {
-    return await client(options?.useStaticToken || useStaticToken)
-      .request(sdkDeleteItem(collection, id))
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkDeleteItem(collection, id))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't delete item", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
   async function deleteItems <
@@ -202,8 +261,18 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     idOrQuery: ID | TQuery,
     options?: DirectusReqOptions
   ) {
-    return await client(options?.useStaticToken || useStaticToken)
-      .request(sdkDeleteItems(collection, idOrQuery))
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkDeleteItems(collection, idOrQuery))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't delete items", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
   return {

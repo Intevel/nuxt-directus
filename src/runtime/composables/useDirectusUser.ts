@@ -28,11 +28,9 @@ export function useDirectusUser <TSchema extends Object> (useStaticToken?: boole
       if (error && error.message) {
         // eslint-disable-next-line no-console
         console.error("Couldn't create user", error.errors)
-        throw error.errors
       } else {
         // eslint-disable-next-line no-console
         console.error(error)
-        throw error
       }
     }
   }
@@ -46,11 +44,9 @@ export function useDirectusUser <TSchema extends Object> (useStaticToken?: boole
       if (error && error.message) {
         // eslint-disable-next-line no-console
         console.error("Couldn't update user", error.errors)
-        throw error.errors
       } else {
         // eslint-disable-next-line no-console
         console.error(error)
-        throw error
       }
     }
   }
@@ -62,11 +58,9 @@ export function useDirectusUser <TSchema extends Object> (useStaticToken?: boole
       if (error && error.message) {
         // eslint-disable-next-line no-console
         console.error("Couldn't delete user", error.errors)
-        throw error.errors
       } else {
         // eslint-disable-next-line no-console
         console.error(error)
-        throw error
       }
     }
   }

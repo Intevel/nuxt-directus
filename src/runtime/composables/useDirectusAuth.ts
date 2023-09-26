@@ -27,11 +27,9 @@ export function useDirectusAuth<TSchema extends Object> () {
         if (error && error.message) {
           // eslint-disable-next-line no-console
           console.error("Couldn't fetch user", error.errors)
-          throw error.errors
         } else {
           // eslint-disable-next-line no-console
           console.error(error)
-          throw error
         }
       }
     }
@@ -59,11 +57,9 @@ export function useDirectusAuth<TSchema extends Object> () {
       if (error && error.message) {
         // eslint-disable-next-line no-console
         console.error("Couldn't login user", error.errors)
-        throw error.errors
       } else {
         // eslint-disable-next-line no-console
         console.error(error)
-        throw error
       }
     }
   }
@@ -83,11 +79,9 @@ export function useDirectusAuth<TSchema extends Object> () {
       if (error && error.message) {
         // eslint-disable-next-line no-console
         console.error("Couldn't refresh tokens", error.errors)
-        throw error.errors
       } else {
         // eslint-disable-next-line no-console
         console.error(error)
-        throw error
       }
     }
   }
@@ -100,11 +94,9 @@ export function useDirectusAuth<TSchema extends Object> () {
       if (error && error.message) {
         // eslint-disable-next-line no-console
         console.error("Couldn't logut user", error.errors)
-        throw error.errors
       } else {
         // eslint-disable-next-line no-console
         console.error(error)
-        throw error
       }
     }
   }
