@@ -33,7 +33,7 @@ export interface ModuleOptions {
   * @default Directus handles auth cookies
   * @type object
   */
-  cookieConfigs: {
+  cookieConfig: {
     /**
     * Handle auth cookies using Nuxt instead of Directus.
     * @default false
@@ -69,7 +69,7 @@ export interface ModuleOptions {
   * A series of configs that let you define how the module should be used by Nuxt.
   * @type object
   */
-  moduleConfigs: {
+  moduleConfig: {
     /**
      * Whether to automatically refresh the access token when it expires.
      * @default true

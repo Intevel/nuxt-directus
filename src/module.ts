@@ -22,14 +22,14 @@ export default defineNuxtModule<ModuleOptions>({
     url: '',
     privateStaticToken: '',
     publicStaticToken: '',
-    cookieConfigs: {
+    cookieConfig: {
       useNuxtCookies: false,
       refreshTokenCookieName: 'directus_refresh_token',
       cookieHttpOnly: false,
       cookieSameSite: 'lax',
       cookieSecure: false
     },
-    moduleConfigs: {
+    moduleConfig: {
       devtools: false,
       autoRefresh: true,
       autoImport: true
@@ -44,8 +44,8 @@ export default defineNuxtModule<ModuleOptions>({
       {
         staticToken: options.privateStaticToken,
         moduleConfigs: {
-          devtools: options.moduleConfigs.devtools,
-          autoImport: options.moduleConfigs.autoImport
+          devtools: options.moduleConfig.devtools,
+          autoImport: options.moduleConfig.autoImport
         }
       }
     )
@@ -57,21 +57,21 @@ export default defineNuxtModule<ModuleOptions>({
         url: options.url,
         staticToken: options.publicStaticToken,
         cookieConfigs: {
-          useNuxtCookies: options.cookieConfigs.useNuxtCookies,
-          refreshTokenCookieName: options.cookieConfigs.refreshTokenCookieName,
-          customCookie: options.cookieConfigs.useNuxtCookies,
-          cookieHttpOnly: options.cookieConfigs.cookieHttpOnly,
-          cookieSameSite: options.cookieConfigs.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
-          cookieSecure: options.cookieConfigs.cookieSecure
+          useNuxtCookies: options.cookieConfig.useNuxtCookies,
+          refreshTokenCookieName: options.cookieConfig.refreshTokenCookieName,
+          customCookie: options.cookieConfig.useNuxtCookies,
+          cookieHttpOnly: options.cookieConfig.cookieHttpOnly,
+          cookieSameSite: options.cookieConfig.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
+          cookieSecure: options.cookieConfig.cookieSecure
         },
         moduleConfigs: {
-          autoRefresh: options.moduleConfigs.autoRefresh
+          autoRefresh: options.moduleConfig.autoRefresh
         }
       }
     )
 
     // Auto import native components
-    if (options.moduleConfigs.autoImport) {
+    if (options.moduleConfig.autoImport) {
       nuxt.options.imports = defu(nuxt.options.imports, {
         presets: [
           {
@@ -92,7 +92,7 @@ export default defineNuxtModule<ModuleOptions>({
     addImportsDir(resolve(runtimeDir, 'composables'))
 
     // Enable Directus inside Nuxt Devtools
-    if (options.moduleConfigs.devtools) {
+    if (options.moduleConfig.devtools) {
       const adminUrl = joinURL(
         nuxt.options.runtimeConfig.public.directus.url,
         '/admin/'
