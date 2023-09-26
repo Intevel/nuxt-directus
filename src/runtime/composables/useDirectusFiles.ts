@@ -32,7 +32,7 @@ export const useDirectusFiles = () => {
     fileId: string,
     options?: DirectusThumbnailOptions
   ): string => {
-    const url = new URL(`${directusUrl}assets/${fileId}`)
+    const url = new URL(`${directusUrl}/assets/${fileId}`)
     if (options) {
       if (options.width) { url.searchParams.append('width', options.width.toFixed(0)) }
       if (options.height) { url.searchParams.append('height', options.height.toFixed(0)) }
