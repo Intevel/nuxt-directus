@@ -43,9 +43,9 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
       storage: useDirectusTokens()
     })).with(rest(options))
 
-  if (config?.staticToken !== false) {
-    if (typeof config?.staticToken === 'string') {
-      publicStaticToken.value = config?.staticToken
+  if (config?.useStaticToken !== false) {
+    if (typeof config?.useStaticToken === 'string') {
+      publicStaticToken.value = config?.useStaticToken
     } else {
       publicStaticToken.value = useRuntimeConfig().public.directus.staticToken
     }
@@ -67,9 +67,9 @@ export const useDirectusGraphql = <T extends Object>(config?: DirectusGrafqlConf
       storage: useDirectusTokens()
     })).with(graphql())
 
-  if (config?.staticToken !== false) {
-    if (typeof config?.staticToken === 'string') {
-      publicStaticToken.value = config?.staticToken
+  if (config?.useStaticToken !== false) {
+    if (typeof config?.useStaticToken === 'string') {
+      publicStaticToken.value = config?.useStaticToken
     } else {
       publicStaticToken.value = useRuntimeConfig().public.directus.staticToken
     }

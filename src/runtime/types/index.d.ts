@@ -96,6 +96,7 @@ export interface DirectusRegularItemRequestOptions<TSchema, TQuery> {
   query?: TQuery | undefined;
   /* useAsyncData options */
   params?: AsyncDataOptions<RegularCollections<TSchema>>;
+  useStaticToken?: boolean | string;
 }
 
 export interface DirectusSingletonItemRequestOptions<TSchema, TQuery> {
@@ -103,15 +104,7 @@ export interface DirectusSingletonItemRequestOptions<TSchema, TQuery> {
   query?: TQuery | undefined;
   /* useAsyncData options */
   params?: AsyncDataOptions<SingletonCollections<TSchema>>;
-}
-
-export interface DirectusGrafqlConfig {
-  /**
-   * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
-   * @default true
-   * @type boolean | string
-   */
-  staticToken?: boolean | string;
+  useStaticToken?: boolean | string;
 }
 
 export interface DirectusUserInfo<TSchema, TQuery> {
@@ -121,7 +114,7 @@ export interface DirectusUserInfo<TSchema, TQuery> {
 }
 
 export interface DirectusDeleteUser<TSchema> {
-  key: DirectusUser<TSchema>["id"]
+  id: DirectusUser<TSchema>["id"]
   useStaticToken?: boolean | string;
 }
 
@@ -130,6 +123,15 @@ export interface DirectusRestConfig extends RestConfig {
    * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
    * @default true
    * @type boolean | string
+  */
+  useStaticToken?: boolean | string;
+}
+
+export interface DirectusGrafqlConfig {
+  /**
+   * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
+   * @default true
+   * @type boolean | string
    */
-  staticToken?: boolean | string;
+  useStaticToken?: boolean | string;
 }

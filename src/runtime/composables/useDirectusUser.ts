@@ -11,18 +11,19 @@ import {
   updateMe as sdkUpdateMe
 } from '@directus/sdk'
 
-export function useDirectusUser <TSchema extends Object> () {
+export function useDirectusUser <TSchema extends Object> (useStaticToken?: boolean | string) {
+  const client = (useStaticToken?: boolean | string) => {
+    return useDirectusRest<TSchema>({
+      useStaticToken,
+      credentials: 'include'
+    })
+  }
 
   async function createUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (params: DirectusUserInfo<TSchema, TQuery>) {
-    const createUserClient = useDirectusRest<TSchema>({
-      staticToken: params?.useStaticToken,
-      credentials: 'include'
-    })
-
     try {
-      return await createUserClient.request(sdkCreateUser(params.userInfo, params.query))
+      return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUser(params.userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
@@ -39,13 +40,8 @@ export function useDirectusUser <TSchema extends Object> () {
   async function updateMe <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (params: DirectusUserInfo<TSchema, TQuery>) {
-    const createUserClient = useDirectusRest<TSchema>({
-      staticToken: params?.useStaticToken,
-      credentials: 'include'
-    })
-
     try {
-      return await createUserClient.request(sdkUpdateMe(params.userInfo, params.query))
+      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateMe(params.userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
@@ -60,13 +56,8 @@ export function useDirectusUser <TSchema extends Object> () {
   }
 
   async function deleteUser (params: DirectusDeleteUser<TSchema>) {
-    const createUserClient = useDirectusRest<TSchema>({
-      staticToken: params?.useStaticToken,
-      credentials: 'include'
-    })
-
     try {
-      return await createUserClient.request(sdkDeleteUser(params.key))
+      return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteUser(params.id))
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console

@@ -13,8 +13,13 @@ import {
   readSingleton as sdkReadSingleton
 } from '@directus/sdk'
 
-export function useDirectusItems<TSchema extends object> () {
-  const client = useDirectusRest<TSchema>()
+export function useDirectusItems<TSchema extends object> (useStaticToken?: boolean | string) {
+  const client = (useStaticToken?: boolean | string) => {
+    return useDirectusRest<TSchema>({
+      useStaticToken,
+      credentials: 'include'
+    })
+  }
 
   /**
    * Get a single item from a collection.
@@ -41,7 +46,7 @@ export function useDirectusItems<TSchema extends object> () {
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? `${String(collectionName.value)}_${itemId.value}`,
-      async () => await client.request(sdkReadItem(collectionName.value, itemId.value, options?.query)), options?.params
+      async () => await client(options?.useStaticToken || useStaticToken).request(sdkReadItem(collectionName.value, itemId.value, options?.query)), options?.params
     )
   }
 
@@ -67,7 +72,7 @@ export function useDirectusItems<TSchema extends object> () {
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
-      async () => await client.request(sdkReadItems(collectionName.value, options?.query)), options?.params
+      async () => await client(options?.useStaticToken || useStaticToken).request(sdkReadItems(collectionName.value, options?.query)), options?.params
     )
   }
 
@@ -93,7 +98,7 @@ export function useDirectusItems<TSchema extends object> () {
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
-      async () => await client.request(sdkReadSingleton(collectionName.value, options?.query)), options?.params
+      async () => await client(options?.useStaticToken || useStaticToken).request(sdkReadSingleton(collectionName.value, options?.query)), options?.params
     )
   }
 

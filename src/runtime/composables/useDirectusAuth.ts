@@ -8,7 +8,7 @@ import {
 } from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
-  const client = useDirectusRest<TSchema>({ staticToken: false, credentials: 'include' })
+  const client = useDirectusRest<TSchema>({ useStaticToken: false, credentials: 'include' })
 
   const { user } = useDirectusUser()
   const { tokens } = useDirectusTokens()
