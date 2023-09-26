@@ -1,6 +1,5 @@
 import type {
   DirectusUser,
-  Query,
   RegularCollections,
   SingletonCollections,
   RestConfig
@@ -115,10 +114,15 @@ export interface DirectusGrafqlConfig {
   staticToken?: boolean | string;
 }
 
-export interface DirectusRegisterCredentials<TSchema> {
+export interface DirectusUserInfo<TSchema, TQuery> {
   userInfo: Partial<DirectusUser<TSchema>>;
   useStaticToken?: boolean | string;
-  query?: Query<TSchema, DirectusUser<TSchema>> | undefined;
+  query?: TQuery | undefined;
+}
+
+export interface DirectusDeleteUser<TSchema> {
+  key: DirectusUser<TSchema>["id"]
+  useStaticToken?: boolean | string;
 }
 
 export interface DirectusRestConfig extends RestConfig {
