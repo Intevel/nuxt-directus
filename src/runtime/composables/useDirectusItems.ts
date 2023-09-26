@@ -1,16 +1,24 @@
 import type {
+  AsyncDataDirectusReqItem,
   CollectionType,
-  DirectusRegularItemRequestOptions,
-  DirectusSingletonItemRequestOptions,
+  DirectusReqOptions,
+  DirectusReqItemOptions,
   RegularCollections,
   SingletonCollections,
-  Query
+  Query,
+  UnpackList
 } from '../types'
 import { useAsyncData } from '#imports'
 import {
+  createItem as sdkCreateItem,
+  createItems as sdkCreateItems,
   readItem as sdkReadItem,
   readItems as sdkReadItems,
-  readSingleton as sdkReadSingleton
+  readSingleton as sdkReadSingleton,
+  updateItem as sdkUpdateItem,
+  updateItems as sdkUpdateItems,
+  deleteItem as sdkDeleteItem,
+  deleteItems as sdkDeleteItems
 } from '@directus/sdk'
 
 export function useDirectusItems<TSchema extends object> (useStaticToken?: boolean | string) {
@@ -19,6 +27,36 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
       useStaticToken,
       credentials: 'include'
     })
+  }
+
+  async function createItem <
+    Collection extends keyof TSchema,
+    Item extends Partial<UnpackList<TSchema[Collection]>>,
+    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+  > (
+    collection: Ref<Collection> | Collection,
+    item: Item,
+    options?: DirectusReqItemOptions<TQuery>
+  ) {
+    const collectionName = toRef(collection) as Ref<Collection>
+    const itemRef = toRef(item)
+    return await client(options?.useStaticToken || useStaticToken)
+      .request(sdkCreateItem(collectionName.value, itemRef.value, options?.query))
+  }
+
+  async function createItems <
+    Collection extends keyof TSchema,
+    Item extends Partial<UnpackList<TSchema[Collection]>>,
+    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+  > (
+    collection: Ref<Collection> | Collection,
+    items: Item,
+    options?: DirectusReqItemOptions<TQuery>
+  ) {
+    const collectionName = toRef(collection) as Ref<Collection>
+    const itemsRef = toRef(items)
+    return await client(options?.useStaticToken || useStaticToken)
+      .request(sdkCreateItems(collectionName.value, itemsRef.value, options?.query))
   }
 
   /**
@@ -39,14 +77,15 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   > (
     collection: Ref<Collection> | Collection,
     id: Ref<string | number> | string | number,
-    options?: DirectusRegularItemRequestOptions<TSchema, TQuery>
+    options?: AsyncDataDirectusReqItem<TSchema, TQuery>
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
     const itemId = toRef(id)
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? `${String(collectionName.value)}_${itemId.value}`,
-      async () => await client(options?.useStaticToken || useStaticToken).request(sdkReadItem(collectionName.value, itemId.value, options?.query)), options?.params
+      async () => await client(options?.useStaticToken || useStaticToken)
+        .request(sdkReadItem(collectionName.value, itemId.value, options?.query)), options?.params
     )
   }
 
@@ -66,13 +105,14 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
     collection: Ref<Collection> | Collection,
-    options?: DirectusRegularItemRequestOptions<TSchema, TQuery>
+    options?: AsyncDataDirectusReqItem<TSchema, TQuery>
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
-      async () => await client(options?.useStaticToken || useStaticToken).request(sdkReadItems(collectionName.value, options?.query)), options?.params
+      async () => await client(options?.useStaticToken || useStaticToken)
+        .request(sdkReadItems(collectionName.value, options?.query)), options?.params
     )
   }
 
@@ -92,19 +132,89 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     TQuery extends Query<TSchema, TSchema[Collection]>
   > (
     collection: Ref<Collection> | Collection,
-    options?: DirectusSingletonItemRequestOptions<TSchema, TQuery>
+    options?: AsyncDataDirectusReqItem<TSchema, TQuery>
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
-      async () => await client(options?.useStaticToken || useStaticToken).request(sdkReadSingleton(collectionName.value, options?.query)), options?.params
+      async () => await client(options?.useStaticToken || useStaticToken)
+        .request(sdkReadSingleton(collectionName.value, options?.query)), options?.params
     )
   }
 
+  async function updateItem <
+    Collection extends keyof TSchema,
+    Item extends Partial<UnpackList<TSchema[Collection]>>,
+    TQuery extends Query<TSchema, TSchema[Collection]>
+  > (
+    collection: Ref<Collection> | Collection,
+    id: string | number,
+    item: Item,
+    options?: DirectusReqItemOptions<TQuery>
+  ) {
+    const collectionName = toRef(collection) as Ref<Collection>
+    const itemId = toRef(id)
+    const itemRef = toRef(item)
+    return await client(options?.useStaticToken || useStaticToken)
+      .request(sdkUpdateItem(collectionName.value, itemId.value, itemRef.value, options?.query))
+  }
+
+  async function updateItems <
+    Collection extends keyof TSchema,
+    Item extends Partial<UnpackList<TSchema[Collection]>>,
+    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+  > (
+    collection: Ref<Collection> | Collection,
+    id: string[] | number[],
+    items: Item,
+    options?: DirectusReqItemOptions<TQuery>
+  ) {
+    const collectionName = toRef(collection) as Ref<Collection>
+    const itemId = toRef(id)
+    const itemsRef = toRef(items)
+    return await client(options?.useStaticToken || useStaticToken)
+      .request(sdkUpdateItems(collectionName.value, itemId.value, itemsRef.value, options?.query))
+  }
+
+  async function deleteItem <
+    Collection extends keyof TSchema,
+    ID extends Partial<UnpackList<TSchema[Collection]>>
+  > (
+    collection: Ref<Collection> | Collection,
+    id: ID,
+    options?: DirectusReqOptions
+  ) {
+    const collectionName = toRef(collection) as Ref<Collection>
+    const itemId = toRef(id)
+    return await client(options?.useStaticToken || useStaticToken)
+      .request(sdkDeleteItem(collectionName.value, itemId.value))
+  }
+
+  async function deleteItems <
+    Collection extends keyof TSchema,
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+    ID extends string[] | number[] | TQuery
+  > (
+    collection: Ref<Collection> | Collection,
+    idOrQuery: Ref<ID> | ID,
+    options?: DirectusReqItemOptions<TQuery>
+  ) {
+    const collectionName = toRef(collection) as Ref<Collection>
+    const itemId = toRef(idOrQuery) as Ref<ID>
+    return await client(options?.useStaticToken || useStaticToken)
+      .request(sdkDeleteItems(collectionName.value, itemId.value))
+  }
+
   return {
+    createItem,
+    createItems,
     readItem,
     readItems,
-    readSingleton
+    readSingleton,
+    updateItem,
+    updateItems,
+    deleteItem,
+    deleteItems
   }
 }
