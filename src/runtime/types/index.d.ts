@@ -5,7 +5,7 @@ import type {
   SingletonCollections,
   RestConfig
 } from '@directus/sdk';
-import type { AsyncDataOptions } from '#imports';
+import type { AsyncDataOptions } from '#app';
 
 export type * from "@directus/sdk";
 
@@ -103,7 +103,7 @@ export interface DirectusReqItemOptions<TQuery> extends DirectusReqOptions {
 export interface AsyncDataDirectusReqItem<TSchema, TQuery> extends DirectusReqItemOptions<TQuery> {
   /* useAsyncData key and params */
   key?: string;
-  params?: AsyncDataOptions<CollectionType<TSchema>>;
+  params?: AsyncDataOptions<any>; // This will fire an error when using `transform`
 }
 
 export interface DirectusUserInfo<TSchema, TQuery> {
