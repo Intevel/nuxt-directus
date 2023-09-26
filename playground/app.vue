@@ -70,7 +70,7 @@
 
 <script setup lang="ts">
 const { login, logout, refreshTokens, fetchUser } = useDirectusAuth()
-const user = useDirectusUser()
+const { user } = useDirectusUser()
 
 interface Global {
   title: string

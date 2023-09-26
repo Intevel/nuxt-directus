@@ -1,18 +1,16 @@
 import { defu } from 'defu'
 import type {
-  DirectusRegisterCredentials,
   DirectusUser,
   LoginOptions
 } from '../types'
 import {
-  createUser,
   readMe
 } from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
   const client = useDirectusRest<TSchema>({ staticToken: false, credentials: 'include' })
 
-  const user = useDirectusUser()
+  const { user } = useDirectusUser()
   const { tokens } = useDirectusTokens()
 
   function setUser (value: DirectusUser<TSchema>) {
@@ -38,27 +36,6 @@ export function useDirectusAuth<TSchema extends Object> () {
       }
     }
     return user
-  }
-
-  async function registerUser (params: DirectusRegisterCredentials<TSchema>) {
-    const createUserClient = useDirectusRest<TSchema>({
-      staticToken: params?.useStaticToken,
-      credentials: 'include'
-    })
-
-    try {
-      return await createUserClient.request(createUser(params.userInfo, params.query))
-    } catch (error: any) {
-      if (error && error.message) {
-        // eslint-disable-next-line no-console
-        console.error("Couldn't create user", error.errors)
-        throw error.errors
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(error)
-        throw error
-      }
-    }
   }
 
   async function login (identifier: string, password: string, options?: LoginOptions) {
@@ -137,7 +114,6 @@ export function useDirectusAuth<TSchema extends Object> () {
     tokens,
     setUser,
     fetchUser,
-    registerUser,
     login,
     refreshTokens,
     logout
