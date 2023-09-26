@@ -29,13 +29,6 @@ export interface ModuleOptions {
    */
   publicStaticToken?: string;
   /**
-   * Enable Directus Devtools
-   * @default false
-   * @type boolean
-   * @see https://docs.directus.io/guides/developer-tools.html
-   */
-  devtools?: boolean;
-  /**
   * A series of configs that let you define Nuxt as the auth cookie handler.
   * @default Directus handles auth cookies
   * @type object
@@ -73,11 +66,30 @@ export interface ModuleOptions {
     cookieSecure?: boolean | undefined;
   }
   /**
-   * Whether to automatically refresh the access token when it expires.
-   * @default true
-   * @type boolean
-   */
-  autoRefresh: boolean;
+  * A series of configs that let you define how the module should be used by Nuxt.
+  * @type object
+  */
+  moduleConfigs: {
+    /**
+     * Whether to automatically refresh the access token when it expires.
+     * @default true
+     * @type boolean
+     */
+    autoRefresh: boolean;
+    /**
+     * Auto import native components from the Directus SDK.
+     * @default true
+     * @type boolean
+     */
+    autoImport?: boolean;
+    /**
+     * Enable Directus Devtools
+     * @default false
+     * @type boolean
+     * @see https://docs.directus.io/guides/developer-tools.html
+     */
+    devtools?: boolean;
+  }
 }
 
 export interface DirectusRegularItemRequestOptions<TSchema, TQuery> {

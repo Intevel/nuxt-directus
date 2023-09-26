@@ -22,7 +22,6 @@ export default defineNuxtModule<ModuleOptions>({
     url: '',
     privateStaticToken: '',
     publicStaticToken: '',
-    devtools: false,
     cookieConfigs: {
       useNuxtCookies: false,
       refreshTokenCookieName: 'directus_refresh_token',
@@ -30,7 +29,11 @@ export default defineNuxtModule<ModuleOptions>({
       cookieSameSite: 'lax',
       cookieSecure: false
     },
-    autoRefresh: true
+    moduleConfigs: {
+      devtools: false,
+      autoRefresh: true,
+      autoImport: true
+    }
   },
   setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
@@ -40,7 +43,10 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.options.runtimeConfig.directus,
       {
         staticToken: options.privateStaticToken,
-        devtools: options.devtools
+        moduleConfigs: {
+          devtools: options.moduleConfigs.devtools,
+          autoImport: options.moduleConfigs.autoImport
+        }
       }
     )
 
@@ -58,29 +64,35 @@ export default defineNuxtModule<ModuleOptions>({
           cookieSameSite: options.cookieConfigs.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
           cookieSecure: options.cookieConfigs.cookieSecure
         },
-        autoRefresh: options.autoRefresh
+        moduleConfigs: {
+          autoRefresh: options.moduleConfigs.autoRefresh
+        }
       }
     )
 
-    nuxt.options.imports = defu(nuxt.options.imports, {
-      presets: [
-        {
-          from: '@directus/sdk',
-          imports: Object.keys(DirectusSDK)
-        }
-      ]
-    })
+    // Auto import native components
+    if (options.moduleConfigs.autoImport) {
+      nuxt.options.imports = defu(nuxt.options.imports, {
+        presets: [
+          {
+            from: '@directus/sdk',
+            imports: Object.keys(DirectusSDK)
+          }
+        ]
+      })
+    }
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
-    if (nuxt.options.runtimeConfig.public.directus.autoRefresh) {
+    if (nuxt.options.runtimeConfig.public.directus.moduleConfigs.autoRefresh) {
       addPlugin(resolve(runtimeDir, './plugins/autoRefresh'), { append: true })
     }
 
     addImportsDir(resolve(runtimeDir, 'composables'))
 
-    if (options.devtools) {
+    // Enable Directus inside Nuxt Devtools
+    if (options.moduleConfigs.devtools) {
       const adminUrl = joinURL(
         nuxt.options.runtimeConfig.public.directus.url,
         '/admin/'

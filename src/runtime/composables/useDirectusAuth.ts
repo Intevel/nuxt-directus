@@ -4,7 +4,10 @@ import type {
   DirectusUser,
   LoginOptions
 } from '../types'
-import { readMe } from '#imports'
+import {
+  createUser,
+  readMe
+} from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
   const client = useDirectusRest<TSchema>({ staticToken: false, credentials: 'include' })

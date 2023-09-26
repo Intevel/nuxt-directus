@@ -6,7 +6,12 @@ import type {
   SingletonCollections,
   Query
 } from '../types'
-import { useAsyncData, readItem, readItems } from '#imports'
+import { useAsyncData } from '#imports'
+import {
+  readItem,
+  readItems,
+  readSingleton
+} from '@directus/sdk'
 
 export function useDirectusItems<TSchema extends object> () {
   const client = useDirectusRest<TSchema>()
