@@ -8,7 +8,7 @@ export default defineNuxtPlugin(async (_nuxtApp) => {
   // TODO: check for cookies, to avoid unnecessary requests
   async function checkUserAuth () {
     if (process.client) {
-      if ((!tokens.value?.access_token || !user.value) && (useNuxtCookies ? refreshToken().value : true)) {
+      if ((!user.value || !tokens.value?.access_token) && (refreshToken().value || !useNuxtCookies)) {
         await refreshTokens().catch(error => error)
       }
     }

@@ -179,14 +179,14 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
 
   async function deleteItem <
     Collection extends keyof TSchema,
-    ID extends Partial<UnpackList<TSchema[Collection]>>
+    ID extends string | number
   > (
     collection: Ref<Collection> | Collection,
     id: ID,
     options?: DirectusReqOptions
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
-    const itemId = toRef(id)
+    const itemId = toRef(id) as Ref<ID>
     return await client(options?.useStaticToken || useStaticToken)
       .request(sdkDeleteItem(collectionName.value, itemId.value))
   }
