@@ -4,7 +4,7 @@ import type {
   LoginOptions
 } from '../types'
 import {
-  readMe
+  readMe as sdkReadMe
 } from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
@@ -17,10 +17,10 @@ export function useDirectusAuth<TSchema extends Object> () {
     user.value = value
   }
 
-  async function fetchUser () {
+  async function readMe () {
     if (tokens.value?.access_token) {
       try {
-        const res = await client.request(readMe())
+        const res = await client.request(sdkReadMe())
         // TODO: fix types for custom fields in `directus_users`
         setUser(res as DirectusUser<TSchema>)
       } catch (error: any) {
@@ -45,7 +45,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       const params = defu(options, defaultOptions) as LoginOptions
 
       const authResponse = await client.login(identifier, password, params)
-      fetchUser()
+      readMe()
 
       return {
         access_token: authResponse.access_token,
@@ -67,7 +67,7 @@ export function useDirectusAuth<TSchema extends Object> () {
   async function refreshTokens () {
     try {
       const authResponse = await client.refresh()
-      fetchUser()
+      readMe()
 
       return {
         access_token: authResponse.access_token,
@@ -105,7 +105,7 @@ export function useDirectusAuth<TSchema extends Object> () {
     user,
     tokens,
     setUser,
-    fetchUser,
+    readMe,
     login,
     refreshTokens,
     logout
