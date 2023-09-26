@@ -43,7 +43,7 @@ export default defineNuxtModule<ModuleOptions>({
       nuxt.options.runtimeConfig.directus,
       {
         staticToken: options.privateStaticToken,
-        moduleConfigs: {
+        moduleConfig: {
           devtools: options.moduleConfig.devtools,
           autoImport: options.moduleConfig.autoImport
         }
@@ -56,7 +56,7 @@ export default defineNuxtModule<ModuleOptions>({
       {
         url: options.url,
         staticToken: options.publicStaticToken,
-        cookieConfigs: {
+        cookieConfig: {
           useNuxtCookies: options.cookieConfig.useNuxtCookies,
           refreshTokenCookieName: options.cookieConfig.refreshTokenCookieName,
           customCookie: options.cookieConfig.useNuxtCookies,
@@ -64,7 +64,7 @@ export default defineNuxtModule<ModuleOptions>({
           cookieSameSite: options.cookieConfig.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
           cookieSecure: options.cookieConfig.cookieSecure
         },
-        moduleConfigs: {
+        moduleConfig: {
           autoRefresh: options.moduleConfig.autoRefresh
         }
       }
@@ -85,7 +85,7 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
-    if (nuxt.options.runtimeConfig.public.directus.moduleConfigs.autoRefresh) {
+    if (nuxt.options.runtimeConfig.public.directus.moduleConfig.autoRefresh) {
       addPlugin(resolve(runtimeDir, './plugins/autoRefresh'), { append: true })
     }
 

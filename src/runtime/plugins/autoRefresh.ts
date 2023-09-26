@@ -3,7 +3,7 @@ import { defineNuxtPlugin } from '#imports'
 export default defineNuxtPlugin(async (_nuxtApp) => {
   const { user, tokens, refreshTokens } = useDirectusAuth()
   const { refreshToken } = useDirectusTokens()
-  const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfigs
+  const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfig
 
   // TODO: check for cookies, to avoid unnecessary requests
   async function checkUserAuth () {

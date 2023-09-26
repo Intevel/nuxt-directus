@@ -37,7 +37,7 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
 
   async function login (identifier: string, password: string, options?: LoginOptions) {
-    const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfigs
+    const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfig
     try {
       const defaultOptions = {
         mode: useNuxtCookies ? 'json' : 'cookie'

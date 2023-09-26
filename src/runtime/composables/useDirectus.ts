@@ -24,7 +24,7 @@ export const useDirectus = <T extends Object>(url?: string, options?: ClientOpti
 }
 
 export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) => {
-  const { moduleConfigs, cookieConfigs, staticToken } = useRuntimeConfig().public.directus
+  const { moduleConfig, cookieConfig, staticToken } = useRuntimeConfig().public.directus
   const { tokens } = useDirectusTokens()
 
   // TODO: add configs for oFetch once the following is fixed and released and check if `credentials: 'include'` works
@@ -36,8 +36,8 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
   const options = defu(config, defaultConfig)
   
   const client = useDirectus<T>().with(authentication(
-    cookieConfigs ? 'json' : 'cookie', {
-      autoRefresh: moduleConfigs.autoRefresh,
+    cookieConfig ? 'json' : 'cookie', {
+      autoRefresh: moduleConfig.autoRefresh,
       credentials: 'include',
       storage: useDirectusTokens()
     })).with(rest(options))
@@ -54,12 +54,12 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
 }
 
 export const useDirectusGraphql = <T extends Object>(config?: DirectusGraphqlConfig) => {
-  const { moduleConfigs, cookieConfigs, staticToken } = useRuntimeConfig().public.directus
+  const { moduleConfig, cookieConfig, staticToken } = useRuntimeConfig().public.directus
   const { tokens } = useDirectusTokens()
 
   const client = useDirectus<T>().with(authentication(
-    cookieConfigs.useNuxtCookies ? 'json' : 'cookie', {
-      autoRefresh: moduleConfigs.autoRefresh,
+    cookieConfig.useNuxtCookies ? 'json' : 'cookie', {
+      autoRefresh: moduleConfig.autoRefresh,
       credentials: 'include',
       storage: useDirectusTokens()
     })).with(graphql())
