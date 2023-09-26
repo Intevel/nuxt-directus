@@ -39,60 +39,42 @@
         List Posts
         <ul>
           <li v-for="post in posts" :key="post.id">
-            <h2>{{ post.title }}</h2>
-            <sub>{{ post.id }}</sub>
+            <h3>{{ post.title }}</h3>
+            <sub>{{ post.slug }} | {{ post.id }}</sub>
             <p>{{ post.content }}</p>
           </li>
         </ul>
       </div>
       <div>
-        <h1>Single Post</h1>
-        <input v-model="postId" placeholder="Post ID">
-        <div v-if="!postId && singlePostPending">
-          No post selected.
-        </div>
-        <div v-else-if="singlePostPending">
-          Searching post...
-        </div>
-        <div v-else-if="singlePostError">
-          {{ singlePostError }}
-        </div>
-        <div v-else-if="singlePost">
-          {{ singlePost }}
-        </div>
-        <div v-else>
-          No post found
-        </div>
-      </div>
-      <div>
-        <h1>New Post</h1>
+        <h2>New Post</h2>
         <div>
-          <input v-model="postNewData.title" placeholder="Post title">
-          <input v-model="postNewData.slug" placeholder="Post slug">
-          <input v-model="postNewData.content" placeholder="Post content">
-          <button @click="async () => await createItem('posts', postNewData)">
+          <input type="text" v-model="postNewData.title" placeholder="Post title">
+          <input type="text" v-model="postNewData.slug" placeholder="Post slug">
+          <br>
+          <textarea v-model="postNewData.content" placeholder="Post content"></textarea>
+          <button @click="createContent()">
             Create Post
           </button>
         </div>
       </div>
       <div>
-        <h1>Update Post</h1>
+        <h2>Update or Delete a Post</h2>
         <div>
-          <input v-model="postIdUpdate" placeholder="Post ID">
-          <input v-model="postUpdateData.title" placeholder="Post title">
-          <input v-model="postUpdateData.slug" placeholder="Post slug">
-          <input v-model="postUpdateData.content" placeholder="Post content">
-          <button @click="updateItem('posts', postIdUpdate, postUpdateData)">
+          <div v-for="post in posts" :key="post.id" >
+            <input type="radio" v-model="postId" :id="post.id.toString" :value="post.id">
+            <label for="post.id">{{ post.title }}</label>
+          </div>
+          <input type="text" v-model="postUpdateData.title" placeholder="Post title">
+          <input type="text" v-model="postUpdateData.slug" placeholder="Post slug">
+          <br>
+          <textarea v-model="postUpdateData.content" placeholder="Post content"></textarea>
+          <button @click="updateContent()">
             Update Post
           </button>
+          <button @click="deleteItem('posts', postId).then(()=>refreshPosts())">
+            Delete Post
+          </button>
         </div>
-      </div>
-      <div>
-        <h1>Delete Post</h1>
-        <input v-model="postIdDelete" placeholder="Post ID">
-        <button @click="deleteItem('posts', postIdDelete)">
-          Delete Post
-        </button>
       </div>
     </div>
   </div>
@@ -107,24 +89,25 @@ interface Global {
   description: string
 }
 
-interface Posts {
+interface Post {
   id: string | number
   title: string
   slug: string
   content: string
+  status: string
 }
 
 interface Schema {
   global: Global
-  posts: Posts[]
+  posts: Post[]
 }
 
-const { createItem, readItems, readItem, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
+const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
 
-const { data: global, error: errorGlobal } = await readSingleton('global')
+const { data: global } = await readSingleton('global')
 const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await readItems('posts', {
   query: {
-    fields: ['title', 'id', 'content']
+    fields: ['title', 'id', 'slug', 'content']
   },
   params: {
     watch: [user]
@@ -135,21 +118,18 @@ onMounted(() => {
   refreshPosts()
 })
 
-const postId = ref<Posts['id']>('')
-const { data: singlePost, pending: singlePostPending, error: singlePostError } = await readItem('posts', postId, {params: {immediate: false, watch: [postId]}})
+const postNewData = ref<Partial<Post>>({})
 
-const postNewData = ref<Partial<Posts>>({
-  title: '',
-  slug: '',
-  content: ''
-})
+async function createContent() {
+  await createItem('posts', postNewData.value)
+  refreshPosts()
+}
 
-const postIdUpdate = ref<Posts['id']>('')
-const postUpdateData = ref<Partial<Posts>>({
-  title: '',
-  slug: '',
-  content: ''
-})
+const postId = ref<Post['id']>(posts.value?.[0].id || '')
+const postUpdateData = ref<Partial<Post>>({})
 
-const postIdDelete = ref<Posts['id']>('')
+async function updateContent() {
+  await updateItem('posts', postId.value, postUpdateData.value)
+  refreshPosts()
+}
 </script>
