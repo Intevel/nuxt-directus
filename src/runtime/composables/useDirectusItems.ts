@@ -8,9 +8,9 @@ import type {
 } from '../types'
 import { useAsyncData } from '#imports'
 import {
-  readItem,
-  readItems,
-  readSingleton
+  readItem as sdkReadItem,
+  readItems as sdkReadItems,
+  readSingleton as sdkReadSingleton
 } from '@directus/sdk'
 
 export function useDirectusItems<TSchema extends object> () {
@@ -28,7 +28,7 @@ export function useDirectusItems<TSchema extends object> () {
    * @returns error: an error object if the data fetching failed.
    * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
    */
-  async function getItemById <
+  async function readItem <
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
@@ -41,7 +41,7 @@ export function useDirectusItems<TSchema extends object> () {
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? `${String(collectionName.value)}_${itemId.value}`,
-      async () => await client.request(readItem(collectionName.value, itemId.value, options?.query)), options?.params
+      async () => await client.request(sdkReadItem(collectionName.value, itemId.value, options?.query)), options?.params
     )
   }
 
@@ -56,7 +56,7 @@ export function useDirectusItems<TSchema extends object> () {
    * @returns error: an error object if the data fetching failed.
    * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
    */
-  async function getItems <
+  async function readItems <
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
@@ -67,7 +67,7 @@ export function useDirectusItems<TSchema extends object> () {
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
-      async () => await client.request(readItems(collectionName.value, options?.query)), options?.params
+      async () => await client.request(sdkReadItems(collectionName.value, options?.query)), options?.params
     )
   }
 
@@ -82,24 +82,24 @@ export function useDirectusItems<TSchema extends object> () {
    * @returns error: an error object if the data fetching failed.
    * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
    */
-  const getSingletonItem = async <
+  async function readSingleton <
     Collection extends SingletonCollections<TSchema>,
     TQuery extends Query<TSchema, TSchema[Collection]>
   > (
     collection: Ref<Collection> | Collection,
     options?: DirectusSingletonItemRequestOptions<TSchema, TQuery>
-  ) => {
+  ) {
     const collectionName = toRef(collection) as Ref<Collection>
     return await useAsyncData(
       // TODO: add logic to randomize key if query is present
       options?.key ?? String(collectionName.value),
-      async () => await client.request(readSingleton(collectionName.value, options?.query)), options?.params
+      async () => await client.request(sdkReadSingleton(collectionName.value, options?.query)), options?.params
     )
   }
 
   return {
-    getItemById,
-    getItems,
-    getSingletonItem
+    readItem,
+    readItems,
+    readSingleton
   }
 }
