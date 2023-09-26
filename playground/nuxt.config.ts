@@ -4,7 +4,9 @@ export default defineNuxtConfig({
   modules: [NuxtDirectus, '@nuxt/devtools'],
   directus: {
     url: 'http://localhost:8055/',
-    devtools: true,
+    moduleConfigs: {
+      devtools: true,
+    },
     cookieConfigs: {
       useNuxtCookies: true
     }

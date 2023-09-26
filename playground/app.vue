@@ -64,6 +64,36 @@
           No post found
         </div>
       </div>
+      <div>
+        <h1>New Post</h1>
+        <div>
+          <input v-model="postNewData.title" placeholder="Post title">
+          <input v-model="postNewData.slug" placeholder="Post slug">
+          <input v-model="postNewData.content" placeholder="Post content">
+          <button @click="async () => await createItem('posts', postNewData)">
+            Create Post
+          </button>
+        </div>
+      </div>
+      <div>
+        <h1>Update Post</h1>
+        <div>
+          <input v-model="postIdUpdate" placeholder="Post ID">
+          <input v-model="postUpdateData.title" placeholder="Post title">
+          <input v-model="postUpdateData.slug" placeholder="Post slug">
+          <input v-model="postUpdateData.content" placeholder="Post content">
+          <button @click="updateItem('posts', postIdUpdate, postUpdateData)">
+            Update Post
+          </button>
+        </div>
+      </div>
+      <div>
+        <h1>Delete Post</h1>
+        <input v-model="postIdDelete" placeholder="Post ID">
+        <button @click="deleteItem('posts', postIdDelete)">
+          Delete Post
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -89,15 +119,37 @@ interface Schema {
   posts: Posts[]
 }
 
-const { readItems, readItem, readSingleton } = useDirectusItems<Schema>()
+const { createItem, readItems, readItem, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
 
-const { data: global } = await readSingleton('global')
+const { data: global, error: errorGlobal } = await readSingleton('global')
 const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await readItems('posts', {
   query: {
     fields: ['title', 'id', 'content']
+  },
+  params: {
+    watch: [user]
   }
+})
+
+onMounted(() => {
+  refreshPosts()
 })
 
 const postId = ref<Posts['id']>('')
 const { data: singlePost, pending: singlePostPending, error: singlePostError } = await readItem('posts', postId, {params: {immediate: false, watch: [postId]}})
+
+const postNewData = ref<Partial<Posts>>({
+  title: '',
+  slug: '',
+  content: ''
+})
+
+const postIdUpdate = ref<Posts['id']>('')
+const postUpdateData = ref<Partial<Posts>>({
+  title: '',
+  slug: '',
+  content: ''
+})
+
+const postIdDelete = ref<Posts['id']>('')
 </script>
