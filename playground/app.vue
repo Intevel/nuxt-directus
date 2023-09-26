@@ -48,10 +48,10 @@
       <div>
         <h1>Single Post</h1>
         <input v-model="postId" placeholder="Post ID">
-        <button @click="searchPost()">
-          Search post
-        </button>
-        <div v-if="singlePostPending">
+        <div v-if="!postId && singlePostPending">
+          No post selected.
+        </div>
+        <div v-else-if="singlePostPending">
           Searching post...
         </div>
         <div v-else-if="singlePostError">
@@ -89,15 +89,15 @@ interface Schema {
   posts: Posts[]
 }
 
-const { getItems, getItemById, getSingletonItem } = useDirectusItems<Schema>()
+const { readItems, readItem, readSingleton } = useDirectusItems<Schema>()
 
-const { data: global } = await getSingletonItem('global')
-const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await getItems('posts', {
+const { data: global } = await readSingleton('global')
+const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await readItems('posts', {
   query: {
     fields: ['title', 'id', 'content']
   }
 })
 
 const postId = ref<Posts['id']>('')
-const { data: singlePost, pending: singlePostPending, error: singlePostError, refresh: searchPost } = await getItemById('posts', postId)
+const { data: singlePost, pending: singlePostPending, error: singlePostError } = await readItem('posts', postId, {params: {immediate: false, watch: [postId]}})
 </script>
