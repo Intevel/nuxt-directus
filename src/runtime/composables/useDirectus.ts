@@ -1,7 +1,7 @@
 import { defu } from 'defu'
 import type {
   ClientOptions,
-  DirectusGrafqlConfig,
+  DirectusGraphqlConfig,
   DirectusRestConfig,
   RestConfig
 } from '../types'
@@ -53,7 +53,7 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
   return client
 }
 
-export const useDirectusGraphql = <T extends Object>(config?: DirectusGrafqlConfig) => {
+export const useDirectusGraphql = <T extends Object>(config?: DirectusGraphqlConfig) => {
   const { moduleConfigs, cookieConfigs, staticToken } = useRuntimeConfig().public.directus
   const { tokens } = useDirectusTokens()
 

@@ -126,7 +126,7 @@ export interface DirectusRestConfig extends RestConfig {
   useStaticToken?: boolean | string;
 }
 
-export interface DirectusGrafqlConfig {
+export interface DirectusGraphqlConfig {
   /**
    * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
    * @default true
