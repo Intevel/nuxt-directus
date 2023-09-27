@@ -93,7 +93,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   async function readUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    id: DirectusUser<TSchema>["id"],
+    id: DirectusUser<TSchema>['id'],
     params?: DirectusUsersOptions<TQuery>
   ) {
     if (tokens.value?.access_token) {
@@ -153,7 +153,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   async function updateUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    id: DirectusUser<TSchema>["id"],
+    id: DirectusUser<TSchema>['id'],
     userInfo: Partial<DirectusUser<TSchema>>,
     params: DirectusUsersOptions<TQuery>
   ) {
@@ -173,7 +173,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   async function updateUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    id: DirectusUser<TSchema>["id"][],
+    id: DirectusUser<TSchema>['id'][],
     userInfo: Partial<DirectusUser<TSchema>>,
     params: DirectusUsersOptions<TQuery>
   ) {
@@ -191,7 +191,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   }
 
   async function deleteUser (
-    id: DirectusUser<TSchema>["id"],
+    id: DirectusUser<TSchema>['id'],
     params: DirectusClientConfig
   ) {
     try {
@@ -208,7 +208,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   }
 
   async function deleteUsers (
-    id: DirectusUser<TSchema>["id"][],
+    id: DirectusUser<TSchema>['id'][],
     params: DirectusClientConfig
   ) {
     try {

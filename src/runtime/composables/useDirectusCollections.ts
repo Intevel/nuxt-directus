@@ -12,9 +12,6 @@ import {
   updateCollection as sdkUpdateCollection,
   deleteCollection as sdkDeleteCollection,
 } from '@directus/sdk'
-import {
-  useDirectusRest
-} from './useDirectus'
 
 export function useDirectusCollections<TSchema extends object> (useStaticToken?: boolean | string) {
   const client = (useStaticToken?: boolean | string) => {
