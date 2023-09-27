@@ -46,7 +46,9 @@ export const useDirectusTokens = ():DirectusTokens => {
     },
     set: (value: AuthenticationData | null) => {
       tokens.value = value
-      useNuxtCookies ? (refreshToken(value?.expires || undefined).value = value?.refresh_token) : null
+      if (useNuxtCookies) {
+        refreshToken(value?.expires || undefined).value = value?.refresh_token
+      }
     },
     tokens,
     refreshToken
