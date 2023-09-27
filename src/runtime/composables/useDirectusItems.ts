@@ -1,7 +1,7 @@
 import type {
   AsyncDataDirectusReqItem,
   CollectionType,
-  DirectusReqOptions,
+  DirectusClientConfig,
   DirectusReqItemOptions,
   RegularCollections,
   SingletonCollections,
@@ -242,7 +242,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   > (
     collection: Collection,
     id: ID,
-    options?: DirectusReqOptions
+    options?: DirectusClientConfig
   ) {
     try {
       return await client(options?.useStaticToken || useStaticToken)
@@ -265,7 +265,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   > (
     collection: Collection,
     idOrQuery: ID | TQuery,
-    options?: DirectusReqOptions
+    options?: DirectusClientConfig
   ) {
     try {
       return await client(options?.useStaticToken || useStaticToken)

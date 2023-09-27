@@ -3,7 +3,8 @@ import type {
   DirectusUser,
   RegularCollections,
   SingletonCollections,
-  RestConfig
+  RestConfig,
+  GraphqlConfig
 } from '@directus/sdk';
 import type { AsyncDataOptions } from '#app';
 
@@ -116,11 +117,16 @@ export interface ModuleOptions {
   }
 }
 
-export interface DirectusReqOptions {
-  useStaticToken?: boolean | string;
+export interface DirectusClientConfig {
+  /**
+   * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If string, the string will be used as the token.
+   * @default true
+   * @type boolean | string | undefined
+  */
+  useStaticToken?: boolean | string | undefined;
 }
 
-export interface DirectusReqItemOptions<TQuery> extends DirectusReqOptions {
+export interface DirectusReqItemOptions<TQuery> extends DirectusClientConfig {
   query?: TQuery | undefined;
 }
 
@@ -130,8 +136,7 @@ export interface AsyncDataDirectusReqItem<TSchema, TQuery> extends DirectusReqIt
   params?: AsyncDataOptions<any>; // This will fire an error when using `transform`
 }
 
-export interface DirectusUserFetch<TSchema, TQuery> {
-  useStaticToken?: boolean | string;
+export interface DirectusUserFetch<TSchema, TQuery> extends DirectusClientConfig {
   query?: TQuery | undefined;
 }
 
@@ -144,20 +149,8 @@ export interface DirectusDeleteUser<TSchema> {
   useStaticToken?: boolean | string;
 }
 
-export interface DirectusRestConfig extends RestConfig {
-  /**
-   * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
-   * @default true
-   * @type boolean | string
-  */
-  useStaticToken?: boolean | string;
+export interface DirectusRestConfig extends DirectusClientConfig, RestConfig {
 }
 
-export interface DirectusGraphqlConfig {
-  /**
-   * Whether to use the static token or not. If true, the static token will be used, if false, no token will be used. If a string, the string will be used as the token.
-   * @default true
-   * @type boolean | string
-   */
-  useStaticToken?: boolean | string;
+export interface DirectusGraphqlConfig extends DirectusClientConfig, GraphqlConfig {
 }

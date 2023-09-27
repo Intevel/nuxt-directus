@@ -3,6 +3,7 @@ import type {
   ClientOptions,
   DirectusGraphqlConfig,
   DirectusRestConfig,
+  GraphqlConfig,
   RestConfig
 } from '../types'
 import {
@@ -56,12 +57,18 @@ export const useDirectusGraphql = <T extends Object>(config?: DirectusGraphqlCon
   const { moduleConfig, authConfig, staticToken } = useRuntimeConfig().public.directus
   const { tokens } = useDirectusTokens()
 
+  const defaultConfig: GraphqlConfig = {
+    credentials: 'include'
+  }
+
+  const options = defu(config, defaultConfig)
+
   const client = useDirectus<T>().with(authentication(
     authConfig.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh: moduleConfig.autoRefresh,
       credentials: 'include',
       storage: useDirectusTokens()
-    })).with(graphql())
+    })).with(graphql(options))
 
   if (config?.useStaticToken === undefined && !tokens.value?.access_token) {
     return client.with(sdkStaticToken(staticToken))
