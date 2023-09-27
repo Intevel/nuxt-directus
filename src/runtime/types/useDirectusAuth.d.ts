@@ -2,7 +2,7 @@ import {
   DirectusClientConfig
 } from './index'
 
-export interface DirectusPasswordForgotCredentials extends DirectusClientConfig {
+export interface DirectusPasswordRequest extends DirectusClientConfig {
   email: string;
   reset_url?: string;
 }
@@ -10,4 +10,10 @@ export interface DirectusPasswordForgotCredentials extends DirectusClientConfig 
 export interface DirectusPasswordReset extends DirectusClientConfig {
   token: string;
   password: string;
+}
+
+export interface DirectusInviteUser extends DirectusClientConfig {
+  email: string;
+  role: string;
+  invite_url?: string;
 }

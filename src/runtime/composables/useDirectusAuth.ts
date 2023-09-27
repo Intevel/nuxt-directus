@@ -1,12 +1,14 @@
 import { defu } from 'defu'
 import type {
-  DirectusPasswordForgotCredentials,
+  DirectusInviteUser,
+  DirectusPasswordRequest,
   DirectusPasswordReset,
   LoginOptions
 } from '../types'
 import {
   passwordRequest as sdkPasswordRequest,
   passwordReset as sdkPasswordReset,
+  inviteUser as sdkInviteUser,
 } from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
@@ -90,7 +92,7 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
 
   async function passwordRequest (
-    options: DirectusPasswordForgotCredentials
+    options: DirectusPasswordRequest
   ) {
     try {
       await client(options.useStaticToken).request(sdkPasswordRequest(options.email, options.reset_url))
@@ -121,13 +123,30 @@ export function useDirectusAuth<TSchema extends Object> () {
     }
   }
 
+  async function inviteUser (
+    options: DirectusInviteUser
+  ) {
+    try {
+      await client(options.useStaticToken).request(sdkInviteUser(options.email, options.role, options.invite_url))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't invite user", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
+  }
+
   return {
-    user,
-    tokens,
+    inviteUser,
     login,
-    refreshTokens,
     logout,
     passwordRequest,
-    passwordReset
+    passwordReset,
+    refreshTokens,
+    tokens,
+    user,
   }
 }
