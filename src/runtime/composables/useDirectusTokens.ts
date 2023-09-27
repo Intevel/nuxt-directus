@@ -21,14 +21,15 @@ import {
 export const useDirectusTokens = ():AuthenticationStorage & { tokens: Ref<AuthenticationData | null> } & { refreshToken: (maxAge?: number | undefined) => CookieRef<string | null | undefined> } => {
 
   const {
+    authStateName,
     useNuxtCookies,
     refreshTokenCookieName,
     cookieHttpOnly: httpOnly,
     cookieSameSite: sameSite,
     cookieSecure: secure
-  } = useRuntimeConfig().public.directus.cookieConfig as ModuleOptions['cookieConfig']
+  } = useRuntimeConfig().public.directus.authConfig as ModuleOptions['authConfig']
 
-  const tokens: Ref<AuthenticationData | null> = useState('directus.auth')
+  const tokens: Ref<AuthenticationData | null> = useState(authStateName)
   const refreshToken = (maxAge?: number | undefined): CookieRef<string | null | undefined> => {
     const cookie = useCookie<string | null>(refreshTokenCookieName!, { maxAge, httpOnly, sameSite, secure })
     return cookie

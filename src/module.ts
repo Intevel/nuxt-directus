@@ -22,7 +22,9 @@ export default defineNuxtModule<ModuleOptions>({
     url: '',
     privateStaticToken: '',
     publicStaticToken: '',
-    cookieConfig: {
+    authConfig: {
+      authStateName: 'directus.auth',
+      userStateName: 'directus.user',
       useNuxtCookies: false,
       refreshTokenCookieName: 'directus_refresh_token',
       cookieHttpOnly: false,
@@ -56,13 +58,15 @@ export default defineNuxtModule<ModuleOptions>({
       {
         url: options.url,
         staticToken: options.publicStaticToken,
-        cookieConfig: {
-          useNuxtCookies: options.cookieConfig.useNuxtCookies,
-          refreshTokenCookieName: options.cookieConfig.refreshTokenCookieName,
-          customCookie: options.cookieConfig.useNuxtCookies,
-          cookieHttpOnly: options.cookieConfig.cookieHttpOnly,
-          cookieSameSite: options.cookieConfig.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
-          cookieSecure: options.cookieConfig.cookieSecure
+        authConfig: {
+          authStateName: options.authConfig.authStateName,
+          userStateName: options.authConfig.userStateName,
+          useNuxtCookies: options.authConfig.useNuxtCookies,
+          refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
+          customCookie: options.authConfig.useNuxtCookies,
+          cookieHttpOnly: options.authConfig.cookieHttpOnly,
+          cookieSameSite: options.authConfig.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
+          cookieSecure: options.authConfig.cookieSecure
         },
         moduleConfig: {
           autoRefresh: options.moduleConfig.autoRefresh

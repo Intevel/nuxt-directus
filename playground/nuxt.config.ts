@@ -7,7 +7,7 @@ export default defineNuxtConfig({
     moduleConfig: {
       devtools: true,
     },
-    cookieConfig: {
+    authConfig: {
       useNuxtCookies: true
     }
   }

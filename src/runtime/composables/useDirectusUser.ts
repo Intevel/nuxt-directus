@@ -12,6 +12,7 @@ import {
 } from '@directus/sdk'
 
 export function useDirectusUser <TSchema extends Object> (useStaticToken?: boolean | string) {
+  const { userStateName } = useRuntimeConfig().public.directus.authConfig
   const client = (useStaticToken?: boolean | string) => {
     return useDirectusRest<TSchema>({
       useStaticToken
@@ -64,7 +65,7 @@ export function useDirectusUser <TSchema extends Object> (useStaticToken?: boole
     }
   }
 
-  const user: Ref<DirectusUser<TSchema> | null> = useState<DirectusUser<TSchema> | null>('directus.user', () => null)
+  const user: Ref<DirectusUser<TSchema> | null> = useState<DirectusUser<TSchema> | null>(userStateName, () => null)
 
   return {
     createUser,

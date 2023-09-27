@@ -9,7 +9,7 @@ import {
 
 export function useDirectusAuth<TSchema extends Object> () {
   const client = useDirectusRest<TSchema>({ useStaticToken: false })
-  const { useNuxtCookies } = useRuntimeConfig().public.directus.cookieConfig
+  const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
 
   const { user } = useDirectusUser()
   const { tokens } = useDirectusTokens()

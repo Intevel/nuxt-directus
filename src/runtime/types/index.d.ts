@@ -33,7 +33,19 @@ export interface ModuleOptions {
   * @default Directus handles auth cookies
   * @type object
   */
-  cookieConfig: {
+  authConfig: {
+    /**
+     * The name for the Nuxt useState that handles authentication data such as access_token.
+     * @default 'directus.auth'
+     * @type string
+     */
+    authStateName: string;
+    /**
+     * The name for the Nuxt useState that handles user data once authenticated.
+     * @default 'directus.user'
+     * @type string
+     */
+    userStateName: string;
     /**
     * Handle auth cookies using Nuxt instead of Directus.
     * @default false
