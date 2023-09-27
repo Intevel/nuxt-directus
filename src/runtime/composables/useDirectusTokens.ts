@@ -1,6 +1,6 @@
 import type { 
   AuthenticationData,
-  AuthenticationStorage,
+  DirectusTokens,
   ModuleOptions
 } from '../types'
 import type {
@@ -18,7 +18,7 @@ import {
  * @returns Directus SDK native AuthenticationStorage functions
  * @returns `store` for direct access to the stored data
  */
-export const useDirectusTokens = ():AuthenticationStorage & { tokens: Ref<AuthenticationData | null> } & { refreshToken: (maxAge?: number | undefined) => CookieRef<string | null | undefined> } => {
+export const useDirectusTokens = ():DirectusTokens => {
 
   const {
     authStateName,
@@ -30,7 +30,7 @@ export const useDirectusTokens = ():AuthenticationStorage & { tokens: Ref<Authen
   } = useRuntimeConfig().public.directus.authConfig as ModuleOptions['authConfig']
 
   const tokens: Ref<AuthenticationData | null> = useState(authStateName)
-  const refreshToken = (maxAge?: number | undefined): CookieRef<string | null | undefined> => {
+  function refreshToken (maxAge?: number | undefined): CookieRef<string | null | undefined> {
     const cookie = useCookie<string | null>(refreshTokenCookieName!, { maxAge, httpOnly, sameSite, secure })
     return cookie
   }
