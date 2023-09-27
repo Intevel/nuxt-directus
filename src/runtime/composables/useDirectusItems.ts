@@ -8,7 +8,8 @@ import type {
   Query,
   UnpackList
 } from '../types'
-import { useAsyncData } from '#imports'
+import { useAsyncData, computed } from '#imports'
+import { hash } from 'ohash'
 import {
   createItem as sdkCreateItem,
   createItems as sdkCreateItems,
@@ -96,9 +97,11 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
     const itemId = toRef(id)
+    const key = computed(() => {
+      return hash([collectionName.value, itemId.value, options?.query, options?.params])
+    })
     return await useAsyncData(
-      // TODO: add logic to randomize key if query is present
-      options?.key ?? `${String(collectionName.value)}_${itemId.value}`,
+      options?.key ?? key.value,
       async () => await client(options?.useStaticToken || useStaticToken)
         .request(sdkReadItem(collectionName.value, itemId.value, options?.query)), options?.params
     )
@@ -123,9 +126,11 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     options?: AsyncDataDirectusReqItem<TSchema, TQuery>
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
+    const key = computed(() => {
+      return hash([collectionName.value, options?.query, options?.params])
+    })
     return await useAsyncData(
-      // TODO: add logic to randomize key if query is present
-      options?.key ?? String(collectionName.value),
+      options?.key ?? key.value,
       async () => await client(options?.useStaticToken || useStaticToken)
         .request(sdkReadItems(collectionName.value, options?.query)), options?.params
     )
@@ -150,9 +155,11 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     options?: AsyncDataDirectusReqItem<TSchema, TQuery>
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
+    const key = computed(() => {
+      return hash([collectionName.value, options?.query, options?.params])
+    })
     return await useAsyncData(
-      // TODO: add logic to randomize key if query is present
-      options?.key ?? String(collectionName.value),
+      options?.key ?? key.value,
       async () => await client(options?.useStaticToken || useStaticToken)
         .request(sdkReadSingleton(collectionName.value, options?.query)), options?.params
     )
