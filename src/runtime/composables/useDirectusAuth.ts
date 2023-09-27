@@ -1,41 +1,16 @@
 import { defu } from 'defu'
 import type {
-  DirectusUser,
   LoginOptions
 } from '../types'
 import {
-  readMe as sdkReadMe
 } from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
   const client = useDirectusRest<TSchema>({ useStaticToken: false })
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
 
-  const { user } = useDirectusUser()
+  const { readMe, setUser, user } = useDirectusUser()
   const { tokens } = useDirectusTokens()
-
-  function setUser (value: DirectusUser<TSchema>) {
-    user.value = value
-  }
-
-  async function readMe () {
-    if (tokens.value?.access_token) {
-      try {
-        const res = await client.request(sdkReadMe())
-        // TODO: fix types for custom fields in `directus_users`
-        setUser(res as DirectusUser<TSchema>)
-      } catch (error: any) {
-        if (error && error.message) {
-          // eslint-disable-next-line no-console
-          console.error("Couldn't fetch user", error.errors)
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(error)
-        }
-      }
-    }
-    return user
-  }
 
   async function login (identifier: string, password: string, options?: LoginOptions) {
     try {
@@ -45,7 +20,8 @@ export function useDirectusAuth<TSchema extends Object> () {
       const params = defu(options, defaultOptions) as LoginOptions
 
       const authResponse = await client.login(identifier, password, params)
-      readMe()
+      const userData = await readMe({ useStaticToken: false })
+      setUser(userData)
 
       return {
         access_token: authResponse.access_token,
@@ -67,7 +43,8 @@ export function useDirectusAuth<TSchema extends Object> () {
   async function refreshTokens () {
     try {
       const authResponse = await client.refresh()
-      readMe()
+      const userData = await readMe({ useStaticToken: false })
+      setUser(userData)
 
       return {
         access_token: authResponse.access_token,
@@ -89,7 +66,7 @@ export function useDirectusAuth<TSchema extends Object> () {
   async function logout () {
     try {
       await client.logout()
-      user.value = null
+      user.value = undefined
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
@@ -104,8 +81,6 @@ export function useDirectusAuth<TSchema extends Object> () {
   return {
     user,
     tokens,
-    setUser,
-    readMe,
     login,
     refreshTokens,
     logout

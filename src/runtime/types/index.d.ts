@@ -118,10 +118,13 @@ export interface AsyncDataDirectusReqItem<TSchema, TQuery> extends DirectusReqIt
   params?: AsyncDataOptions<any>; // This will fire an error when using `transform`
 }
 
-export interface DirectusUserInfo<TSchema, TQuery> {
-  userInfo: Partial<DirectusUser<TSchema>>;
+export interface DirectusUserFetch<TSchema, TQuery> {
   useStaticToken?: boolean | string;
   query?: TQuery | undefined;
+}
+
+export interface DirectusUserInfo<TSchema, TQuery> extends DirectusUserFetch<TSchema, TQuery>{
+  userInfo: Partial<DirectusUser<TSchema>>;
 }
 
 export interface DirectusDeleteUser<TSchema> {
