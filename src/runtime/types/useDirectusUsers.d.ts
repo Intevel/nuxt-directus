@@ -4,7 +4,7 @@ import type  {
 } from './index'
 
 export interface DirectusUserOptions<TQuery> extends DirectusClientConfig {
-  query: TQuery | undefined;
+  query?: TQuery | undefined;
 }
 
 export interface DirectusDeleteUser<TSchema> extends DirectusClientConfig {
