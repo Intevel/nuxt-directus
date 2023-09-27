@@ -2,7 +2,6 @@ import type {
   CollectionType,
   DirectusClientConfig,
   DirectusItemsOptions,
-  DirectusItemsOptionsAsyncData,
   RegularCollections,
   SingletonCollections,
   Query,
@@ -75,94 +74,39 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     }
   }
 
-  /**
-   * Get a single item from a collection.
-   * @param collection The collection name to get the item from.
-   * @param id The id of the item to get.
-   * @param options The options to use when fetching the item.
-   *
-   * @returns data: returns an item object if a valid primary key was provided.
-   * @returns pending: a boolean indicating whether the data is still being fetched.
-   * @returns refresh/execute: a function that can be used to refresh the data returned by the handler function.
-   * @returns error: an error object if the data fetching failed.
-   * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
-   */
   async function readItem <
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
-    collection: Ref<Collection> | Collection,
-    id: Ref<string | number> | string | number,
-    options?: DirectusItemsOptionsAsyncData<TSchema, TQuery>
+    collection: Collection,
+    id: string | number,
+    params?: DirectusItemsOptions<TQuery>
   ) {
-    const collectionName = toRef(collection) as Ref<Collection>
-    const itemId = toRef(id)
-    const key = computed(() => {
-      return hash([collectionName.value, itemId.value, options?.query, options?.params])
-    })
-    return await useAsyncData(
-      options?.key ?? key.value,
-      async () => await client(options?.useStaticToken || useStaticToken)
-        .request(sdkReadItem(collectionName.value, itemId.value, options?.query)), options?.params
-    )
+    return await client(params?.useStaticToken || useStaticToken)
+      .request(sdkReadItem(collection, id, params?.query))
+    
   }
 
-  /**
-   * Get all the items from a collection.
-   * @param collection The collection name to get the items from.
-   * @param options The options to use when fetching the items.
-   *
-   * @returns data: an array of up to limit item objects. If no items are available, data will be an empty array.
-   * @returns pending: a boolean indicating whether the data is still being fetched.
-   * @returns refresh/execute: a function that can be used to refresh the data returned by the handler function.
-   * @returns error: an error object if the data fetching failed.
-   * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
-   */
   async function readItems <
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
-    collection: Ref<Collection> | Collection,
-    options?: DirectusItemsOptionsAsyncData<TSchema, TQuery>
+    collection: Collection,
+    params?: DirectusItemsOptions<TQuery>
   ) {
-    const collectionName = toRef(collection) as Ref<Collection>
-    const key = computed(() => {
-      return hash([unref(collectionName), options?.toString()])
-    })
-    return await useAsyncData(
-      options?.key ?? key.value,
-      async () => await client(options?.useStaticToken || useStaticToken)
-        .request(sdkReadItems(collectionName.value, options?.query)), options?.params
-    )
+    return await client(params?.useStaticToken || useStaticToken)
+      .request(sdkReadItems(collection, params?.query))    
   }
 
-  /**
-   * Get the item from a collection marked as Singleton.
-   * @param collection The collection name to get the items from.
-   * @param options The options to use when fetching the items.
-   *
-   * @returns data: an item objects. If no items are available, data will be an empty object.
-   * @returns pending: a boolean indicating whether the data is still being fetched.
-   * @returns refresh/execute: a function that can be used to refresh the data returned by the handler function.
-   * @returns error: an error object if the data fetching failed.
-   * @returns status: a string indicating the status of the data request ("idle", "pending", "success", "error").
-   */
   async function readSingleton <
     Collection extends SingletonCollections<TSchema>,
     TQuery extends Query<TSchema, TSchema[Collection]>
   > (
-    collection: Ref<Collection> | Collection,
-    options?: DirectusItemsOptionsAsyncData<TSchema, TQuery>
+    collection: Collection,
+    params?: DirectusItemsOptions<TQuery>
   ) {
-    const collectionName = toRef(collection) as Ref<Collection>
-    const key = computed(() => {
-      return hash([collectionName.value, options?.query, options?.params])
-    })
-    return await useAsyncData(
-      options?.key ?? key.value,
-      async () => await client(options?.useStaticToken || useStaticToken)
-        .request(sdkReadSingleton(collectionName.value, options?.query)), options?.params
-    )
+    return await client(params?.useStaticToken || useStaticToken)
+      .request(sdkReadSingleton(collection, params?.query))
   }
 
   async function updateItem <

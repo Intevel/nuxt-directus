@@ -101,14 +101,13 @@ interface Schema {
 
 const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
 
-const { data: global } = await readSingleton('global')
-const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await readItems('posts', {
+const { data: global } = useAsyncData(async () => await readSingleton('global'))
+const { data: posts, pending: pendingPosts, refresh: refreshPosts } = useAsyncData(async () => await readItems('posts', {
   query: {
     fields: ['title', 'id', 'slug', 'content']
-  },
-  params: {
-    watch: [user]
   }
+}), {
+  watch: [user]
 })
 
 const postNewData = ref<Partial<Post>>({})
