@@ -16,9 +16,6 @@
       <button @click="refreshTokens()">
         Refresh Tokens
       </button>
-      <button @click="readMe()">
-        Refresh User
-      </button>
     </div>
     <div>
       <pre>
@@ -81,7 +78,7 @@
 </template>
 
 <script setup lang="ts">
-const { login, logout, refreshTokens, readMe } = useDirectusAuth()
+const { login, logout, refreshTokens } = useDirectusAuth()
 const { user } = useDirectusUser()
 
 interface Global {
@@ -112,10 +109,6 @@ const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await read
   params: {
     watch: [user]
   }
-})
-
-onMounted(() => {
-  refreshPosts()
 })
 
 const postNewData = ref<Partial<Post>>({})
