@@ -1,18 +1,22 @@
 import type {
-  DirectusDeleteUser,
+  DirectusUserFetch,
   DirectusUserInfo,
+  DirectusDeleteUser,
   DirectusUser,
   Query
 } from '../types'
 import { type Ref, useState } from '#imports'
 import {
   createUser as sdkCreateUser,
-  deleteUser as sdkDeleteUser,
-  updateMe as sdkUpdateMe
+  readMe as sdkReadMe,
+  updateMe as sdkUpdateMe,
+  deleteUser as sdkDeleteUser
 } from '@directus/sdk'
 
 export function useDirectusUser <TSchema extends Object> (useStaticToken?: boolean | string) {
   const { userStateName } = useRuntimeConfig().public.directus.authConfig
+  const { tokens } = useDirectusTokens()
+
   const client = (useStaticToken?: boolean | string) => {
     return useDirectusRest<TSchema>({
       useStaticToken
@@ -31,6 +35,28 @@ export function useDirectusUser <TSchema extends Object> (useStaticToken?: boole
       } else {
         // eslint-disable-next-line no-console
         console.error(error)
+      }
+    }
+  }
+
+  function setUser (value: Partial<DirectusUser<TSchema>> | undefined) {
+    user.value = value
+  }
+
+  async function readMe <
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>
+  > (params?: DirectusUserFetch<TSchema, TQuery>) {
+    if (tokens.value?.access_token) {
+      try {
+        return await client(params?.useStaticToken || useStaticToken).request(sdkReadMe())
+      } catch (error: any) {
+        if (error && error.message) {
+          // eslint-disable-next-line no-console
+          console.error("Couldn't fetch user", error.errors)
+        } else {
+          // eslint-disable-next-line no-console
+          console.error(error)
+        }
       }
     }
   }
@@ -65,12 +91,14 @@ export function useDirectusUser <TSchema extends Object> (useStaticToken?: boole
     }
   }
 
-  const user: Ref<DirectusUser<TSchema> | null> = useState<DirectusUser<TSchema> | null>(userStateName, () => null)
+  const user: Ref<Partial<DirectusUser<TSchema>> | undefined> = useState<Partial<DirectusUser<TSchema>> | undefined>(userStateName, () => undefined)
 
   return {
     createUser,
-    deleteUser,
+    readMe,
     updateMe,
+    deleteUser,
+    setUser,
     user
   }
 }
