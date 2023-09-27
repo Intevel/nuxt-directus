@@ -1,6 +1,6 @@
 import type {
   DirectusClientConfig,
-  DirectusUserOptions,
+  DirectusUsersOptions,
   DirectusUser,
   Query
 } from '../types'
@@ -32,7 +32,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     userInfo: Partial<DirectusUser<TSchema>>,
-    params?: DirectusUserOptions<TQuery>
+    params?: DirectusUsersOptions<TQuery>
   ) {
     try {
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUser(userInfo, params?.query))
@@ -51,7 +51,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     userInfo: Partial<DirectusUser<TSchema>>[],
-    params?: DirectusUserOptions<TQuery>
+    params?: DirectusUsersOptions<TQuery>
   ) {
     try {
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUsers(userInfo, params?.query))
@@ -73,7 +73,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   async function readMe <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    params?: DirectusUserOptions<TQuery>
+    params?: DirectusUsersOptions<TQuery>
   ) {
     if (tokens.value?.access_token) {
       try {
@@ -94,7 +94,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     id: DirectusUser<TSchema>["id"],
-    params?: DirectusUserOptions<TQuery>
+    params?: DirectusUsersOptions<TQuery>
   ) {
     if (tokens.value?.access_token) {
       try {
@@ -114,7 +114,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   async function readUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    params?: DirectusUserOptions<TQuery>
+    params?: DirectusUsersOptions<TQuery>
   ) {
     if (tokens.value?.access_token) {
       try {
@@ -135,7 +135,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     userInfo: Partial<DirectusUser<TSchema>>,
-    params: DirectusUserOptions<TQuery>
+    params: DirectusUsersOptions<TQuery>
   ) {
     try {
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateMe(userInfo, params.query))
@@ -155,7 +155,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   > (
     id: DirectusUser<TSchema>["id"],
     userInfo: Partial<DirectusUser<TSchema>>,
-    params: DirectusUserOptions<TQuery>
+    params: DirectusUsersOptions<TQuery>
   ) {
     try {
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateUser(id, userInfo, params.query))
@@ -175,7 +175,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   > (
     id: DirectusUser<TSchema>["id"][],
     userInfo: Partial<DirectusUser<TSchema>>,
-    params: DirectusUserOptions<TQuery>
+    params: DirectusUsersOptions<TQuery>
   ) {
     try {
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateUsers(id, userInfo, params.query))

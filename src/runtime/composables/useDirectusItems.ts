@@ -1,8 +1,8 @@
 import type {
-  AsyncDataDirectusReqItem,
   CollectionType,
   DirectusClientConfig,
-  DirectusReqItemOptions,
+  DirectusItemsOptions,
+  DirectusItemsOptionsAsyncData,
   RegularCollections,
   SingletonCollections,
   Query,
@@ -37,7 +37,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   > (
     collection: Collection,
     item: Item,
-    options?: DirectusReqItemOptions<TQuery>
+    options?: DirectusItemsOptions<TQuery>
   ) {
     try {
       return await client(options?.useStaticToken || useStaticToken)
@@ -59,7 +59,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   > (
     collection: Collection,
     items: Item,
-    options?: DirectusReqItemOptions<TQuery>
+    options?: DirectusItemsOptions<TQuery>
   ) {
     try {
       return await client(options?.useStaticToken || useStaticToken)
@@ -93,7 +93,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   > (
     collection: Ref<Collection> | Collection,
     id: Ref<string | number> | string | number,
-    options?: AsyncDataDirectusReqItem<TSchema, TQuery>
+    options?: DirectusItemsOptionsAsyncData<TSchema, TQuery>
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
     const itemId = toRef(id)
@@ -123,7 +123,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
     collection: Ref<Collection> | Collection,
-    options?: AsyncDataDirectusReqItem<TSchema, TQuery>
+    options?: DirectusItemsOptionsAsyncData<TSchema, TQuery>
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
     const key = computed(() => {
@@ -152,7 +152,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     TQuery extends Query<TSchema, TSchema[Collection]>
   > (
     collection: Ref<Collection> | Collection,
-    options?: AsyncDataDirectusReqItem<TSchema, TQuery>
+    options?: DirectusItemsOptionsAsyncData<TSchema, TQuery>
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
     const key = computed(() => {
@@ -173,7 +173,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     collection: Collection,
     id: string | number,
     item: Item,
-    options?: DirectusReqItemOptions<TQuery>
+    options?: DirectusItemsOptions<TQuery>
   ) {
     try {
       return await client(options?.useStaticToken || useStaticToken)
@@ -197,7 +197,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     collection: Collection,
     ids: string[] | number[],
     item: Item,
-    options?: DirectusReqItemOptions<TQuery>
+    options?: DirectusItemsOptions<TQuery>
   ) {
     try {
       return await client(options?.useStaticToken || useStaticToken)
@@ -220,7 +220,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   > (
     collection: Collection,
     item: Item,
-    options?: DirectusReqItemOptions<TQuery>
+    options?: DirectusItemsOptions<TQuery>
   ) {
     try {
       return await client(options?.useStaticToken || useStaticToken)

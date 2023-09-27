@@ -1,7 +1,7 @@
 import type {
   DirectusClientConfig,
   DirectusCollection,
-  DirectusCollectionOptions,
+  DirectusCollectionsOptions,
   NestedPartial,
   Query
 } from '../types'
@@ -27,7 +27,7 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
     TQuery extends Query<TSchema, DirectusCollection<TSchema>>
   > (
     item: NestedPartial<DirectusCollection<TSchema>>,
-    params?: DirectusCollectionOptions<TQuery>
+    params?: DirectusCollectionsOptions<TQuery>
   ) {
     try {
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateCollection(item, params?.query))
@@ -80,7 +80,7 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
   > (
     collection: string,
     item: NestedPartial<DirectusCollection<TSchema>>,
-    params?: DirectusCollectionOptions<TQuery>
+    params?: DirectusCollectionsOptions<TQuery>
   ) {
     try {
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateCollection(collection, item, params?.query))

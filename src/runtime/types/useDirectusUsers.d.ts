@@ -3,10 +3,6 @@ import type  {
   DirectusUser
 } from './index'
 
-export interface DirectusUserOptions<TQuery> extends DirectusClientConfig {
+export interface DirectusUsersOptions<TQuery> extends DirectusClientConfig {
   query?: TQuery | undefined;
-}
-
-export interface DirectusDeleteUser<TSchema> extends DirectusClientConfig {
-  id: DirectusUser<TSchema>["id"]
 }

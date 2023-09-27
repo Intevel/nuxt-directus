@@ -1,9 +1,7 @@
 import { defu } from 'defu'
 import type {
-  DirectusAcceptUserInvite,
+  DirectusClientConfig,
   DirectusInviteUser,
-  DirectusPasswordRequest,
-  DirectusPasswordReset,
   LoginOptions
 } from '../types'
 import {
@@ -94,10 +92,12 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
 
   async function passwordRequest (
-    options: DirectusPasswordRequest
+    email: string,
+    reset_url?: string,
+    params?: DirectusClientConfig
   ) {
     try {
-      await client(options.useStaticToken).request(sdkPasswordRequest(options.email, options.reset_url))
+      await client(params?.useStaticToken).request(sdkPasswordRequest(email, reset_url))
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
@@ -110,10 +110,12 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
 
   async function passwordReset (
-    options: DirectusPasswordReset
+    token: string,
+    password: string,
+    params?: DirectusClientConfig
   ) {
     try {
-      await client(options.useStaticToken).request(sdkPasswordReset(options.token, options.password))
+      await client(params?.useStaticToken).request(sdkPasswordReset(token, password))
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
@@ -126,10 +128,12 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
 
   async function inviteUser (
-    options: DirectusInviteUser
+    email: string,
+    role: string,
+    params?: DirectusInviteUser
   ) {
     try {
-      await client(options.useStaticToken).request(sdkInviteUser(options.email, options.role, options.invite_url))
+      await client(params?.useStaticToken).request(sdkInviteUser(email, role, params?.invite_url))
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
@@ -142,10 +146,12 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
 
   async function acceptUserInvite (
-    options: DirectusAcceptUserInvite
+    token: string,
+    password: string,
+    params?: DirectusClientConfig
   ) {
     try {
-      await client(options.useStaticToken).request(sdkAcceptUserInvite(options.token, options.password))
+      await client(params?.useStaticToken).request(sdkAcceptUserInvite(token, password))
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
