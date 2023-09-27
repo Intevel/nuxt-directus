@@ -67,6 +67,7 @@ export function useDirectusAuth<TSchema extends Object> () {
     try {
       await client.logout()
       user.value = undefined
+      user.value = undefined
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
