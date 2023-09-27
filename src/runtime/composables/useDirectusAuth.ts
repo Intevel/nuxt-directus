@@ -1,14 +1,16 @@
 import { defu } from 'defu'
 import type {
+  DirectusAcceptUserInvite,
   DirectusInviteUser,
   DirectusPasswordRequest,
   DirectusPasswordReset,
   LoginOptions
 } from '../types'
 import {
+  acceptUserInvite as sdkAcceptUserInvite,
+  inviteUser as sdkInviteUser,
   passwordRequest as sdkPasswordRequest,
   passwordReset as sdkPasswordReset,
-  inviteUser as sdkInviteUser,
 } from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
@@ -139,7 +141,24 @@ export function useDirectusAuth<TSchema extends Object> () {
     }
   }
 
+  async function acceptUserInvite (
+    options: DirectusAcceptUserInvite
+  ) {
+    try {
+      await client(options.useStaticToken).request(sdkAcceptUserInvite(options.token, options.password))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't accept user invite", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
+  }
+
   return {
+    acceptUserInvite,
     inviteUser,
     login,
     logout,

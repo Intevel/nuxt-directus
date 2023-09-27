@@ -17,3 +17,8 @@ export interface DirectusInviteUser extends DirectusClientConfig {
   role: string;
   invite_url?: string;
 }
+
+export interface DirectusAcceptUserInvite extends DirectusClientConfig {
+  token: string;
+  password: string;
+}
