@@ -21,7 +21,7 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
 
-  const { readMe, setUser, user } = useDirectusUser()
+  const { readMe, setUser, user } = useDirectusUsers()
   const { tokens } = useDirectusTokens()
 
   async function login (
