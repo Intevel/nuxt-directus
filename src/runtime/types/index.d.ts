@@ -136,6 +136,16 @@ export interface AsyncDataDirectusReqItem<TSchema, TQuery> extends DirectusReqIt
   params?: AsyncDataOptions<any>; // This will fire an error when using `transform`
 }
 
+export interface DirectusPasswordForgotCredentials extends DirectusClientConfig {
+  email: string;
+  reset_url?: string;
+}
+
+export interface DirectusPasswordReset extends DirectusClientConfig {
+  token: string;
+  password: string;
+}
+
 export interface DirectusUserFetch<TSchema, TQuery> extends DirectusClientConfig {
   query?: TQuery | undefined;
 }
