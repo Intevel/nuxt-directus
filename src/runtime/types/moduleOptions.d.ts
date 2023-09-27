@@ -28,19 +28,19 @@ export interface ModuleOptions {
      * @default 'directus.auth'
      * @type string
      */
-    authStateName: string;
+    authStateName?: string;
     /**
      * The name for the Nuxt useState that handles user data once authenticated.
      * @default 'directus.user'
      * @type string
      */
-    userStateName: string;
+    userStateName?: string;
     /**
     * Handle auth cookies using Nuxt instead of Directus.
     * @default false
     * @type boolean
     */
-    useNuxtCookies: boolean;
+    useNuxtCookies?: boolean;
     /**
     * Refresh Token Cookie Name
     * @default 'directus_refresh_token'
@@ -83,7 +83,7 @@ export interface ModuleOptions {
      * @default true
      * @type boolean
      */
-    autoRefresh: boolean;
+    autoRefresh?: boolean;
     /**
      * Auto import native components from the Directus SDK.
      * @default false
