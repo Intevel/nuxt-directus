@@ -69,7 +69,7 @@ export interface ModuleOptions {
     * @default 'lax'
     * @type true | false | 'lax' | 'strict' | 'none' | undefined
     */
-    cookieSameSite?: true | false | 'lax' | 'strict' | 'none' | undefined;
+    cookieSameSite?: boolean | 'lax' | 'strict' | 'none' | undefined;
     /**
     * The Secure attribute for auth cookies.
     * @default false
@@ -83,6 +83,13 @@ export interface ModuleOptions {
   */
   moduleConfig: {
     /**
+     * Enable Directus Devtools
+     * @default false
+     * @type boolean
+     * @see https://docs.directus.io/guides/developer-tools.html
+     */
+    devtools?: boolean;
+    /**
      * Whether to automatically refresh the access token when it expires.
      * @default true
      * @type boolean
@@ -90,17 +97,22 @@ export interface ModuleOptions {
     autoRefresh: boolean;
     /**
      * Auto import native components from the Directus SDK.
-     * @default true
+     * @default false
      * @type boolean
      */
     autoImport?: boolean;
     /**
-     * Enable Directus Devtools
-     * @default false
-     * @type boolean
-     * @see https://docs.directus.io/guides/developer-tools.html
+     * Prefix for auto imported components from the Directus SDK.
+     * @default ''
+     * @type string
      */
-    devtools?: boolean;
+    autoImportPrefix?: string;
+    /**
+     * Suffix for auto imported components from the Directus SDK.
+     * @default ''
+     * @type string
+     */
+    autoImportSuffix?: string;
   }
 }
 

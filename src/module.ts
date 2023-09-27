@@ -34,7 +34,9 @@ export default defineNuxtModule<ModuleOptions>({
     moduleConfig: {
       devtools: false,
       autoRefresh: true,
-      autoImport: true
+      autoImport: false,
+      autoImportPrefix: '',
+      autoImportSuffix: ''
     }
   },
   setup (options, nuxt) {
@@ -47,7 +49,9 @@ export default defineNuxtModule<ModuleOptions>({
         staticToken: options.privateStaticToken,
         moduleConfig: {
           devtools: options.moduleConfig.devtools,
-          autoImport: options.moduleConfig.autoImport
+          autoImport: options.moduleConfig.autoImport,
+          autoImportPrefix: options.moduleConfig.autoImportPrefix,
+          autoImportSuffix: options.moduleConfig.autoImportSuffix
         }
       }
     )
@@ -65,7 +69,7 @@ export default defineNuxtModule<ModuleOptions>({
           refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
           customCookie: options.authConfig.useNuxtCookies,
           cookieHttpOnly: options.authConfig.cookieHttpOnly,
-          cookieSameSite: options.authConfig.cookieSameSite as string, // TODO: understand if it is possible to fix the type mismatch
+          cookieSameSite: options.authConfig.cookieSameSite as boolean | string | undefined, // TODO: understand if it is possible to fix the type mismatch
           cookieSecure: options.authConfig.cookieSecure
         },
         moduleConfig: {
@@ -76,11 +80,18 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Auto import native components
     if (options.moduleConfig.autoImport) {
+      const prefix = options.moduleConfig.autoImportPrefix
+      const suffix = options.moduleConfig.autoImportSuffix
+
+      const directusImports = Object.keys(DirectusSDK).map((key) => {
+        return prefix + (prefix ? (key.charAt(0).toUpperCase() + key.slice(1)) : key) + suffix
+      })
+
       nuxt.options.imports = defu(nuxt.options.imports, {
         presets: [
           {
             from: '@directus/sdk',
-            imports: Object.keys(DirectusSDK)
+            imports: directusImports
           }
         ]
       })
