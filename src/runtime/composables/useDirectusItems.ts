@@ -8,7 +8,7 @@ import type {
   Query,
   UnpackList
 } from '../types'
-import { useAsyncData, computed } from '#imports'
+import { useAsyncData, computed, toRef, unref } from '#imports'
 import { hash } from 'ohash'
 import {
   createItem as sdkCreateItem,
@@ -127,7 +127,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
   ) {
     const collectionName = toRef(collection) as Ref<Collection>
     const key = computed(() => {
-      return hash([collectionName.value, options?.query, options?.params])
+      return hash([unref(collectionName), options?.toString()])
     })
     return await useAsyncData(
       options?.key ?? key.value,
