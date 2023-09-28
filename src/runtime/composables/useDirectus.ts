@@ -1,4 +1,5 @@
 import { useRuntimeConfig } from '#imports'
+import { useRuntimeConfig } from '#imports'
 import { defu } from 'defu'
 import type {
   ClientOptions,
