@@ -1,3 +1,4 @@
+import { useRuntimeConfig } from '#imports'
 import { defu } from 'defu'
 import type {
   ClientOptions,
@@ -6,10 +7,6 @@ import type {
   GraphqlConfig,
   RestConfig
 } from '../types'
-import {
-  useRuntimeConfig,
-  ref
-} from '#imports'
 import {
   authentication,
   createDirectus,
@@ -21,7 +18,16 @@ import {
 export const useDirectus = <T extends Object>(url?: string, options?: ClientOptions) => {
   const configUrl = useRuntimeConfig().public.directus.url
 
-  return createDirectus<T>(url ?? configUrl, options)
+  const defaultOptions: ClientOptions = {
+    // Commented out untill if fixed https://github.com/directus/directus/issues/19747
+    // globals: {
+    //   fetch: $fetch
+    // }
+  }
+
+  const clientOptions = defu(options, defaultOptions)
+
+  return createDirectus<T>(url ?? configUrl, clientOptions)
 }
 
 export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) => {
