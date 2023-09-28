@@ -2,6 +2,7 @@ import type {
   CollectionType,
   DirectusClientConfig,
   DirectusItemsOptions,
+  DirectusItemsOptionsAsyncData,
   RegularCollections,
   SingletonCollections,
   Query,
@@ -78,35 +79,69 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
-    collection: Collection,
-    id: string | number,
-    params?: DirectusItemsOptions<TQuery>
+    collection: Ref<Collection> | Collection,
+    id: Ref<string | number> | string | number,
+    params?: DirectusItemsOptionsAsyncData<TQuery>
   ) {
-    return await client(params?.useStaticToken || useStaticToken)
-      .request(sdkReadItem(collection, id, params?.query))
-    
+    const collectionRef = toRef(collection) as Ref<Collection>
+    const idRef = toRef(id) as Ref<string | number>
+    const key = computed(() => {
+      return hash([
+        'readItem',
+        unref(collectionRef),
+        unref(idRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken)
+        .request(sdkReadItem(collectionRef.value, idRef.value, params?.query)), params?.params
+    )
   }
 
   async function readItems <
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
-    collection: Collection,
-    params?: DirectusItemsOptions<TQuery>
+    collection: Ref<Collection> | Collection,
+    params?: DirectusItemsOptionsAsyncData<TQuery>
   ) {
-    return await client(params?.useStaticToken || useStaticToken)
-      .request(sdkReadItems(collection, params?.query))    
+    const collectionRef = toRef(collection) as Ref<Collection>
+    const key = computed(() => {
+      return hash([
+        'readItems',
+        unref(collectionRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken)
+        .request(sdkReadItems(collectionRef.value, params?.query)), params?.params    
+    )
   }
 
   async function readSingleton <
     Collection extends SingletonCollections<TSchema>,
     TQuery extends Query<TSchema, TSchema[Collection]>
   > (
-    collection: Collection,
-    params?: DirectusItemsOptions<TQuery>
+    collection: Ref<Collection> | Collection,
+    params?: DirectusItemsOptionsAsyncData<TQuery>
   ) {
-    return await client(params?.useStaticToken || useStaticToken)
-      .request(sdkReadSingleton(collection, params?.query))
+    const collectionRef = toRef(collection) as Ref<Collection>
+    const key = computed(() => {
+      return hash([
+        'readSingleton',
+        unref(collectionRef),
+        params?.toString()
+      ])
+    })
+    return useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken)
+        .request(sdkReadSingleton(collectionRef.value, params?.query)), params?.params
+    )
   }
 
   async function updateItem <

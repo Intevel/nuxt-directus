@@ -1,10 +1,19 @@
 import type {
   DirectusClientConfig,
   DirectusUsersOptions,
+  DirectusUsersOptionsAsyncData,
   DirectusUser,
   Query
 } from '../types'
-import { type Ref, useState } from '#imports'
+import {
+  type Ref,
+  useState,
+  useAsyncData,
+  computed,
+  toRef,
+  unref
+} from '#imports'
+import { hash } from 'ohash'
 import {
   createUser as sdkCreateUser,
   createUsers as sdkCreateUsers,
@@ -93,42 +102,38 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   async function readUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    id: DirectusUser<TSchema>['id'],
-    params?: DirectusUsersOptions<TQuery>
+    id: DirectusUser<TSchema>['id'] | Ref<DirectusUser<TSchema>['id']>,
+    params?: DirectusUsersOptionsAsyncData<TQuery>
   ) {
-    if (tokens.value?.access_token) {
-      try {
-        return await client(params?.useStaticToken || useStaticToken).request(sdkReadUser(id, params?.query))
-      } catch (error: any) {
-        if (error && error.message) {
-          // eslint-disable-next-line no-console
-          console.error("Couldn't fetch user", error.errors)
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(error)
-        }
-      }
-    }
+    const idRef = toRef(id) as Ref<DirectusUser<TSchema>['id']>
+    const key = computed(() => {
+      return hash([
+        'readUser',
+        unref(idRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadUser(idRef.value, params?.query)), params?.params
+    )
   }
 
   async function readUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    params?: DirectusUsersOptions<TQuery>
+    params?: DirectusUsersOptionsAsyncData<TQuery>
   ) {
-    if (tokens.value?.access_token) {
-      try {
-        return await client(params?.useStaticToken || useStaticToken).request(sdkReadUsers(params?.query))
-      } catch (error: any) {
-        if (error && error.message) {
-          // eslint-disable-next-line no-console
-          console.error("Couldn't fetch users", error.errors)
-        } else {
-          // eslint-disable-next-line no-console
-          console.error(error)
-        }
-      }
-    }
+    const key = computed(() => {
+      return hash([
+        'readUsers',
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadUsers(params?.query)), params?.params
+    )
   }
 
   async function updateMe <

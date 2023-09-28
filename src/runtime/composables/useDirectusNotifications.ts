@@ -2,8 +2,11 @@ import type {
   DirectusClientConfig,
   DirectusNotification,
   DirectusNotificationsOptions,
+  DirectusNotificationsOptionsAsyncData,
   Query
 } from '../types'
+import { useAsyncData, computed, toRef, unref } from '#imports'
+import { hash } from 'ohash'
 import {
   createNotification as sdkCreateNotification,
   createNotifications as sdkCreateNotifications,
@@ -63,38 +66,38 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
   async function readNotification <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
-    id: DirectusNotification<TSchema>['id'],
-    params?: DirectusNotificationsOptions<TQuery>
+    id: DirectusNotification<TSchema>['id'] | Ref<DirectusNotification<TSchema>['id']>,
+    params?: DirectusNotificationsOptionsAsyncData<TQuery>
   ) {
-    try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkReadNotification(id, params?.query))
-    } catch (error: any) {
-      if (error && error.message) {
-        // eslint-disable-next-line no-console
-        console.error("Couldn't read notification", error.errors)
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
-    }
+    const idRef = toRef(id) as Ref<DirectusNotification<TSchema>['id']>
+    const key = computed(() => {
+      return hash([
+        'readNotification',
+        unref(idRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadNotification(idRef.value, params?.query)), params?.params
+    )
   }
 
   async function readNotifications <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
-    params?: DirectusNotificationsOptions<TQuery>
+    params?: DirectusNotificationsOptionsAsyncData<TQuery>
   ) {
-    try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkReadNotifications(params?.query))
-    } catch (error: any) {
-      if (error && error.message) {
-        // eslint-disable-next-line no-console
-        console.error("Couldn't read notifications", error.errors)
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
-    }
+    const key = computed(() => {
+      return hash([
+        'readNotifications',
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadNotifications(params?.query)), params?.params
+    )
   }
 
   async function updateNotification <

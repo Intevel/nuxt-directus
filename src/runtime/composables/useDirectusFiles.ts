@@ -2,8 +2,11 @@ import type {
   DirectusClientConfig,
   DirectusFile,
   DirectusFilesOptions,
+  DirectusFilesOptionsAsyncData,
   Query
 } from '../types'
+import { useAsyncData, computed, toRef, unref } from '#imports'
+import { hash } from 'ohash'
 import {
   uploadFiles as sdkUploadFiles,
   importFile as sdkImportFile,
@@ -64,38 +67,38 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
   async function readFile <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
-    id: DirectusFile<TSchema>['id'],
-    params?: DirectusFilesOptions<TQuery>
+    id: Ref<DirectusFile<TSchema>['id']>| DirectusFile<TSchema>['id'],
+    params?: DirectusFilesOptionsAsyncData<TQuery>
   ) {
-    try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkReadFile(id, params?.query))
-    } catch (error: any) {
-      if (error && error.message) {
-        // eslint-disable-next-line no-console
-        console.error("Couldn't read file", error.errors)
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
-    }
+    const idRef = toRef(id) as Ref<DirectusFile<TSchema>['id']>
+    const key = computed(() => {
+      return hash([
+        'readFile',
+        unref(idRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadFile(idRef.value, params?.query)), params?.params
+    )
   }
 
   async function readFiles <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
-    params?: DirectusFilesOptions<TQuery>
+    params?: DirectusFilesOptionsAsyncData<TQuery>
   ) {
-    try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkReadFiles(params?.query))
-    } catch (error: any) {
-      if (error && error.message) {
-        // eslint-disable-next-line no-console
-        console.error("Couldn't read files", error.errors)
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
-    }
+    const key = computed(() => {
+      return hash([
+        'readFiles',
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadFiles(params?.query)), params?.params
+    )
   }
 
   async function updateFile <

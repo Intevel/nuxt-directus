@@ -2,9 +2,12 @@ import type {
   DirectusClientConfig,
   DirectusCollection,
   DirectusCollectionsOptions,
+  DirectusCollectionsOptionsAsyncData,
   NestedPartial,
   Query
 } from '../types'
+import { useAsyncData, computed, toRef, unref } from '#imports'
+import { hash } from 'ohash'
 import {
   createCollection as sdkCreateCollection,
   readCollection as sdkReadCollection,
@@ -40,36 +43,36 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
   }
 
   async function readCollection (
-    collection: string,
-    params?: DirectusClientConfig
+    collection: Ref<string> | string,
+    params?: DirectusCollectionsOptionsAsyncData
   ) {
-    try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkReadCollection(collection))
-    } catch (error: any) {
-      if (error && error.message) {
-        // eslint-disable-next-line no-console
-        console.error("Couldn't read collection", error.errors)
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
-    }
+    const collectionRef = toRef(collection)
+    const key = computed(() => {
+      return hash([
+        'readCollection',
+        unref(collectionRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadCollection(collectionRef.value)), params?.params
+    )
   }
 
   async function readCollections (
-    params?: DirectusClientConfig
+    params?: DirectusCollectionsOptionsAsyncData
   ) {
-    try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkReadCollections())
-    } catch (error: any) {
-      if (error && error.message) {
-        // eslint-disable-next-line no-console
-        console.error("Couldn't read collections", error.errors)
-      } else {
-        // eslint-disable-next-line no-console
-        console.error(error)
-      }
-    }
+    const key = computed(() => {
+      return hash([
+        'readCollections',
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadCollections()), params?.params
+    )
   }
 
   async function updateCollection <
