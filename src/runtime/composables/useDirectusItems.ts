@@ -48,6 +48,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         console.error("Couldn't create item", error.errors)
       } else {
         // eslint-disable-next-line no-console
+        console.error(error)
       }
     }
   }
@@ -118,7 +119,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     return await useAsyncData(
       params?.key ?? key.value,
       async () => await client(params?.useStaticToken || useStaticToken)
-        .request(sdkReadItems(collectionRef.value, params?.query)), params?.params    
+        .request(sdkReadItems(collectionRef.value, params?.query)), params?.params
     )
   }
 
@@ -137,7 +138,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         params?.toString()
       ])
     })
-    return useAsyncData(
+    return await useAsyncData(
       params?.key ?? key.value,
       async () => await client(params?.useStaticToken || useStaticToken)
         .request(sdkReadSingleton(collectionRef.value, params?.query)), params?.params
