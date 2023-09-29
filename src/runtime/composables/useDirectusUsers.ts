@@ -1,3 +1,16 @@
+import { hash } from 'ohash'
+import {
+  createUser as sdkCreateUser,
+  createUsers as sdkCreateUsers,
+  readMe as sdkReadMe,
+  readUser as sdkReadUser,
+  readUsers as sdkReadUsers,
+  updateMe as sdkUpdateMe,
+  updateUser as sdkUpdateUser,
+  updateUsers as sdkUpdateUsers,
+  deleteUser as sdkDeleteUser,
+  deleteUsers as sdkDeleteUsers
+} from '@directus/sdk'
 import type {
   DirectusClientConfig,
   DirectusUsersOptions,
@@ -13,19 +26,6 @@ import {
   toRef,
   unref
 } from '#imports'
-import { hash } from 'ohash'
-import {
-  createUser as sdkCreateUser,
-  createUsers as sdkCreateUsers,
-  readMe as sdkReadMe,
-  readUser as sdkReadUser,
-  readUsers as sdkReadUsers,
-  updateMe as sdkUpdateMe,
-  updateUser as sdkUpdateUser,
-  updateUsers as sdkUpdateUsers,
-  deleteUser as sdkDeleteUser,
-  deleteUsers as sdkDeleteUsers
-} from '@directus/sdk'
 
 export function useDirectusUsers <TSchema extends Object> (useStaticToken?: boolean | string) {
   const { userStateName } = useRuntimeConfig().public.directus.authConfig
@@ -246,4 +246,3 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     user
   }
 }
-

@@ -1,12 +1,4 @@
-import { useRuntimeConfig } from '#imports'
 import { defu } from 'defu'
-import type {
-  ClientOptions,
-  DirectusGraphqlConfig,
-  DirectusRestConfig,
-  GraphqlConfig,
-  RestConfig
-} from '../types'
 import {
   authentication,
   createDirectus,
@@ -14,6 +6,14 @@ import {
   rest,
   staticToken as sdkStaticToken
 } from '@directus/sdk'
+import type {
+  ClientOptions,
+  DirectusGraphqlConfig,
+  DirectusRestConfig,
+  GraphqlConfig,
+  RestConfig
+} from '../types'
+import { useRuntimeConfig } from '#imports'
 
 export const useDirectus = <T extends Object>(url?: string, options?: ClientOptions) => {
   const configUrl = useRuntimeConfig().public.directus.url
@@ -39,9 +39,9 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
   const defaultConfig: RestConfig = {
     credentials: 'include'
   }
-  
+
   const options = defu(config, defaultConfig)
-  
+
   const client = useDirectus<T>().with(authentication(
     authConfig.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh: moduleConfig.autoRefresh,

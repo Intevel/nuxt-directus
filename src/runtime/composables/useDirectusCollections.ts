@@ -1,3 +1,11 @@
+import { hash } from 'ohash'
+import {
+  createCollection as sdkCreateCollection,
+  readCollection as sdkReadCollection,
+  readCollections as sdkReadCollections,
+  updateCollection as sdkUpdateCollection,
+  deleteCollection as sdkDeleteCollection
+} from '@directus/sdk'
 import type {
   DirectusClientConfig,
   DirectusCollection,
@@ -7,14 +15,6 @@ import type {
   Query
 } from '../types'
 import { useAsyncData, computed, toRef, unref } from '#imports'
-import { hash } from 'ohash'
-import {
-  createCollection as sdkCreateCollection,
-  readCollection as sdkReadCollection,
-  readCollections as sdkReadCollections,
-  updateCollection as sdkUpdateCollection,
-  deleteCollection as sdkDeleteCollection,
-} from '@directus/sdk'
 
 export function useDirectusCollections<TSchema extends object> (useStaticToken?: boolean | string) {
   const client = (useStaticToken?: boolean | string) => {

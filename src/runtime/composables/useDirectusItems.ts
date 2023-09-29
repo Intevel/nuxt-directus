@@ -1,14 +1,3 @@
-import type {
-  CollectionType,
-  DirectusClientConfig,
-  DirectusItemsOptions,
-  DirectusItemsOptionsAsyncData,
-  RegularCollections,
-  SingletonCollections,
-  Query,
-  UnpackList
-} from '../types'
-import { useAsyncData, computed, toRef, unref } from '#imports'
 import { hash } from 'ohash'
 import {
   createItem as sdkCreateItem,
@@ -22,6 +11,17 @@ import {
   deleteItem as sdkDeleteItem,
   deleteItems as sdkDeleteItems
 } from '@directus/sdk'
+import type {
+  CollectionType,
+  DirectusClientConfig,
+  DirectusItemsOptions,
+  DirectusItemsOptionsAsyncData,
+  RegularCollections,
+  SingletonCollections,
+  Query,
+  UnpackList
+} from '../types'
+import { useAsyncData, computed, toRef, unref } from '#imports'
 
 export function useDirectusItems<TSchema extends object> (useStaticToken?: boolean | string) {
   const client = (useStaticToken?: boolean | string) => {

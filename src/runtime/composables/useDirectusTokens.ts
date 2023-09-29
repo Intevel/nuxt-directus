@@ -1,11 +1,11 @@
-import type { 
+import type {
+  CookieRef
+} from '#app'
+import type {
   AuthenticationData,
   DirectusTokens,
   ModuleOptions
 } from '../types'
-import type {
-  CookieRef
-} from '#app'
 import {
   type Ref,
   useCookie,
@@ -19,7 +19,6 @@ import {
  * @returns `store` for direct access to the stored data
  */
 export const useDirectusTokens = ():DirectusTokens => {
-
   const {
     authStateName,
     useNuxtCookies,

@@ -1,15 +1,15 @@
 import { defu } from 'defu'
+import {
+  acceptUserInvite as sdkAcceptUserInvite,
+  inviteUser as sdkInviteUser,
+  passwordRequest as sdkPasswordRequest,
+  passwordReset as sdkPasswordReset
+} from '@directus/sdk'
 import type {
   DirectusClientConfig,
   DirectusInviteUser,
   LoginOptions
 } from '../types'
-import {
-  acceptUserInvite as sdkAcceptUserInvite,
-  inviteUser as sdkInviteUser,
-  passwordRequest as sdkPasswordRequest,
-  passwordReset as sdkPasswordReset,
-} from '@directus/sdk'
 
 export function useDirectusAuth<TSchema extends Object> () {
   const client = (useStaticToken: boolean | string = false) => {
@@ -93,11 +93,11 @@ export function useDirectusAuth<TSchema extends Object> () {
 
   async function passwordRequest (
     email: string,
-    reset_url?: string,
+    resetUrl?: string,
     params?: DirectusClientConfig
   ) {
     try {
-      await client(params?.useStaticToken).request(sdkPasswordRequest(email, reset_url))
+      await client(params?.useStaticToken).request(sdkPasswordRequest(email, resetUrl))
     } catch (error: any) {
       if (error && error.message) {
         // eslint-disable-next-line no-console
@@ -172,6 +172,6 @@ export function useDirectusAuth<TSchema extends Object> () {
     passwordReset,
     refreshTokens,
     tokens,
-    user,
+    user
   }
 }

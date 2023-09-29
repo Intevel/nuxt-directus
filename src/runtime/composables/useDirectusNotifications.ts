@@ -1,11 +1,3 @@
-import type {
-  DirectusClientConfig,
-  DirectusNotification,
-  DirectusNotificationsOptions,
-  DirectusNotificationsOptionsAsyncData,
-  Query
-} from '../types'
-import { useAsyncData, computed, toRef, unref } from '#imports'
 import { hash } from 'ohash'
 import {
   createNotification as sdkCreateNotification,
@@ -15,8 +7,16 @@ import {
   updateNotification as sdkUpdateNotification,
   updateNotifications as sdkUpdateNotifications,
   deleteNotification as sdkDeleteNotification,
-  deleteNotifications as sdkDeleteNotifications,
+  deleteNotifications as sdkDeleteNotifications
 } from '@directus/sdk'
+import type {
+  DirectusClientConfig,
+  DirectusNotification,
+  DirectusNotificationsOptions,
+  DirectusNotificationsOptionsAsyncData,
+  Query
+} from '../types'
+import { useAsyncData, computed, toRef, unref } from '#imports'
 
 export function useDirectusNotifications<TSchema extends object> (useStaticToken?: boolean | string) {
   const client = (useStaticToken?: boolean | string) => {

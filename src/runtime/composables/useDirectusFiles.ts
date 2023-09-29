@@ -1,11 +1,3 @@
-import type {
-  DirectusClientConfig,
-  DirectusFile,
-  DirectusFilesOptions,
-  DirectusFilesOptionsAsyncData,
-  Query
-} from '../types'
-import { useAsyncData, computed, toRef, unref } from '#imports'
 import { hash } from 'ohash'
 import {
   uploadFiles as sdkUploadFiles,
@@ -15,8 +7,16 @@ import {
   updateFile as sdkUpdateFile,
   updateFiles as sdkUpdateFiles,
   deleteFile as sdkDeleteFile,
-  deleteFiles as sdkDeleteFiles,
+  deleteFiles as sdkDeleteFiles
 } from '@directus/sdk'
+import type {
+  DirectusClientConfig,
+  DirectusFile,
+  DirectusFilesOptions,
+  DirectusFilesOptionsAsyncData,
+  Query
+} from '../types'
+import { useAsyncData, computed, toRef, unref } from '#imports'
 
 export function useDirectusFiles<TSchema extends object> (useStaticToken?: boolean | string) {
   const client = (useStaticToken?: boolean | string) => {
@@ -174,8 +174,6 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
       }
     }
   }
-
-  
 
   return {
     uploadFiles,
