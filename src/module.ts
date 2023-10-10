@@ -59,21 +59,22 @@ export interface ModuleOptions {
    */
   cookieNameRefreshToken?: string;
 
-  /**
-   * The max age for auth cookies in milliseconds.
-   * This should match your directus env key REFRESH_TOKEN_TTL
-   * @type string
-   * @default 604800000
-   */
-  cookieMaxAge?: number;
+/**
+ * The max age for auth cookies in milliseconds.
+ * This should match your directus env key REFRESH_TOKEN_TTL
+ * @type string
+ * @default 604800000
+ */
+cookieMaxAge?: number;
 
-  /**
-   * The max age for auth cookies in milliseconds.
-   * This should match your directus env key REFRESH_TOKEN_TTL
-   * @type string
-   * @default 604800000
-   */
-  maxAgeRefreshToken?: number;
+/**
+ * @deprecated Use `cookieMaxAge` instead.
+ * The max age for auth cookies in milliseconds.
+ * This should match your directus env key REFRESH_TOKEN_TTL
+ * @type string
+ * @default 604800000
+ */
+maxAgeRefreshToken?: number;
 
   /**
    * The SameSite attribute for auth cookies.
