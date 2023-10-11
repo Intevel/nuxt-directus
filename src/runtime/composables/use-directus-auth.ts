@@ -75,7 +75,6 @@ export function useDirectusAuth<TSchema extends Object> () {
     try {
       await client().logout()
       user.value = undefined
-      user.value = undefined
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't logut user", error.errors)
