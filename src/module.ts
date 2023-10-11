@@ -101,7 +101,7 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.build.transpile.push(runtimeDir)
 
     if (nuxt.options.runtimeConfig.public.directus.moduleConfig.autoRefresh) {
-      addPlugin(resolve(runtimeDir, './plugins/autoRefresh'), { append: true })
+      addPlugin(resolve(runtimeDir, './plugins/auto-refresh'), { append: true })
     }
 
     addImportsDir(resolve(runtimeDir, 'composables'))
@@ -126,3 +126,14 @@ export default defineNuxtModule<ModuleOptions>({
     }
   }
 })
+
+declare module '@nuxt/schema' {
+  interface ConfigSchema {
+    directus?: ModuleOptions;
+    runtimeConfig?: {
+      public?: {
+        directus?: ModuleOptions;
+      }
+    };
+  }
+}
