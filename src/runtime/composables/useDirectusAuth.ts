@@ -1,103 +1,177 @@
-import { type DirectusUser } from '@directus/sdk'
-import { login, refresh, logout, readMe } from '#imports'
+import { defu } from 'defu'
+import {
+  acceptUserInvite as sdkAcceptUserInvite,
+  inviteUser as sdkInviteUser,
+  passwordRequest as sdkPasswordRequest,
+  passwordReset as sdkPasswordReset
+} from '@directus/sdk'
+import type {
+  DirectusClientConfig,
+  DirectusInviteUser,
+  LoginOptions
+} from '../types'
 
-export function useDirectusAuth () {
-  const { accessToken, refreshToken } = useDirectusCookie()
-  const user = useDirectusUser()
-  const directus = useDirectusRest({
-    onRequest: (request) => {
-      if (accessToken() && accessToken().value) {
-        request.headers = {
-          ...request.headers,
-          authorization: `Bearer ${accessToken().value}`
-        }
-      }
-
-      return request
-    }
-  })
-
-  const setUser = <T extends object>(value: DirectusUser<T>) => {
-    user.value = value
+export function useDirectusAuth<TSchema extends Object> () {
+  const client = (useStaticToken: boolean | string = false) => {
+    return useDirectusRest<TSchema>({
+      useStaticToken
+    })
   }
+  const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
 
-  const fetchUser = async () => {
-    if (accessToken().value) {
-      try {
-        const res = await directus.request(readMe())
-        setUser(res)
-      } catch (error) {
+  const { readMe, setUser, user } = useDirectusUsers()
+  const { tokens } = useDirectusTokens()
+
+  async function login (
+    identifier: string, password: string, options?: LoginOptions
+  ) {
+    try {
+      const defaultOptions = {
+        mode: useNuxtCookies ? 'json' : 'cookie'
+      }
+      const params = defu(options, defaultOptions) as LoginOptions
+
+      const authResponse = await client().login(identifier, password, params)
+      const userData = await readMe({ useStaticToken: false })
+      setUser(userData)
+
+      return {
+        access_token: authResponse.access_token,
+        refresh_token: authResponse.refresh_token,
+        expires_at: authResponse.expires_at,
+        expires: authResponse.expires
+      }
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't login user", error.errors)
+      } else {
         // eslint-disable-next-line no-console
         console.error(error)
       }
     }
-    return user
   }
 
-  const signIn = async (identifier: string, password: string) => {
+  async function refreshTokens () {
     try {
-      const authResponse = await directus.request(
-        login(identifier, password, {})
-      )
-      /* the following `if` is required to avoid a type error
-       *  because the type of expires is number | null
-       *  while maxAge for useCookie is number | undefined
-       */
-      if (authResponse.expires !== null) {
-        refreshToken(authResponse.expires).value = authResponse.refresh_token
-      }
-      accessToken().value = authResponse.access_token
+      const authResponse = await client().refresh()
+      const userData = await readMe({ useStaticToken: false })
+      setUser(userData)
 
       return {
-        accessToken: authResponse.access_token,
-        refreshToken: authResponse.refresh_token,
-        expiresAt: authResponse.expires_at,
+        access_token: authResponse.access_token,
+        refresh_token: authResponse.refresh_token,
+        expires_at: authResponse.expires_at,
         expires: authResponse.expires
       }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error)
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't refresh tokens", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
     }
   }
 
-  const refreshTokens = async () => {
+  async function logout () {
     try {
-      const authResponse =
-        await directus.request(refresh(refreshToken().value!))
-      // check previous note about type error
-      if (authResponse.expires !== null) {
-        refreshToken(authResponse.expires).value = authResponse.refresh_token
+      await client().logout()
+      user.value = undefined
+      user.value = undefined
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't logut user", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
       }
-      accessToken().value = authResponse.access_token
-
-      return {
-        accessToken: authResponse.access_token,
-        refreshToken: authResponse.refresh_token,
-        expiresAt: authResponse.expires_at,
-        expires: authResponse.expires
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error)
     }
   }
-  const signOut = async () => {
+
+  async function passwordRequest (
+    email: string,
+    resetUrl?: string,
+    params?: DirectusClientConfig
+  ) {
     try {
-      await directus.request(logout(refreshToken().value!))
-      accessToken().value = null
-      refreshToken().value = null
-      user.value = null
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(error)
+      await client(params?.useStaticToken).request(sdkPasswordRequest(email, resetUrl))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't request password reset", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
+  }
+
+  async function passwordReset (
+    token: string,
+    password: string,
+    params?: DirectusClientConfig
+  ) {
+    try {
+      await client(params?.useStaticToken).request(sdkPasswordReset(token, password))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't reset password", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
+  }
+
+  async function inviteUser (
+    email: string,
+    role: string,
+    params?: DirectusInviteUser
+  ) {
+    try {
+      await client(params?.useStaticToken).request(sdkInviteUser(email, role, params?.invite_url))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't invite user", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
+  }
+
+  async function acceptUserInvite (
+    token: string,
+    password: string,
+    params?: DirectusClientConfig
+  ) {
+    try {
+      await client(params?.useStaticToken).request(sdkAcceptUserInvite(token, password))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't accept user invite", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
     }
   }
 
   return {
-    setUser,
-    fetchUser,
-    signIn,
+    acceptUserInvite,
+    inviteUser,
+    login,
+    logout,
+    passwordRequest,
+    passwordReset,
     refreshTokens,
-    signOut
+    tokens,
+    user
   }
 }

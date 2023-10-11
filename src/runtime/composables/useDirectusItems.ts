@@ -1,80 +1,276 @@
+import { hash } from 'ohash'
+import {
+  createItem as sdkCreateItem,
+  createItems as sdkCreateItems,
+  readItem as sdkReadItem,
+  readItems as sdkReadItems,
+  readSingleton as sdkReadSingleton,
+  updateItem as sdkUpdateItem,
+  updateItems as sdkUpdateItems,
+  updateSingleton as sdkUpdateSingleton,
+  deleteItem as sdkDeleteItem,
+  deleteItems as sdkDeleteItems
+} from '@directus/sdk'
 import type {
-  DirectusItemRequestOptions,
+  CollectionType,
+  DirectusClientConfig,
+  DirectusItemsOptions,
+  DirectusItemsOptionsAsyncData,
   RegularCollections,
-  SingletonCollections
+  SingletonCollections,
+  Query,
+  UnpackList
 } from '../types'
-import { useAsyncData, readItem, readItems } from '#imports'
+import { useAsyncData, computed, toRef, unref } from '#imports'
 
-export function useDirectusItems<TSchema extends Record<string, any>> () {
-  const { accessToken } = useDirectusCookie()
-  const directus = useDirectusRest<TSchema>({
-    onRequest: (request) => {
-      if (accessToken() && accessToken().value) {
-        request.headers = {
-          ...request.headers,
-          authorization: `Bearer ${accessToken().value}`
-        }
+export function useDirectusItems<TSchema extends object> (useStaticToken?: boolean | string) {
+  const client = (useStaticToken?: boolean | string) => {
+    return useDirectusRest<TSchema>({
+      useStaticToken
+    })
+  }
+
+  async function createItem <
+    Collection extends keyof TSchema,
+    Item extends Partial<UnpackList<TSchema[Collection]>>,
+    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+  > (
+    collection: Collection,
+    item: Item,
+    options?: DirectusItemsOptions<TQuery>
+  ) {
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkCreateItem(collection, item, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't create item", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
       }
-
-      return request
     }
-  })
+  }
 
-  /**
-   * Get a single item from a collection.
-   * @param collection The collection name to get the item from.
-   * @param id The id of the item to get.
-   * @param options The options to use when fetching the item.
-   */
-  const getItemById = async (
-    collection: RegularCollections<TSchema>,
+  async function createItems <
+    Collection extends keyof TSchema,
+    Item extends Partial<UnpackList<TSchema[Collection]>>[],
+    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+  > (
+    collection: Collection,
+    items: Item,
+    options?: DirectusItemsOptions<TQuery>
+  ) {
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkCreateItems(collection, items, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't create items", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
+  }
+
+  async function readItem <
+    Collection extends RegularCollections<TSchema>,
+    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
+  > (
+    collection: Ref<Collection> | Collection,
+    id: Ref<string | number> | string | number,
+    params?: DirectusItemsOptionsAsyncData<TQuery>
+  ) {
+    const collectionRef = toRef(collection) as Ref<Collection>
+    const idRef = toRef(id) as Ref<string | number>
+    const key = computed(() => {
+      return hash([
+        'readItem',
+        unref(collectionRef),
+        unref(idRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken)
+        .request(sdkReadItem(collectionRef.value, idRef.value, params?.query)), params?.params
+    )
+  }
+
+  async function readItems <
+    Collection extends RegularCollections<TSchema>,
+    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
+  > (
+    collection: Ref<Collection> | Collection,
+    params?: DirectusItemsOptionsAsyncData<TQuery>
+  ) {
+    const collectionRef = toRef(collection) as Ref<Collection>
+    const key = computed(() => {
+      return hash([
+        'readItems',
+        unref(collectionRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken)
+        .request(sdkReadItems(collectionRef.value, params?.query)), params?.params
+    )
+  }
+
+  async function readSingleton <
+    Collection extends SingletonCollections<TSchema>,
+    TQuery extends Query<TSchema, TSchema[Collection]>
+  > (
+    collection: Ref<Collection> | Collection,
+    params?: DirectusItemsOptionsAsyncData<TQuery>
+  ) {
+    const collectionRef = toRef(collection) as Ref<Collection>
+    const key = computed(() => {
+      return hash([
+        'readSingleton',
+        unref(collectionRef),
+        params?.toString()
+      ])
+    })
+    return await useAsyncData(
+      params?.key ?? key.value,
+      async () => await client(params?.useStaticToken || useStaticToken)
+        .request(sdkReadSingleton(collectionRef.value, params?.query)), params?.params
+    )
+  }
+
+  async function updateItem <
+    Collection extends keyof TSchema,
+    Item extends Partial<UnpackList<TSchema[Collection]>>,
+    TQuery extends Query<TSchema, TSchema[Collection]>
+  > (
+    collection: Collection,
     id: string | number,
-    options?: DirectusItemRequestOptions
-  ) => {
-    if (!id) { throw new Error('You must provide an id to get an item.') }
-    const { data, pending, error, refresh } = await useAsyncData(
-      options?.key ?? `${String(collection)}_${id}`,
-      async () => await directus.request(readItem(collection, id, options?.query))
-    )
-    return { data, pending, error, refresh }
+    item: Item,
+    options?: DirectusItemsOptions<TQuery>
+  ) {
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkUpdateItem(collection, id, item, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't update item", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
-  /**
-   * Get all the items from a collection.
-   * @param collection The collection name to get the items from.
-   * @param options The options to use when fetching the items.
-   */
-  const getItems = async (
-    collection: RegularCollections<TSchema>,
-    options?: DirectusItemRequestOptions
-  ) => {
-    const { data, pending, error, refresh } = await useAsyncData(
-      // TODO: check status for https://github.com/nuxt/nuxt/issues/23000
-      options?.key ?? String(collection),
-      async () => await directus.request(readItems(collection, options?.query))
-    )
-    return { data, pending, error, refresh }
+  async function updateItems <
+    Collection extends keyof TSchema,
+    Item extends Partial<UnpackList<TSchema[Collection]>>,
+    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+  > (
+    collection: Collection,
+    ids: string[] | number[],
+    item: Item,
+    options?: DirectusItemsOptions<TQuery>
+  ) {
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkUpdateItems(collection, ids, item, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't update items", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
-  /**
-   * Get the item from a collection marked as Singleton.
-   * @param collection The collection name to get the items from.
-   * @param options The options to use when fetching the items.
-   */
-  const getSingletonItem = async (
-    collection: SingletonCollections<TSchema>,
-    options?: DirectusItemRequestOptions
-  ) => {
-    const { data, pending, error, refresh } = await useAsyncData(
-      options?.key ?? String(collection),
-      async () => await directus.request(readSingleton(collection, options?.query))
-    )
-    return { data, pending, error, refresh }
+  async function updateSingleton <
+    Collection extends SingletonCollections<TSchema>,
+    Item extends Partial<UnpackList<TSchema[Collection]>>,
+    TQuery extends Query<TSchema, TSchema[Collection]>
+  > (
+    collection: Collection,
+    item: Item,
+    options?: DirectusItemsOptions<TQuery>
+  ) {
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkUpdateSingleton(collection, item, options?.query))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't update singleton", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
+  }
+
+  async function deleteItem <
+    Collection extends keyof TSchema,
+    ID extends string | number
+  > (
+    collection: Collection,
+    id: ID,
+    options?: DirectusClientConfig
+  ) {
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkDeleteItem(collection, id))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't delete item", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
+  }
+
+  async function deleteItems <
+    Collection extends keyof TSchema,
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+    ID extends string[] | number[]
+  > (
+    collection: Collection,
+    idOrQuery: ID | TQuery,
+    options?: DirectusClientConfig
+  ) {
+    try {
+      return await client(options?.useStaticToken || useStaticToken)
+        .request(sdkDeleteItems(collection, idOrQuery))
+    } catch (error: any) {
+      if (error && error.message) {
+        // eslint-disable-next-line no-console
+        console.error("Couldn't delete items", error.errors)
+      } else {
+        // eslint-disable-next-line no-console
+        console.error(error)
+      }
+    }
   }
 
   return {
-    getItemById,
-    getItems,
-    getSingletonItem
+    createItem,
+    createItems,
+    readItem,
+    readItems,
+    readSingleton,
+    updateItem,
+    updateItems,
+    updateSingleton,
+    deleteItem,
+    deleteItems
   }
 }
