@@ -45,10 +45,10 @@
       <div>
         <h2>New Post</h2>
         <div>
-          <input type="text" v-model="postNewData.title" placeholder="Post title">
-          <input type="text" v-model="postNewData.slug" placeholder="Post slug">
+          <input v-model="postNewData.title" type="text" placeholder="Post title">
+          <input v-model="postNewData.slug" type="text" placeholder="Post slug">
           <br>
-          <textarea v-model="postNewData.content" placeholder="Post content"></textarea>
+          <textarea v-model="postNewData.content" placeholder="Post content" />
           <button @click="createContent()">
             Create Post
           </button>
@@ -57,14 +57,14 @@
       <div>
         <h2>Update or Delete a Post</h2>
         <div>
-          <div v-for="post in posts" :key="post.id" >
-            <input type="radio" v-model="postId" :id="post.id.toString" :value="post.id">
+          <div v-for="post in posts" :key="post.id">
+            <input :id="post.id.toString" v-model="postId" type="radio" :value="post.id">
             <label for="post.id">{{ post.title }}</label>
           </div>
-          <input type="text" v-model="postUpdateData.title" placeholder="Post title">
-          <input type="text" v-model="postUpdateData.slug" placeholder="Post slug">
+          <input v-model="postUpdateData.title" type="text" placeholder="Post title">
+          <input v-model="postUpdateData.slug" type="text" placeholder="Post slug">
           <br>
-          <textarea v-model="postUpdateData.content" placeholder="Post content"></textarea>
+          <textarea v-model="postUpdateData.content" placeholder="Post content" />
           <button @click="updateContent()">
             Update Post
           </button>
@@ -113,7 +113,7 @@ const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await read
 
 const postNewData = ref<Partial<Post>>({})
 
-async function createContent() {
+async function createContent () {
   await createItem('posts', postNewData.value)
   refreshPosts()
 }
@@ -121,7 +121,7 @@ async function createContent() {
 const postId = ref<Post['id']>(posts.value?.[0].id || '')
 const postUpdateData = ref<Partial<Post>>({})
 
-async function updateContent() {
+async function updateContent () {
   await updateItem('posts', postId.value, postUpdateData.value)
   refreshPosts()
 }

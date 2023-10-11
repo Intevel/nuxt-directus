@@ -43,10 +43,8 @@ export function useDirectusAuth<TSchema extends Object> () {
       }
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't login user", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -66,10 +64,8 @@ export function useDirectusAuth<TSchema extends Object> () {
       }
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't refresh tokens", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -82,10 +78,8 @@ export function useDirectusAuth<TSchema extends Object> () {
       user.value = undefined
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't logut user", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -100,10 +94,8 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkPasswordRequest(email, resetUrl))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't request password reset", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -118,10 +110,8 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkPasswordReset(token, password))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't reset password", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -136,10 +126,8 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkInviteUser(email, role, params?.invite_url))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't invite user", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -154,10 +142,8 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkAcceptUserInvite(token, password))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't accept user invite", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }

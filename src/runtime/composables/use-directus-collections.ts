@@ -33,10 +33,8 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateCollection(item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't create collection", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -86,10 +84,8 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateCollection(collection, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update collection", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -103,10 +99,8 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteCollection(collection))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't delete collection", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }

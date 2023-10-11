@@ -44,10 +44,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkCreateItem(collection, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't create item", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -67,10 +65,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkCreateItems(collection, items, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't create items", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -160,10 +156,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkUpdateItem(collection, id, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update item", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -184,10 +178,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkUpdateItems(collection, ids, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update items", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -207,10 +199,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkUpdateSingleton(collection, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update singleton", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -229,10 +219,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkDeleteItem(collection, id))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't delete item", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -252,10 +240,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkDeleteItems(collection, idOrQuery))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't delete items", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }

@@ -35,10 +35,8 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
       return await client(params?.useStaticToken || useStaticToken).request(sdkUploadFiles(data, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't upload files", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -55,10 +53,8 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
       return await client(params?.useStaticToken || useStaticToken).request(sdkImportFile(url, data, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't import file", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -112,10 +108,8 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateFile(id, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update file", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -132,10 +126,8 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateFiles(id, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update files", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -149,10 +141,8 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteFile(id))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't delete file", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -166,10 +156,8 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteFiles(id))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't delete files", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }

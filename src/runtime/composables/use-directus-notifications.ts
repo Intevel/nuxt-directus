@@ -35,10 +35,8 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateNotification(item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't create notification", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -54,10 +52,8 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateNotifications(item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't create notifications", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -111,10 +107,8 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateNotification(id, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't read notification", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -131,10 +125,8 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateNotifications(id, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't read notification", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -148,10 +140,8 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteNotification(id))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't read notification", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -165,10 +155,8 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteNotifications(id))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't read notification", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }

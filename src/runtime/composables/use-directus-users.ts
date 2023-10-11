@@ -47,10 +47,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUser(userInfo, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't create user", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -66,10 +64,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUsers(userInfo, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't create users", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -89,10 +85,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
         return await client(params?.useStaticToken || useStaticToken).request(sdkReadMe(params?.query))
       } catch (error: any) {
         if (error && error.message) {
-          // eslint-disable-next-line no-console
           console.error("Couldn't fetch authenticated user", error.errors)
         } else {
-          // eslint-disable-next-line no-console
           console.error(error)
         }
       }
@@ -146,10 +140,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateMe(userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update authenticated user", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -166,10 +158,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateUser(id, userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update user", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -186,10 +176,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateUsers(id, userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't update users", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -203,10 +191,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteUser(id))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't delete user", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }
@@ -220,10 +206,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteUsers(id))
     } catch (error: any) {
       if (error && error.message) {
-        // eslint-disable-next-line no-console
         console.error("Couldn't delete users", error.errors)
       } else {
-        // eslint-disable-next-line no-console
         console.error(error)
       }
     }

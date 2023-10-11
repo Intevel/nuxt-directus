@@ -30,7 +30,7 @@
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "docs": "cd docs && pnpm dev",
     "release": "nuxt-module-build && changelogen --release --push && pnpm publish",
-    "lint": "eslint --ext .js,.ts,.vue"
+    "lint": "eslint . --fix"
   },
   "dependencies": {
     "@directus/sdk": "^12.0.1",
