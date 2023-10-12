@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import type { NitroFetchOptions } from 'nitropack'
-import { useRuntimeConfig, createError } from '#app'
+import { useRuntimeConfig, createError } from 'nuxt/app'
 import { joinURL } from 'ufo'
 import { useDirectusUrl } from './useDirectusUrl'
 import { useDirectusToken } from './useDirectusToken'

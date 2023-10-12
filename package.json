@@ -33,7 +33,8 @@
     "lint": "eslint --ext .js,.ts,.vue"
   },
   "dependencies": {
-    "@nuxt/kit": "^3.0.0"
+    "@nuxt/kit": "^3.7.4",
+    "@nuxt/ui": "^2.9.0"
   },
   "devDependencies": {
     "@nuxt/devtools": "1.0.0-beta.1",

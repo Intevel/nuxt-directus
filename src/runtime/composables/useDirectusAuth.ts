@@ -1,4 +1,4 @@
-import { useRoute, useRuntimeConfig, navigateTo } from '#app'
+import { useRoute, useRuntimeConfig, navigateTo, useRouter } from 'nuxt/app'
 
 import type { Ref } from 'vue'
 import type {
@@ -164,16 +164,36 @@ export const useDirectusAuth = () => {
   }
 
   const logout = async (): Promise<void> => {
-    await $fetch('/auth/logout', {
-      baseURL: baseUrl,
-      body: { refresh_token: refreshToken.value },
-      method: 'POST'
-    })
-
-    removeTokens()
-    setUser(null)
-    await fetchUser()
+    try {
+      console.log('Sending logout request...');  // Log before sending request
+  
+      const response = await fetch(`${baseUrl}/auth/logout`, {
+        body: JSON.stringify({ refresh_token: refreshToken.value }),  // Ensure the body is stringified
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }  // Add Content-Type header
+      });
+  
+      console.log('Logout response:', response);  // Log response object
+  
+      if (!response.ok) {  // Check for a successful response
+        const responseData = await response.json();  // Parse and log response data on error
+        console.error('Logout error:', responseData);
+        throw new Error(`Logout failed with status: ${response.status}`);
+      }
+  
+      removeTokens();
+      setUser(null);
+      await fetchUser();
+  
+      // Redirect to index page
+      const router = useRouter();  // Get the router instance from 'nuxt/app'
+      router.push('/');  // Navigate to the index page
+  
+    } catch (error) {
+      console.error('Logout exception:', error);  // Log any exceptions
+    }
   }
+  
 
   return {
     setUser,

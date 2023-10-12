@@ -144,7 +144,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     if (options.devtools) {
-      const adminUrl = joinURL(nuxt.options.runtimeConfig.public.directus.url, '/admin/')
+      const adminUrl = joinURL((nuxt.options.runtimeConfig.public.directus as ModuleOptions).url, '/admin/')
       // @ts-expect-error - private API
       nuxt.hook('devtools:customTabs', (iframeTabs) => {
         iframeTabs.push({
