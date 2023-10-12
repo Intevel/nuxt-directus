@@ -31,4 +31,4 @@ RUN npm run prepack
 EXPOSE 3000
 
 # Command to run the application
-CMD ["npx", "nuxi", "dev", "playground"]
+CMD ["npx", "nuxi", "dev"]
