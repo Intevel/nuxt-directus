@@ -131,6 +131,7 @@ declare module '@nuxt/schema' {
   interface ConfigSchema {
     directus?: ModuleOptions;
     runtimeConfig?: {
+      directus?: ModuleOptions;
       public?: {
         directus?: ModuleOptions;
       }
