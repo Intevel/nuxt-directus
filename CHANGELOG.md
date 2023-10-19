@@ -2,6 +2,53 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.6.0
+
+
+### 🚀 Enhancements
+
+  - Warning "maxAgeRefreshToken deprecated" (035b382)
+  - Documentation updates, own hero (dd4dfd6)
+  - Rewrite feedback to plausible events (5bc6ab6)
+  - Update files url (980b91e)
+  - Remove trailing slash if present (ad28fee)
+  - Ensures url does not ends with a trailing slash (d3e429e)
+
+### 🩹 Fixes
+
+  - Wrong default cookieMaxAge fixes #181 (#181)
+  - Default env directus url (c211585)
+  - Mobile padding (9d961eb)
+  - Readme link (16741bd)
+  - Remove deprecation notes (46bd2d1)
+
+### 💅 Refactors
+
+  - Minor eslinting (7b3633a)
+
+### 📖 Documentation
+
+  - Fix usedirectustoken (7f788df)
+  - Fix wrong default (b21826c)
+  - Fix middleware example (84bef8b)
+  - Update cover (564e20e)
+  - Add deprecation notes (0e3869f)
+
+### 🏡 Chore
+
+  - Update readme links (86d8b2f)
+  - Update docs links in package.json (3cceb24)
+  - **deps-dev:** Bump @antfu/utils from 0.7.2 to 0.7.5 (a2c764c)
+
+### ❤️  Contributors
+
+- Conner Bachmann ([@Intevel](http://github.com/Intevel))
+- Rashid Pathiyil ([@rashidpathiyil](http://github.com/rashidpathiyil))
+- Conner ([@Intevel](http://github.com/Intevel))
+- Sandros94 ([@Sandros94](http://github.com/Sandros94))
+- Drennvinn <drennvinn@gmail.com>
+- Matt
+
 ## v5.5.0
 
 
