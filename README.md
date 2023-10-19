@@ -1,9 +1,6 @@
 [![nuxt-directus](https://raw.githubusercontent.com/Intevel/nuxt-directus/main/docs/public/cover.png)](https://nuxt-directus.site/)
 
-# Nuxt Directus _(deprecated)_
-
-> **DEPRECATED** - Nuxt-Directus is now deprecated. It will no longer receive updates.
-I recommend using the new [Directus JavaScript SDK](https://docs.directus.io/guides/sdk/getting-started.html)
+# Nuxt Directus
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
