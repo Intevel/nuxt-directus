@@ -1,16 +1,50 @@
-export interface ModuleOptions {
-  /**
-   * Directus API URL, customizable at runtime via NUXT_PUBLIC_DIRECTUS_URL environment variable.
-   * @default ''
-   * @type string
-   */
-  url: string;
+export interface ModuleOptionsPrivate {
   /**
    * Directus static token that is available only server side. Customizable at runtime via NUXT_DIRECTUS_STATIC_TOKEN environment variable.
    * @default ''
    * @type string
    */
   privateStaticToken?: string;
+  /**
+  * A series of configs that let you define how the module should be used by Nuxt.
+  * @type object
+  */
+  moduleConfig: {
+    /**
+     * Enable Directus Devtools
+     * @default false
+     * @type boolean
+     * @see https://docs.directus.io/guides/developer-tools.html
+     */
+    devtools?: boolean;
+    /**
+     * Auto import native components from the Directus SDK.
+     * @default false
+     * @type boolean
+     */
+    autoImport?: boolean;
+    /**
+     * Prefix for auto imported components from the Directus SDK.
+     * @default ''
+     * @type string
+     */
+    autoImportPrefix?: string;
+    /**
+     * Suffix for auto imported components from the Directus SDK.
+     * @default ''
+     * @type string
+     */
+    autoImportSuffix?: string;
+  }
+}
+
+export interface ModuleOptionsPublic {
+  /**
+   * Directus API URL, customizable at runtime via NUXT_PUBLIC_DIRECTUS_URL environment variable.
+   * @default ''
+   * @type string
+   */
+  url: string;
   /**
    * Directus static token that is available both server and client side. Customizable at runtime via NUXT_PUBLIC_DIRECTUS_STATIC_TOKEN environment variable.
    * @default ''
@@ -72,35 +106,12 @@ export interface ModuleOptions {
   */
   moduleConfig: {
     /**
-     * Enable Directus Devtools
-     * @default false
-     * @type boolean
-     * @see https://docs.directus.io/guides/developer-tools.html
-     */
-    devtools?: boolean;
-    /**
      * Whether to automatically refresh the access token when it expires.
      * @default true
      * @type boolean
      */
     autoRefresh?: boolean;
-    /**
-     * Auto import native components from the Directus SDK.
-     * @default false
-     * @type boolean
-     */
-    autoImport?: boolean;
-    /**
-     * Prefix for auto imported components from the Directus SDK.
-     * @default ''
-     * @type string
-     */
-    autoImportPrefix?: string;
-    /**
-     * Suffix for auto imported components from the Directus SDK.
-     * @default ''
-     * @type string
-     */
-    autoImportSuffix?: string;
   }
 }
+
+export type ModuleOptions = ModuleOptionsPrivate & ModuleOptionsPublic;
