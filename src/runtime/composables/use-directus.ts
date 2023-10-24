@@ -8,6 +8,7 @@ import {
 } from '@directus/sdk'
 import type {
   ClientOptions,
+  DirectusClientOptions,
   DirectusGraphqlConfig,
   DirectusRestConfig,
   GraphqlConfig,
@@ -15,18 +16,18 @@ import type {
 } from '../types'
 import { useRuntimeConfig } from '#imports'
 
-export const useDirectus = <T extends Object>(url?: string, options?: ClientOptions) => {
+export const useDirectus = <T extends Object>(options?: DirectusClientOptions) => {
   const configUrl = useRuntimeConfig().public.directus.url
 
   const defaultOptions: ClientOptions = {
     globals: {
-      fetch: $fetch
+      fetch: $fetch.create(options?.fetchOptions ?? {})
     }
   }
 
   const clientOptions = defu(options, defaultOptions)
 
-  return createDirectus<T>(url ?? configUrl, clientOptions)
+  return createDirectus<T>(options?.url ?? configUrl, clientOptions)
 }
 
 export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) => {
@@ -41,7 +42,7 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
 
   const options = defu(config, defaultConfig)
 
-  const client = useDirectus<T>().with(authentication(
+  const client = useDirectus<T>(config?.clientOptions).with(authentication(
     authConfig.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh: moduleConfig.autoRefresh,
       storage: useDirectusTokens()
@@ -68,7 +69,7 @@ export const useDirectusGraphql = <T extends Object>(config?: DirectusGraphqlCon
 
   const options = defu(config, defaultConfig)
 
-  const client = useDirectus<T>().with(authentication(
+  const client = useDirectus<T>(config?.clientOptions).with(authentication(
     authConfig.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh: moduleConfig.autoRefresh,
       credentials: 'include',

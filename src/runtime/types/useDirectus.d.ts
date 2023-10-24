@@ -1,7 +1,15 @@
 import {
+  ClientOptions,
   RestConfig,
   GraphqlConfig,
 } from './index'
+import { FetchOptions } from 'ofetch'
+
+export interface DirectusClientOptions {
+  url?: string;
+  options?: ClientOptions;
+  fetchOptions?: FetchOptions;
+}
 
 export interface DirectusClientConfig {
   /**
@@ -10,6 +18,7 @@ export interface DirectusClientConfig {
    * @type boolean | string | undefined
   */
   useStaticToken?: boolean | string | undefined;
+  clientOptions?: DirectusClientOptions;
 }
 
 export interface DirectusRestConfig extends DirectusClientConfig, RestConfig {
