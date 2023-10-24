@@ -8,7 +8,7 @@ import { FetchOptions } from 'ofetch'
 export interface DirectusClientOptions {
   url?: string;
   options?: ClientOptions;
-  fetchOptions?: FetchOptions;
+  fetchOptions?: Omit<FetchOptions, 'baseURL'>;
 }
 
 export interface DirectusClientConfig {
