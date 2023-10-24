@@ -19,10 +19,9 @@ export const useDirectus = <T extends Object>(url?: string, options?: ClientOpti
   const configUrl = useRuntimeConfig().public.directus.url
 
   const defaultOptions: ClientOptions = {
-    // Commented out untill is fixed https://github.com/directus/directus/issues/19747
-    // globals: {
-    //   fetch: $fetch
-    // }
+    globals: {
+      fetch: $fetch
+    }
   }
 
   const clientOptions = defu(options, defaultOptions)
