@@ -8,7 +8,11 @@ import {
 } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
-import type { ModuleOptions } from './runtime/types'
+import type {
+  ModuleOptions,
+  ModuleOptionsPrivate,
+  ModuleOptionsPublic
+} from './runtime/types'
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
@@ -131,8 +135,9 @@ declare module '@nuxt/schema' {
   interface ConfigSchema {
     directus?: ModuleOptions;
     runtimeConfig?: {
+      directus?: ModuleOptionsPrivate;
       public?: {
-        directus?: ModuleOptions;
+        directus?: ModuleOptionsPublic;
       }
     };
   }

@@ -11,7 +11,7 @@ export default defineAppConfig({
       logo: true
     },
     github: {
-      owner: 'directus-community',
+      owner: 'intevel',
       repo: 'nuxt-directus'
     }
   }

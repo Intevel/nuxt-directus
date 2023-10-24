@@ -1,28 +1,12 @@
+<!-- eslint-disable camelcase -->
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref } from 'vue'
 
-const isSubmitted = ref(false);
+const isSubmitted = ref(false)
 
-async function submitFeedback(feedback: number) {
-  if (typeof window !== "undefined") {
-    const user_id = window.localStorage.getItem("feedback-uuid");
-
-    if (!user_id) return;
-
-    await $fetch("https://directus.conner-bachmann.de/feedback", {
-      method: "POST",
-      body: {
-        feedback: feedback,
-        route: useRoute().path,
-        user_id,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    isSubmitted.value = true;
-  }
+function submitFeedback (feedback: string) {
+  useTrackEvent('feedback', { props: { path: useRoute().path, feedback } })
+  isSubmitted.value = true
 }
 </script>
 
@@ -32,16 +16,16 @@ async function submitFeedback(feedback: number) {
       <p>What do you think?</p>
       <h2>How helpful was this article?</h2>
       <div class="feedback-box-list">
-        <div class="feedback-box-item" @click="submitFeedback(1)">
+        <div class="feedback-box-item" @click="submitFeedback('Worst Doc ever 🥲')">
           <h3>Worst Doc ever 🥲</h3>
         </div>
-        <div class="feedback-box-item" @click="submitFeedback(2)">
+        <div class="feedback-box-item" @click="submitFeedback('Not helpful 🤬')">
           <h3>Not helpful 🤬</h3>
         </div>
-        <div class="feedback-box-item" @click="submitFeedback(3)">
+        <div class="feedback-box-item" @click="submitFeedback('Helpful 😊')">
           <h3>Helpful 😊</h3>
         </div>
-        <div class="feedback-box-item" @click="submitFeedback(4)">
+        <div class="feedback-box-item" @click="submitFeedback('Super Helpful 😍')">
           <h3>Super Helpful 😍</h3>
         </div>
       </div>

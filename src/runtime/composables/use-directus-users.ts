@@ -71,7 +71,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     }
   }
 
-  function setUser (value: Partial<DirectusUser<TSchema>> | undefined) {
+  function setUser (value: Awaited<ReturnType<typeof readMe>> | Partial<DirectusUser<TSchema>> | undefined) {
     user.value = value
   }
 
@@ -213,7 +213,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     }
   }
 
-  const user: Ref<Partial<DirectusUser<TSchema>> | undefined> = useState<Partial<DirectusUser<TSchema>> | undefined>(userStateName, () => undefined)
+  const user: Ref<Awaited<ReturnType<typeof readMe>> | Partial<DirectusUser<TSchema>> | undefined> = useState<Awaited<ReturnType<typeof readMe>> | Partial<DirectusUser<TSchema>> | undefined>(userStateName, () => undefined)
 
   return {
     createUser,
