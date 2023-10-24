@@ -8,6 +8,7 @@ import {
 import type {
   DirectusClientConfig,
   DirectusInviteUser,
+  DirectusUser,
   LoginOptions
 } from '../types'
 
