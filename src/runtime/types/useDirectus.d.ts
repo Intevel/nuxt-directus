@@ -2,7 +2,9 @@ import {
   ClientOptions,
   RestConfig,
   GraphqlConfig,
+  WebSocketConfig
 } from './index'
+import { WebSocket } from 'ws'
 import { FetchOptions } from 'ofetch'
 
 export interface DirectusClientOptions {
@@ -21,8 +23,10 @@ export interface DirectusClientConfig {
   clientOptions?: DirectusClientOptions;
 }
 
-export interface DirectusRestConfig extends DirectusClientConfig, RestConfig {
-}
+export interface DirectusRestConfig extends DirectusClientConfig, RestConfig {}
 
-export interface DirectusGraphqlConfig extends DirectusClientConfig, GraphqlConfig {
+export interface DirectusGraphqlConfig extends DirectusClientConfig, GraphqlConfig {}
+
+export interface DirectusRealtimeConfig extends DirectusClientConfig {
+  websocketConfig?: WebSocketConfig;
 }

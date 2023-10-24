@@ -2,12 +2,15 @@ import { defu } from 'defu'
 import {
   authentication,
   createDirectus,
+  realtime,
   graphql,
   rest,
   staticToken as sdkStaticToken
 } from '@directus/sdk'
+import WebSocket from 'ws'
 import type {
   ClientOptions,
+  DirectusRealtimeConfig,
   DirectusClientOptions,
   DirectusGraphqlConfig,
   DirectusRestConfig,
@@ -75,6 +78,36 @@ export const useDirectusGraphql = <T extends Object>(config?: DirectusGraphqlCon
       credentials: 'include',
       storage: useDirectusTokens()
     })).with(graphql(options))
+
+  if (config?.useStaticToken === undefined && !tokens.value?.access_token) {
+    return client.with(sdkStaticToken(staticToken))
+  } else if (typeof config?.useStaticToken === 'string') {
+    return client.with(sdkStaticToken(config?.useStaticToken))
+  } else if (config?.useStaticToken === true) {
+    return client.with(sdkStaticToken(staticToken))
+  }
+
+  return client
+}
+
+export const useDirectusRealtime = <T extends Object>(config?: DirectusRealtimeConfig) => {
+  const { moduleConfig, authConfig, staticToken } = useRuntimeConfig().public.directus
+  const { tokens } = useDirectusTokens()
+
+  const defaultOptions: ClientOptions = {
+    globals: {
+      WebSocket
+    }
+  }
+
+  const options = defu(config?.clientOptions, defaultOptions)
+
+  const client = useDirectus<T>(options).with(authentication(
+    authConfig.useNuxtCookies ? 'json' : 'cookie', {
+      autoRefresh: moduleConfig.autoRefresh,
+      credentials: 'include',
+      storage: useDirectusTokens()
+    })).with(realtime(config?.websocketConfig))
 
   if (config?.useStaticToken === undefined && !tokens.value?.access_token) {
     return client.with(sdkStaticToken(staticToken))
