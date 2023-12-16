@@ -71,7 +71,7 @@ export interface ModuleOptionsPublic {
     userStateName?: string;
     /**
     * Handle auth cookies using Nuxt instead of Directus.
-    * @default false
+    * @default true
     * @type boolean
     */
     useNuxtCookies?: boolean;
