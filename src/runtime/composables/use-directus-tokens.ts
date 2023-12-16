@@ -29,6 +29,7 @@ export const useDirectusTokens = ():DirectusTokens => {
   } = useRuntimeConfig().public.directus.authConfig as ModuleOptions['authConfig']
 
   const tokens: Ref<AuthenticationData | null> = useState(authStateName)
+
   function refreshToken (maxAge?: number | undefined): CookieRef<string | null | undefined> {
     const cookie = useCookie<string | null>(refreshTokenCookieName!, { maxAge, httpOnly, sameSite, secure })
     return cookie
