@@ -55,8 +55,8 @@ Temporary Items
 .apdisk
 
 # Directus
-.playground/.directus/uploads/*-*-*-*-*__*.jpeg
-.playground/.directus/uploads/*-*-*-*-*__*.jpg
-.playground/.directus/uploads/*-*-*-*-*__*.png
-.playground/.directus/uploads/*-*-*-*-*__*.webp
-.playground/.directus/uploads/*-*-*-*-*__*.avif
+playground/.directus/uploads/*-*-*-*-*__*.jpeg
+playground/.directus/uploads/*-*-*-*-*__*.jpg
+playground/.directus/uploads/*-*-*-*-*__*.png
+playground/.directus/uploads/*-*-*-*-*__*.webp
+playground/.directus/uploads/*-*-*-*-*__*.avif
