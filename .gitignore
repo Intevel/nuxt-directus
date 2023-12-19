@@ -29,7 +29,7 @@ dist
 
 # Env
 .env
-!playgournd/.env
+!playground/.env
 
 # Testing
 reports
