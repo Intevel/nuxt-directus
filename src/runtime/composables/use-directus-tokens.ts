@@ -39,7 +39,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
 
   return {
     get: () => {
-      if (!tokens.value?.access_token && useStaticToken !== false) {
+      if (useStaticToken === true || (!tokens.value?.access_token && useStaticToken !== false)) {
         return {
           access_token: typeof useStaticToken === 'string' ? useStaticToken : directusConfig.staticToken,
           refresh_token: null,
