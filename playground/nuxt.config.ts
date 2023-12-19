@@ -11,7 +11,7 @@ export default defineNuxtConfig({
       autoImport: true
     },
     authConfig: {
-      useNuxtCookies: true
+      refreshTokenCookieName: 'nuxt-directus_refresh_token'
     }
   }
 })
