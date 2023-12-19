@@ -113,15 +113,22 @@ interface Schema {
 
 const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
 
-const { data: global } = await readSingleton('global')
-const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await readItems('posts', {
+const { data: global, error: globalError } = await readSingleton('global', { useStaticToken: true })
+if (!global.value && globalError.value) {
+  console.error('Global fetch error:', globalError.value)
+}
+const { data: posts, pending: pendingPosts, refresh: refreshPosts, error: postsError } = await readItems('posts', {
   query: {
     fields: ['title', 'id', 'slug', 'content']
   },
   params: {
     watch: [user]
-  }
+  },
+  useStaticToken: false
 })
+if (!posts.value && postsError.value) {
+  console.error('Posts fetch error:', postsError.value)
+}
 
 const postNewData = ref<Partial<Post>>({})
 

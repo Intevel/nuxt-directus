@@ -8,6 +8,9 @@ import { WebSocket } from 'ws'
 import { FetchOptions } from 'ofetch'
 
 export interface DirectusClientOptions {
+  /**
+   * The URL of the Directus instance. The default value is defined in the Nuxt runtime config.
+   */
   url?: string;
   options?: ClientOptions;
   fetchOptions?: Omit<FetchOptions, 'baseURL'>;
