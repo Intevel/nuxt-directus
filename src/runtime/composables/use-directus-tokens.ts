@@ -15,10 +15,12 @@ import {
 /**
  * This expands the default Directus storage implementation for authenticated data. It adds a `store` named export for direct access within the Nuxt app using `useState` under the hood.
  *
+ * @param useStaticToken - If `true` or `undefined` it will use the static token from the module config. If `false` it will not use any token. If a string is provided it will use that as the token.
  * @returns Directus SDK native AuthenticationStorage functions
  * @returns `store` for direct access to the stored data
  */
-export const useDirectusTokens = ():DirectusTokens => {
+export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTokens => {
+  const directusConfig = useRuntimeConfig().public.directus
   const {
     authStateName,
     useNuxtCookies,
@@ -26,7 +28,7 @@ export const useDirectusTokens = ():DirectusTokens => {
     cookieHttpOnly: httpOnly,
     cookieSameSite: sameSite,
     cookieSecure: secure
-  } = useRuntimeConfig().public.directus.authConfig as ModuleOptions['authConfig']
+  } = directusConfig.authConfig as ModuleOptions['authConfig']
 
   const tokens: Ref<AuthenticationData | null> = useState(authStateName)
 
@@ -37,6 +39,15 @@ export const useDirectusTokens = ():DirectusTokens => {
 
   return {
     get: () => {
+      if (!tokens.value?.access_token && useStaticToken !== false) {
+        return {
+          access_token: typeof useStaticToken === 'string' ? useStaticToken : directusConfig.staticToken,
+          refresh_token: null,
+          expires_at: null,
+          expires: null
+        }
+      }
+
       return {
         access_token: tokens.value?.access_token ?? null,
         refresh_token: useNuxtCookies ? refreshToken().value : tokens.value?.refresh_token,
