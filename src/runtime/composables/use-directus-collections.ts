@@ -33,7 +33,7 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateCollection(item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create collection", error.errors)
+        console.error("Couldn't create collection.", error.message)
       } else {
         console.error(error)
       }
@@ -84,7 +84,7 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateCollection(collection, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update collection", error.errors)
+        console.error("Couldn't update collection.", error.message)
       } else {
         console.error(error)
       }
@@ -99,7 +99,7 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteCollection(collection))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete collection", error.errors)
+        console.error("Couldn't delete collection.", error.message)
       } else {
         console.error(error)
       }

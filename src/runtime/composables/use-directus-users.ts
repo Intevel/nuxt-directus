@@ -47,7 +47,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUser(userInfo, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create user", error.errors)
+        console.error("Couldn't create user.", error.message)
       } else {
         console.error(error)
       }
@@ -64,7 +64,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUsers(userInfo, params?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create users", error.errors)
+        console.error("Couldn't create users.", error.message)
       } else {
         console.error(error)
       }
@@ -85,7 +85,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
         return await client(params?.useStaticToken || useStaticToken).request(sdkReadMe(params?.query))
       } catch (error: any) {
         if (error && error.message) {
-          console.error("Couldn't fetch authenticated user", error.errors)
+          console.error("Couldn't fetch authenticated user.", error.message)
         } else {
           console.error(error)
         }
@@ -140,7 +140,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateMe(userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update authenticated user", error.errors)
+        console.error("Couldn't update authenticated user.", error.message)
       } else {
         console.error(error)
       }
@@ -158,7 +158,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateUser(id, userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update user", error.errors)
+        console.error("Couldn't update user.", error.message)
       } else {
         console.error(error)
       }
@@ -176,7 +176,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateUsers(id, userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update users", error.errors)
+        console.error("Couldn't update users.", error.message)
       } else {
         console.error(error)
       }
@@ -191,7 +191,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteUser(id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete user", error.errors)
+        console.error("Couldn't delete user.", error.message)
       } else {
         console.error(error)
       }
@@ -206,7 +206,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
       return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteUsers(id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete users", error.errors)
+        console.error("Couldn't delete users.", error.message)
       } else {
         console.error(error)
       }

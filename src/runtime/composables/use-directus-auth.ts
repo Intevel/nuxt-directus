@@ -44,7 +44,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       }
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't login user", error.errors)
+        console.error("Couldn't login user.", error.message)
       } else {
         console.error(error)
       }
@@ -65,7 +65,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       }
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't refresh tokens", error.errors)
+        console.error("Couldn't refresh tokens.", error.message)
       } else {
         console.error(error)
       }
@@ -78,7 +78,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       user.value = undefined
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't logut user", error.errors)
+        console.error("Couldn't logut user.", error.message)
       } else {
         console.error(error)
       }
@@ -94,7 +94,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkPasswordRequest(email, resetUrl))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't request password reset", error.errors)
+        console.error("Couldn't request password reset.", error.message)
       } else {
         console.error(error)
       }
@@ -110,7 +110,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkPasswordReset(token, password))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't reset password", error.errors)
+        console.error("Couldn't reset password.", error.message)
       } else {
         console.error(error)
       }
@@ -126,7 +126,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkInviteUser(email, role, params?.invite_url))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't invite user", error.errors)
+        console.error("Couldn't invite user.", error.message)
       } else {
         console.error(error)
       }
@@ -142,7 +142,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkAcceptUserInvite(token, password))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't accept user invite", error.errors)
+        console.error("Couldn't accept user invite.", error.message)
       } else {
         console.error(error)
       }
