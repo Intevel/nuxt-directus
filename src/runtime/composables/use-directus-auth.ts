@@ -8,7 +8,6 @@ import {
 import type {
   DirectusClientConfig,
   DirectusInviteUser,
-  DirectusUser,
   LoginOptions
 } from '../types'
 
@@ -20,7 +19,7 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
 
-  const { readMe, setUser, user } = useDirectusUsers()
+  const { readMe, user } = useDirectusUsers()
   const { tokens } = useDirectusTokens()
 
   async function login (
@@ -33,8 +32,9 @@ export function useDirectusAuth<TSchema extends Object> () {
       const params = defu(options, defaultOptions) as LoginOptions
 
       const authResponse = await client().login(identifier, password, params)
-      const userData = await readMe({ useStaticToken: false })
-      setUser(userData)
+      if (authResponse.access_token) {
+        await readMe({ useStaticToken: false })
+      }
 
       return {
         access_token: authResponse.access_token,
@@ -54,8 +54,9 @@ export function useDirectusAuth<TSchema extends Object> () {
   async function refreshTokens () {
     try {
       const authResponse = await client().refresh()
-      const userData = await readMe({ useStaticToken: false })
-      setUser(userData)
+      if (authResponse.access_token) {
+        await readMe({ useStaticToken: false })
+      }
 
       return {
         access_token: authResponse.access_token,

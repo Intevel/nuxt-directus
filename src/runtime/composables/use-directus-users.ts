@@ -78,11 +78,17 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   async function readMe <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    params?: DirectusUsersOptions<TQuery>
+    params?: DirectusUsersOptions<TQuery> & { updateState?: boolean }
   ) {
     if (tokens.value?.access_token) {
       try {
-        return await client(params?.useStaticToken || useStaticToken).request(sdkReadMe(params?.query))
+        const userData = await client(params?.useStaticToken || useStaticToken).request(sdkReadMe(params?.query))
+
+        if (userData && params?.updateState !== false) {
+          setUser(userData as Partial<DirectusUser<TSchema>>)
+        }
+
+        return userData
       } catch (error: any) {
         if (error && error.message) {
           console.error("Couldn't fetch authenticated user.", error.message)
@@ -134,10 +140,16 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     userInfo: Partial<DirectusUser<TSchema>>,
-    params: DirectusUsersOptions<TQuery>
+    params: DirectusUsersOptions<TQuery> & { updateState?: boolean }
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateMe(userInfo, params.query))
+      const userData = await client(params?.useStaticToken || useStaticToken).request(sdkUpdateMe(userInfo, params.query))
+
+      if (userData && params?.updateState !== false) {
+        setUser(userData as Partial<DirectusUser<TSchema>>)
+      }
+
+      return userData
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update authenticated user.", error.message)
