@@ -1,13 +1,13 @@
 export type * from "@directus/sdk";
 
-export type * from "./moduleOptions";
+export type * from "./module-options";
 
-export type * from "./useDirectus";
-export type * from "./useDirectusAuth";
-export type * from "./useDirectusCollections";
-export type * from "./useDirectusFiles";
-export type * from "./useDirectusItems";
-export type * from "./useDirectusNotifications";
-export type * from "./useDirectusTokens";
-export type * from "./useDirectusUsers";
+export type * from "./use-directus";
+export type * from "./use-directus-auth";
+export type * from "./use-directus-collections";
+export type * from "./use-directus-files";
+export type * from "./use-directus-items";
+export type * from "./use-directus-notifications";
+export type * from "./use-directus-tokens";
+export type * from "./use-directus-users";
 export type * from "./use-directus-revisions";

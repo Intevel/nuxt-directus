@@ -8,7 +8,6 @@ import {
 import type {
   DirectusClientConfig,
   DirectusInviteUser,
-  DirectusUser,
   LoginOptions
 } from '../types'
 
@@ -20,7 +19,7 @@ export function useDirectusAuth<TSchema extends Object> () {
   }
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
 
-  const { readMe, setUser, user } = useDirectusUsers()
+  const { readMe, user } = useDirectusUsers()
   const { tokens } = useDirectusTokens()
 
   async function login (
@@ -33,8 +32,9 @@ export function useDirectusAuth<TSchema extends Object> () {
       const params = defu(options, defaultOptions) as LoginOptions
 
       const authResponse = await client().login(identifier, password, params)
-      const userData = await readMe({ useStaticToken: false })
-      setUser(userData)
+      if (authResponse.access_token) {
+        await readMe({ useStaticToken: false })
+      }
 
       return {
         access_token: authResponse.access_token,
@@ -44,7 +44,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       }
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't login user", error.errors)
+        console.error("Couldn't login user.", error.message)
       } else {
         console.error(error)
       }
@@ -54,8 +54,9 @@ export function useDirectusAuth<TSchema extends Object> () {
   async function refreshTokens () {
     try {
       const authResponse = await client().refresh()
-      const userData = await readMe({ useStaticToken: false })
-      setUser(userData)
+      if (authResponse.access_token) {
+        await readMe({ useStaticToken: false })
+      }
 
       return {
         access_token: authResponse.access_token,
@@ -65,7 +66,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       }
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't refresh tokens", error.errors)
+        console.error("Couldn't refresh tokens.", error.message)
       } else {
         console.error(error)
       }
@@ -78,7 +79,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       user.value = undefined
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't logut user", error.errors)
+        console.error("Couldn't logut user.", error.message)
       } else {
         console.error(error)
       }
@@ -94,7 +95,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkPasswordRequest(email, resetUrl))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't request password reset", error.errors)
+        console.error("Couldn't request password reset.", error.message)
       } else {
         console.error(error)
       }
@@ -110,7 +111,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkPasswordReset(token, password))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't reset password", error.errors)
+        console.error("Couldn't reset password.", error.message)
       } else {
         console.error(error)
       }
@@ -126,7 +127,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkInviteUser(email, role, params?.invite_url))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't invite user", error.errors)
+        console.error("Couldn't invite user.", error.message)
       } else {
         console.error(error)
       }
@@ -142,7 +143,7 @@ export function useDirectusAuth<TSchema extends Object> () {
       await client(params?.useStaticToken).request(sdkAcceptUserInvite(token, password))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't accept user invite", error.errors)
+        console.error("Couldn't accept user invite.", error.message)
       } else {
         console.error(error)
       }

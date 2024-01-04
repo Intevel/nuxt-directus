@@ -6,16 +6,24 @@
     </div>
     <hr>
     <div>
-      Nuxt module playground
-      <button @click="login('admin@example.com', 'Passw0rd!')">
-        Sign in
-      </button>
-      <button @click="logout()">
-        Sign out
-      </button>
-      <button @click="refreshTokens()">
-        Refresh Tokens
-      </button>
+      <div v-if="!user">
+        User Login
+        <form @submit.prevent>
+          <input v-model="credentials.email" type="email" placeholder="Email">
+          <input v-model="credentials.password" type="password" placeholder="Password">
+          <button @click="login(credentials.email, credentials.password)">
+            Sign in
+          </button>
+        </form>
+      </div>
+      <span v-if="user">
+        <button @click="logout()">
+          Sign out
+        </button>
+        <button @click="refreshTokens()">
+          Refresh Tokens
+        </button>
+      </span>
     </div>
     <div>
       <pre>
@@ -42,35 +50,37 @@
           </li>
         </ul>
       </div>
-      <div>
-        <h2>New Post</h2>
+      <div v-if="user" style="display: inline-flex; gap: 4rem;">
         <div>
-          <input v-model="postNewData.title" type="text" placeholder="Post title">
-          <input v-model="postNewData.slug" type="text" placeholder="Post slug">
-          <br>
-          <textarea v-model="postNewData.content" placeholder="Post content" />
-          <button @click="createContent()">
-            Create Post
-          </button>
-        </div>
-      </div>
-      <div>
-        <h2>Update or Delete a Post</h2>
-        <div>
-          <div v-for="post in posts" :key="post.id">
-            <input :id="post.id.toString" v-model="postId" type="radio" :value="post.id">
-            <label for="post.id">{{ post.title }}</label>
+          <h3>New Post</h3>
+          <div>
+            <input v-model="postNewData.title" type="text" placeholder="Post title">
+            <input v-model="postNewData.slug" type="text" placeholder="Post slug">
+            <br>
+            <textarea v-model="postNewData.content" placeholder="Post content" />
+            <button @click="createContent()">
+              Create Post
+            </button>
           </div>
-          <input v-model="postUpdateData.title" type="text" placeholder="Post title">
-          <input v-model="postUpdateData.slug" type="text" placeholder="Post slug">
-          <br>
-          <textarea v-model="postUpdateData.content" placeholder="Post content" />
-          <button @click="updateContent()">
-            Update Post
-          </button>
-          <button @click="deleteItem('posts', postId).then(()=>refreshPosts())">
-            Delete Post
-          </button>
+        </div>
+        <div>
+          <h3>Update or Delete a Post</h3>
+          <div>
+            <div v-for="post in posts" :key="post.id">
+              <input :id="post.id.toString" v-model="postId" type="radio" :value="post.id">
+              <label for="post.id">{{ post.title }}</label>
+            </div>
+            <input v-model="postUpdateData.title" type="text" placeholder="Post title">
+            <input v-model="postUpdateData.slug" type="text" placeholder="Post slug">
+            <br>
+            <textarea v-model="postUpdateData.content" placeholder="Post content" />
+            <button @click="updateContent()">
+              Update Post
+            </button>
+            <button @click="deleteItem('posts', postId).then(()=>refreshPosts())">
+              Delete Post
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -80,6 +90,8 @@
 <script setup lang="ts">
 const { login, logout, refreshTokens } = useDirectusAuth()
 const { user } = useDirectusUsers()
+
+const credentials = ref({ email: '', password: '' })
 
 interface Global {
   title: string
@@ -101,15 +113,22 @@ interface Schema {
 
 const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
 
-const { data: global } = await readSingleton('global')
-const { data: posts, pending: pendingPosts, refresh: refreshPosts } = await readItems('posts', {
+const { data: global, error: globalError } = await readSingleton('global', { useStaticToken: true })
+if (!global.value && globalError.value) {
+  console.error('Global fetch error:', globalError.value)
+}
+const { data: posts, pending: pendingPosts, refresh: refreshPosts, error: postsError } = await readItems('posts', {
   query: {
     fields: ['title', 'id', 'slug', 'content']
   },
   params: {
     watch: [user]
-  }
+  },
+  useStaticToken: false
 })
+if (!posts.value && postsError.value) {
+  console.error('Posts fetch error:', postsError.value)
+}
 
 const postNewData = ref<Partial<Post>>({})
 

@@ -29,7 +29,7 @@ export default defineNuxtModule<ModuleOptions>({
     authConfig: {
       authStateName: 'directus.auth',
       userStateName: 'directus.user',
-      useNuxtCookies: false,
+      useNuxtCookies: true,
       refreshTokenCookieName: 'directus_refresh_token',
       cookieHttpOnly: false,
       cookieSameSite: 'lax',

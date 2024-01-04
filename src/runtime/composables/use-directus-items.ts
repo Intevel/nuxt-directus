@@ -44,7 +44,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkCreateItem(collection, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create item", error.errors)
+        console.error("Couldn't create item.", error.message)
       } else {
         console.error(error)
       }
@@ -65,7 +65,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkCreateItems(collection, items, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create items", error.errors)
+        console.error("Couldn't create items.", error.message)
       } else {
         console.error(error)
       }
@@ -156,7 +156,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkUpdateItem(collection, id, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update item", error.errors)
+        console.error("Couldn't update item.", error.message)
       } else {
         console.error(error)
       }
@@ -178,7 +178,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkUpdateItems(collection, ids, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update items", error.errors)
+        console.error("Couldn't update items.", error.message)
       } else {
         console.error(error)
       }
@@ -199,7 +199,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkUpdateSingleton(collection, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update singleton", error.errors)
+        console.error("Couldn't update singleton.", error.message)
       } else {
         console.error(error)
       }
@@ -219,7 +219,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkDeleteItem(collection, id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete item", error.errors)
+        console.error("Couldn't delete item.", error.message)
       } else {
         console.error(error)
       }
@@ -240,7 +240,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
         .request(sdkDeleteItems(collection, idOrQuery))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete items", error.errors)
+        console.error("Couldn't delete items.", error.message)
       } else {
         console.error(error)
       }

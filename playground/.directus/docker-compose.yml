@@ -1,0 +1,29 @@
+version: '3.8'
+name: 'nuxt-directus-dev'
+
+services:
+  directus:
+    image: directus/directus:10.8.2
+
+    volumes:
+      - ./database:/directus/database
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+
+    ports:
+      - 8055:8055
+
+    tty: true
+    stdin_open: true
+    environment:
+      KEY: 'nuxt-directus'
+      SECRET: 'nuxt-directus'
+      DB_CLIENT: 'sqlite3'
+      DB_FILENAME: './database/nuxt-directus.db'
+      ADMIN_EMAIL: 'admin@example.com'
+      ADMIN_PASSWORD: 'password'
+      CACHE_ENABLED: 'false'
+      CORS_ENABLED: 'true'
+      CORS_ORIGIN: 'true'
+      CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_ANCESTORS: 'array:http://localhost:*,self'
+      EXTENSIONS_AUTO_RELOAD: 'true'

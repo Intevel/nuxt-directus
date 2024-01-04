@@ -4,8 +4,7 @@ import {
   createDirectus,
   realtime,
   graphql,
-  rest,
-  staticToken as sdkStaticToken
+  rest
 } from '@directus/sdk'
 import WebSocket from 'ws'
 import type {
@@ -34,8 +33,7 @@ export const useDirectus = <T extends Object>(options?: DirectusClientOptions) =
 }
 
 export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) => {
-  const { moduleConfig, authConfig, staticToken } = useRuntimeConfig().public.directus
-  const { tokens } = useDirectusTokens()
+  const { moduleConfig, authConfig } = useRuntimeConfig().public.directus
 
   // TODO: add configs for oFetch once the following is fixed and released and check if `credentials: 'include'` works
   // https://github.com/directus/directus/issues/19747
@@ -48,23 +46,14 @@ export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) =
   const client = useDirectus<T>(config?.clientOptions).with(authentication(
     authConfig.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh: moduleConfig.autoRefresh,
-      storage: useDirectusTokens()
+      storage: useDirectusTokens(config?.useStaticToken)
     })).with(rest(options))
-
-  if (config?.useStaticToken === undefined && !tokens.value?.access_token) {
-    return client.with(sdkStaticToken(staticToken))
-  } else if (typeof config?.useStaticToken === 'string') {
-    return client.with(sdkStaticToken(config?.useStaticToken))
-  } else if (config?.useStaticToken === true) {
-    return client.with(sdkStaticToken(staticToken))
-  }
 
   return client
 }
 
 export const useDirectusGraphql = <T extends Object>(config?: DirectusGraphqlConfig) => {
-  const { moduleConfig, authConfig, staticToken } = useRuntimeConfig().public.directus
-  const { tokens } = useDirectusTokens()
+  const { moduleConfig, authConfig } = useRuntimeConfig().public.directus
 
   const defaultConfig: GraphqlConfig = {
     credentials: 'include'
@@ -76,23 +65,14 @@ export const useDirectusGraphql = <T extends Object>(config?: DirectusGraphqlCon
     authConfig.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh: moduleConfig.autoRefresh,
       credentials: 'include',
-      storage: useDirectusTokens()
+      storage: useDirectusTokens(config?.useStaticToken)
     })).with(graphql(options))
-
-  if (config?.useStaticToken === undefined && !tokens.value?.access_token) {
-    return client.with(sdkStaticToken(staticToken))
-  } else if (typeof config?.useStaticToken === 'string') {
-    return client.with(sdkStaticToken(config?.useStaticToken))
-  } else if (config?.useStaticToken === true) {
-    return client.with(sdkStaticToken(staticToken))
-  }
 
   return client
 }
 
 export const useDirectusRealtime = <T extends Object>(config?: DirectusRealtimeConfig) => {
-  const { moduleConfig, authConfig, staticToken } = useRuntimeConfig().public.directus
-  const { tokens } = useDirectusTokens()
+  const { moduleConfig, authConfig } = useRuntimeConfig().public.directus
 
   const defaultOptions: ClientOptions = {
     globals: {
@@ -106,16 +86,8 @@ export const useDirectusRealtime = <T extends Object>(config?: DirectusRealtimeC
     authConfig.useNuxtCookies ? 'json' : 'cookie', {
       autoRefresh: moduleConfig.autoRefresh,
       credentials: 'include',
-      storage: useDirectusTokens()
+      storage: useDirectusTokens(config?.useStaticToken)
     })).with(realtime(config?.websocketConfig))
-
-  if (config?.useStaticToken === undefined && !tokens.value?.access_token) {
-    return client.with(sdkStaticToken(staticToken))
-  } else if (typeof config?.useStaticToken === 'string') {
-    return client.with(sdkStaticToken(config?.useStaticToken))
-  } else if (config?.useStaticToken === true) {
-    return client.with(sdkStaticToken(staticToken))
-  }
 
   return client
 }
