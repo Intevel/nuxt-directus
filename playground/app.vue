@@ -42,11 +42,20 @@
       </button>
       <div>
         List Posts
-        <ul>
+        <ul style="width: fit-content;">
           <li v-for="post in posts" :key="post.id">
-            <h3>{{ post.title }}</h3>
-            <sub>{{ post.slug }} | {{ post.id }}</sub>
-            <p>{{ post.content }}</p>
+            <div>
+              <span
+                style="width: 100%; display: inline-flex; justify-content: space-between; gap: 1rem; align-items: center;"
+              >
+                <h3>{{ post.title }}</h3>
+                <sub>{{ post.status }}</sub>
+              </span>
+              <div>
+                <sub>{{ post.slug }} | {{ post.id }}</sub>
+                <p>{{ post.content }}</p>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -119,7 +128,7 @@ if (!global.value && globalError.value) {
 }
 const { data: posts, pending: pendingPosts, refresh: refreshPosts, error: postsError } = await readItems('posts', {
   query: {
-    fields: ['title', 'id', 'slug', 'content']
+    fields: ['title', 'id', 'slug', 'content', 'status']
   },
   params: {
     watch: [user]

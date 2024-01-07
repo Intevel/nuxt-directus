@@ -40,7 +40,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
   const refreshTokenCookie = refreshToken().value
   return {
     get: () => {
-      if (useStaticToken === true || (!tokens.value?.access_token && useStaticToken !== false)) {
+      if ((useStaticToken === true || typeof useStaticToken === 'string') || (!tokens.value?.access_token && useStaticToken !== false)) {
         return {
           access_token: typeof useStaticToken === 'string' ? useStaticToken : directusConfig.staticToken,
           refresh_token: null,
