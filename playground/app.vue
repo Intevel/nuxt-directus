@@ -111,9 +111,9 @@ interface Schema {
   posts: Post[]
 }
 
-const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
+const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ useStaticToken: false })
 
-const { data: global, error: globalError } = await readSingleton('global', { useStaticToken: true })
+const { data: global, error: globalError } = await readSingleton('global')
 if (!global.value && globalError.value) {
   console.error('Global fetch error:', globalError.value)
 }
@@ -123,8 +123,7 @@ const { data: posts, pending: pendingPosts, refresh: refreshPosts, error: postsE
   },
   params: {
     watch: [user]
-  },
-  useStaticToken: false
+  }
 })
 if (!posts.value && postsError.value) {
   console.error('Posts fetch error:', postsError.value)

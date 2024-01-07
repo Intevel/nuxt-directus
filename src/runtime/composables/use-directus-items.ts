@@ -13,9 +13,9 @@ import {
 } from '@directus/sdk'
 import type {
   CollectionType,
-  DirectusClientConfig,
   DirectusItemsOptions,
   DirectusItemsOptionsAsyncData,
+  DirectusRestConfig,
   RegularCollections,
   SingletonCollections,
   Query,
@@ -23,12 +23,8 @@ import type {
 } from '../types'
 import { useAsyncData, computed, toRef, unref } from '#imports'
 
-export function useDirectusItems<TSchema extends object> (useStaticToken?: boolean | string) {
-  const client = (useStaticToken?: boolean | string) => {
-    return useDirectusRest<TSchema>({
-      useStaticToken
-    })
-  }
+export function useDirectusItems<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
+  const client = useDirectusRest<TSchema>(config)
 
   async function createItem <
     Collection extends keyof TSchema,
@@ -40,8 +36,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     options?: DirectusItemsOptions<TQuery>
   ) {
     try {
-      return await client(options?.useStaticToken || useStaticToken)
-        .request(sdkCreateItem(collection, item, options?.query))
+      return await client.request(sdkCreateItem(collection, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't create item.", error.message)
@@ -61,8 +56,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     options?: DirectusItemsOptions<TQuery>
   ) {
     try {
-      return await client(options?.useStaticToken || useStaticToken)
-        .request(sdkCreateItems(collection, items, options?.query))
+      return await client.request(sdkCreateItems(collection, items, options?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't create items.", error.message)
@@ -92,8 +86,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken)
-        .request(sdkReadItem(collectionRef.value, idRef.value, params?.query)), params?.params
+      () => client.request(sdkReadItem(collectionRef.value, idRef.value, params?.query)),
+      params?.params
     )
   }
 
@@ -114,8 +108,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken)
-        .request(sdkReadItems(collectionRef.value, params?.query)), params?.params
+      () => client.request(sdkReadItems(collectionRef.value, params?.query)),
+      params?.params
     )
   }
 
@@ -136,8 +130,8 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken)
-        .request(sdkReadSingleton(collectionRef.value, params?.query)), params?.params
+      () => client.request(sdkReadSingleton(collectionRef.value, params?.query)),
+      params?.params
     )
   }
 
@@ -152,8 +146,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     options?: DirectusItemsOptions<TQuery>
   ) {
     try {
-      return await client(options?.useStaticToken || useStaticToken)
-        .request(sdkUpdateItem(collection, id, item, options?.query))
+      return await client.request(sdkUpdateItem(collection, id, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update item.", error.message)
@@ -174,8 +167,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     options?: DirectusItemsOptions<TQuery>
   ) {
     try {
-      return await client(options?.useStaticToken || useStaticToken)
-        .request(sdkUpdateItems(collection, ids, item, options?.query))
+      return await client.request(sdkUpdateItems(collection, ids, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update items.", error.message)
@@ -195,8 +187,7 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     options?: DirectusItemsOptions<TQuery>
   ) {
     try {
-      return await client(options?.useStaticToken || useStaticToken)
-        .request(sdkUpdateSingleton(collection, item, options?.query))
+      return await client.request(sdkUpdateSingleton(collection, item, options?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update singleton.", error.message)
@@ -211,12 +202,10 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     ID extends string | number
   > (
     collection: Collection,
-    id: ID,
-    options?: DirectusClientConfig
+    id: ID
   ) {
     try {
-      return await client(options?.useStaticToken || useStaticToken)
-        .request(sdkDeleteItem(collection, id))
+      return await client.request(sdkDeleteItem(collection, id))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't delete item.", error.message)
@@ -232,12 +221,10 @@ export function useDirectusItems<TSchema extends object> (useStaticToken?: boole
     ID extends string[] | number[]
   > (
     collection: Collection,
-    idOrQuery: ID | TQuery,
-    options?: DirectusClientConfig
+    idOrQuery: ID | TQuery
   ) {
     try {
-      return await client(options?.useStaticToken || useStaticToken)
-        .request(sdkDeleteItems(collection, idOrQuery))
+      return await client.request(sdkDeleteItems(collection, idOrQuery))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't delete items.", error.message)

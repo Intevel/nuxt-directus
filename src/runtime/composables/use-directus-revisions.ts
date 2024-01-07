@@ -4,20 +4,15 @@ import {
   readRevisions as sdkReadRevisions
 } from '@directus/sdk'
 import type {
+  DirectusRestConfig,
   DirectusRevision,
   DirectusRevisionsOptionsAsyncData,
   Query
 } from '../types'
 import { useAsyncData, computed, toRef, unref } from '#imports'
 
-export function useDirectusRevisions<TSchema extends object> (
-  useStaticToken?: boolean | string
-) {
-  const client = (useStaticToken?: boolean | string) => {
-    return useDirectusRest<TSchema>({
-      useStaticToken
-    })
-  }
+export function useDirectusRevisions<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
+  const client = useDirectusRest<TSchema>(config)
 
   async function readRevision<
     TQuery extends Query<TSchema, DirectusRevision<TSchema>>
@@ -31,10 +26,7 @@ export function useDirectusRevisions<TSchema extends object> (
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () =>
-        await client(params?.useStaticToken || useStaticToken).request(
-          sdkReadRevision(idRef.value, params?.query)
-        ),
+      () => client.request(sdkReadRevision(idRef.value, params?.query)),
       params?.params
     )
   }
@@ -47,10 +39,7 @@ export function useDirectusRevisions<TSchema extends object> (
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () =>
-        await client(params?.useStaticToken || useStaticToken).request(
-          sdkReadRevisions(params?.query)
-        ),
+      () => client.request(sdkReadRevisions(params?.query)),
       params?.params
     )
   }

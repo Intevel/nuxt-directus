@@ -13,6 +13,7 @@ import {
 } from '@directus/sdk'
 import type {
   DirectusClientConfig,
+  DirectusRestConfig,
   DirectusUsersOptions,
   DirectusUsersOptionsAsyncData,
   DirectusUser,
@@ -27,15 +28,11 @@ import {
   unref
 } from '#imports'
 
-export function useDirectusUsers <TSchema extends Object> (useStaticToken?: boolean | string) {
+export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
   const { userStateName } = useRuntimeConfig().public.directus.authConfig
   const { tokens } = useDirectusTokens()
 
-  const client = (useStaticToken?: boolean | string) => {
-    return useDirectusRest<TSchema>({
-      useStaticToken
-    })
-  }
+  const client = useDirectusRest<TSchema>(config)
 
   async function createUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
@@ -44,7 +41,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     params?: DirectusUsersOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUser(userInfo, params?.query))
+      return await client.request(sdkCreateUser(userInfo, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't create user.", error.message)
@@ -61,7 +58,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     params?: DirectusUsersOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkCreateUsers(userInfo, params?.query))
+      return await client.request(sdkCreateUsers(userInfo, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't create users.", error.message)
@@ -82,7 +79,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
   ) {
     if (tokens.value?.access_token) {
       try {
-        const userData = await client(params?.useStaticToken || useStaticToken).request(sdkReadMe(params?.query))
+        const userData = await client.request(sdkReadMe(params?.query))
 
         if (userData && params?.updateState !== false) {
           setUser(userData as Partial<DirectusUser<TSchema>>)
@@ -115,7 +112,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadUser(idRef.value, params?.query)), params?.params
+      () => client.request(sdkReadUser(idRef.value, params?.query)),
+      params?.params
     )
   }
 
@@ -132,7 +130,8 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadUsers(params?.query)), params?.params
+      () => client.request(sdkReadUsers(params?.query)),
+      params?.params
     )
   }
 
@@ -143,7 +142,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     params: DirectusUsersOptions<TQuery> & { updateState?: boolean }
   ) {
     try {
-      const userData = await client(params?.useStaticToken || useStaticToken).request(sdkUpdateMe(userInfo, params.query))
+      const userData = await client.request(sdkUpdateMe(userInfo, params.query))
 
       if (userData && params?.updateState !== false) {
         setUser(userData as Partial<DirectusUser<TSchema>>)
@@ -167,7 +166,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     params: DirectusUsersOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateUser(id, userInfo, params.query))
+      return await client.request(sdkUpdateUser(id, userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update user.", error.message)
@@ -185,7 +184,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     params: DirectusUsersOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateUsers(id, userInfo, params.query))
+      return await client.request(sdkUpdateUsers(id, userInfo, params.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update users.", error.message)
@@ -200,7 +199,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     params: DirectusClientConfig
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteUser(id))
+      return await client.request(sdkDeleteUser(id))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't delete user.", error.message)
@@ -215,7 +214,7 @@ export function useDirectusUsers <TSchema extends Object> (useStaticToken?: bool
     params: DirectusClientConfig
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteUsers(id))
+      return await client.request(sdkDeleteUsers(id))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't delete users.", error.message)

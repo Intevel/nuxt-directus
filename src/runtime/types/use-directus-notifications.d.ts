@@ -1,8 +1,6 @@
-import type  {
-  DirectusClientConfig
-} from './index'
+import type { AsyncDataOptions } from '#app'
 
-export interface DirectusNotificationsOptions<TQuery> extends DirectusClientConfig {
+export interface DirectusNotificationsOptions<TQuery> {
   query?: TQuery | undefined;
 }
 

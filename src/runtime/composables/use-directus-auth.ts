@@ -6,20 +6,16 @@ import {
   passwordReset as sdkPasswordReset
 } from '@directus/sdk'
 import type {
-  DirectusClientConfig,
+  DirectusRestConfig,
   DirectusInviteUser,
   LoginOptions
 } from '../types'
 
-export function useDirectusAuth<TSchema extends Object> () {
-  const client = (useStaticToken: boolean | string = false) => {
-    return useDirectusRest<TSchema>({
-      useStaticToken
-    })
-  }
+export function useDirectusAuth<TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
+  const client = useDirectusRest<TSchema>(config)
 
-  const { readMe, user } = useDirectusUsers()
+  const { readMe, user } = useDirectusUsers(config)
   const { tokens } = useDirectusTokens()
 
   async function login (
@@ -31,9 +27,9 @@ export function useDirectusAuth<TSchema extends Object> () {
       }
       const params = defu(options, defaultOptions) as LoginOptions
 
-      const authResponse = await client().login(identifier, password, params)
+      const authResponse = await client.login(identifier, password, params)
       if (authResponse.access_token) {
-        await readMe({ useStaticToken: false })
+        await readMe()
       }
 
       return {
@@ -53,9 +49,9 @@ export function useDirectusAuth<TSchema extends Object> () {
 
   async function refreshTokens () {
     try {
-      const authResponse = await client().refresh()
+      const authResponse = await client.refresh()
       if (authResponse.access_token) {
-        await readMe({ useStaticToken: false })
+        await readMe()
       }
 
       return {
@@ -75,7 +71,7 @@ export function useDirectusAuth<TSchema extends Object> () {
 
   async function logout () {
     try {
-      await client().logout()
+      await client.logout()
       user.value = undefined
     } catch (error: any) {
       if (error && error.message) {
@@ -88,11 +84,10 @@ export function useDirectusAuth<TSchema extends Object> () {
 
   async function passwordRequest (
     email: string,
-    resetUrl?: string,
-    params?: DirectusClientConfig
+    resetUrl?: string
   ) {
     try {
-      await client(params?.useStaticToken).request(sdkPasswordRequest(email, resetUrl))
+      await client.request(sdkPasswordRequest(email, resetUrl))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't request password reset.", error.message)
@@ -104,11 +99,10 @@ export function useDirectusAuth<TSchema extends Object> () {
 
   async function passwordReset (
     token: string,
-    password: string,
-    params?: DirectusClientConfig
+    password: string
   ) {
     try {
-      await client(params?.useStaticToken).request(sdkPasswordReset(token, password))
+      await client.request(sdkPasswordReset(token, password))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't reset password.", error.message)
@@ -124,7 +118,7 @@ export function useDirectusAuth<TSchema extends Object> () {
     params?: DirectusInviteUser
   ) {
     try {
-      await client(params?.useStaticToken).request(sdkInviteUser(email, role, params?.invite_url))
+      await client.request(sdkInviteUser(email, role, params?.invite_url))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't invite user.", error.message)
@@ -136,11 +130,10 @@ export function useDirectusAuth<TSchema extends Object> () {
 
   async function acceptUserInvite (
     token: string,
-    password: string,
-    params?: DirectusClientConfig
+    password: string
   ) {
     try {
-      await client(params?.useStaticToken).request(sdkAcceptUserInvite(token, password))
+      await client.request(sdkAcceptUserInvite(token, password))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't accept user invite.", error.message)
