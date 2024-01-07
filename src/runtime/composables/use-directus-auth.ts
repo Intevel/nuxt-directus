@@ -13,10 +13,14 @@ import type {
 
 export function useDirectusAuth<TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
-  const client = useDirectusRest<TSchema>(config)
 
-  const { readMe, user } = useDirectusUsers(config)
-  const { tokens } = useDirectusTokens()
+  const defaultConfig: Partial<DirectusRestConfig> = {
+    useStaticToken: false
+  }
+  const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
+
+  const { readMe, user } = useDirectusUsers(defu(config, defaultConfig))
+  const { tokens } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
 
   async function login (
     identifier: string, password: string, options?: LoginOptions

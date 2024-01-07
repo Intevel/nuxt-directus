@@ -1,3 +1,4 @@
+import { defu } from 'defu'
 import { hash } from 'ohash'
 import {
   createUser as sdkCreateUser,
@@ -30,9 +31,12 @@ import {
 
 export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
   const { userStateName } = useRuntimeConfig().public.directus.authConfig
-  const { tokens } = useDirectusTokens()
 
-  const client = useDirectusRest<TSchema>(config)
+  const defaultConfig: Partial<DirectusRestConfig> = {
+    useStaticToken: false
+  }
+  const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
+  const { tokens } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
 
   async function createUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
