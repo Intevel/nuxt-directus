@@ -37,6 +37,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
     return cookie
   }
 
+  const refreshTokenCookie = refreshToken().value
   return {
     get: () => {
       if (useStaticToken === true || (!tokens.value?.access_token && useStaticToken !== false)) {
@@ -45,15 +46,15 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
           refresh_token: null,
           expires_at: null,
           expires: null
-        }
+        } as AuthenticationData
+      } else {
+        return {
+          access_token: tokens.value?.access_token ?? null,
+          refresh_token: useNuxtCookies ? refreshTokenCookie : tokens.value?.refresh_token,
+          expires_at: tokens.value?.expires_at ?? null,
+          expires: tokens.value?.expires ?? null
+        } as AuthenticationData
       }
-
-      return {
-        access_token: tokens.value?.access_token ?? null,
-        refresh_token: useNuxtCookies ? refreshToken().value : tokens.value?.refresh_token,
-        expires_at: tokens.value?.expires_at ?? null,
-        expires: tokens.value?.expires ?? null
-      } as AuthenticationData
     },
     set: (value: AuthenticationData | null) => {
       tokens.value = value
