@@ -120,7 +120,7 @@ interface Schema {
   posts: Post[]
 }
 
-const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ useStaticToken: false })
+const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ useStaticToken: true })
 
 const { data: global, error: globalError } = await readSingleton('global')
 if (!global.value && globalError.value) {
