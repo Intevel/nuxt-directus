@@ -72,7 +72,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client.request(sdkReadFile(idRef.value, params?.query)),
+      () => client.request(sdkReadFile(idRef.value, params?.query)),
       params?.params
     )
   }
@@ -90,7 +90,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client.request(sdkReadFiles(params?.query)),
+      () => client.request(sdkReadFiles(params?.query)),
       params?.params
     )
   }

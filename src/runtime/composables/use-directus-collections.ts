@@ -52,7 +52,7 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client.request(sdkReadCollection(collectionRef.value)),
+      () => client.request(sdkReadCollection(collectionRef.value)),
       params?.params
     )
   }
@@ -70,7 +70,7 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client.request(sdkReadCollections()),
+      () => client.request(sdkReadCollections()),
       params?.params
     )
   }
