@@ -15,7 +15,7 @@ import type {
 } from '../types'
 import { useRuntimeConfig } from '#imports'
 
-export const useDirectus = <T extends Object>(options?: DirectusClientOptions) => {
+export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOptions>) => {
   const { url } = useRuntimeConfig().public.directus
 
   const defaultOptions: DirectusClientOptions = {
@@ -32,10 +32,10 @@ export const useDirectus = <T extends Object>(options?: DirectusClientOptions) =
   return createDirectus<T>(config.url!, config.clientOptions)
 }
 
-export const useDirectusRest = <T extends Object>(options?: DirectusRestConfig) => {
+export const useDirectusRest = <T extends Object>(options?: Partial<DirectusRestConfig>) => {
   const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const defaultOptions: DirectusRestConfig = {
+  const defaultOptions: Partial<DirectusRestConfig> = {
     authConfig: {
       autoRefresh,
       storage: useDirectusTokens(options?.useStaticToken)
@@ -54,10 +54,10 @@ export const useDirectusRest = <T extends Object>(options?: DirectusRestConfig) 
   return client
 }
 
-export const useDirectusGraphql = <T extends Object>(options?: DirectusGraphqlConfig) => {
+export const useDirectusGraphql = <T extends Object>(options?: Partial<DirectusGraphqlConfig>) => {
   const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const defaultOptions: DirectusGraphqlConfig = {
+  const defaultOptions: Partial<DirectusGraphqlConfig> = {
     authConfig: {
       autoRefresh,
       storage: useDirectusTokens(options?.useStaticToken)
@@ -76,10 +76,10 @@ export const useDirectusGraphql = <T extends Object>(options?: DirectusGraphqlCo
   return client
 }
 
-export const useDirectusRealtime = <T extends Object>(options?: DirectusRealtimeConfig) => {
+export const useDirectusRealtime = <T extends Object>(options?: Partial<DirectusRealtimeConfig>) => {
   const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const defaultOptions: DirectusRealtimeConfig = {
+  const defaultOptions: Partial<DirectusRealtimeConfig> = {
     authConfig: {
       autoRefresh,
       storage: useDirectusTokens(options?.useStaticToken)
