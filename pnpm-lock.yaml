@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   '@directus/sdk':
-    specifier: ^12.1.0
-    version: 12.1.0
+    specifier: ^14.0.0
+    version: 14.0.0
   '@nuxt/kit':
     specifier: ^3.7.3
     version: 3.7.4(rollup@3.29.3)
@@ -391,8 +391,8 @@ packages:
       mime: 3.0.0
     dev: true
 
-  /@directus/sdk@12.1.0:
-    resolution: {integrity: sha512-WSEYrNFKWGeDD+6BG4xuflNqaZAsEOF+eoqC6JBTodKqidmgYglRTUc16+wemwqHXzrW7y8UgA89HWZtR+lW3A==}
+  /@directus/sdk@14.0.0:
+    resolution: {integrity: sha512-xxX20VpdwKXR5O1QNo1HXY3hF8sulOjTdio+zWELLGsSnW4asXT32VLGhiPSl9gtZ2ctSnsrU29k5ACYD2WoRQ==}
     engines: {node: '>=18.0.0'}
     dev: false
 

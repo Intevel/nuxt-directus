@@ -33,7 +33,7 @@
     "lint": "eslint . --fix"
   },
   "dependencies": {
-    "@directus/sdk": "^12.1.0",
+    "@directus/sdk": "^14.0.0",
     "@nuxt/kit": "^3.7.3",
     "ws": "^8.14.2"
   },
