@@ -4,7 +4,8 @@ import {
   createResolver,
   defineNuxtModule,
   addImportsDir,
-  addPlugin
+  addPlugin,
+  addServerImportsDir
 } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
@@ -19,7 +20,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-directus',
     configKey: 'directus',
     compatibility: {
-      nuxt: '^3.0.0'
+      nuxt: '^3.8.0'
     }
   },
   defaults: {
@@ -109,6 +110,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     addImportsDir(resolve(runtimeDir, 'composables'))
+    addServerImportsDir(resolve(runtimeDir, 'server', 'utils'))
 
     // Enable Directus inside Nuxt Devtools
     if (options.moduleConfig.devtools) {
