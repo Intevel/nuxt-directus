@@ -1,5 +1,8 @@
 import { defu } from 'defu'
 import {
+  login as sdkLogin,
+  refresh as sdkRefresh,
+  logout as sdkLogout,
   acceptUserInvite as sdkAcceptUserInvite,
   inviteUser as sdkInviteUser,
   passwordRequest as sdkPasswordRequest,
@@ -20,7 +23,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
   const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
 
   const { readMe, user } = useDirectusUsers(defu(config, defaultConfig))
-  const { tokens } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
+  const { set, tokens } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
 
   async function login (
     identifier: string, password: string, options?: LoginOptions
@@ -31,8 +34,9 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
       }
       const params = defu(options, defaultOptions) as LoginOptions
 
-      const authResponse = await client.login(identifier, password, params)
+      const authResponse = await client.request(sdkLogin(identifier, password, params))
       if (authResponse.access_token) {
+        set(authResponse)
         await readMe()
       }
 
@@ -53,8 +57,9 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
 
   async function refreshTokens () {
     try {
-      const authResponse = await client.refresh()
+      const authResponse = await client.request(sdkRefresh(useNuxtCookies ? 'json' : 'cookie', tokens.value?.refresh_token ?? undefined))
       if (authResponse.access_token) {
+        set(authResponse)
         await readMe()
       }
 
@@ -75,8 +80,9 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
 
   async function logout () {
     try {
-      await client.logout()
+      await client.request(sdkLogout(tokens.value?.refresh_token ?? undefined))
       user.value = undefined
+      set(null)
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't logut user.", error.message)
