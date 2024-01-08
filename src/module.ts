@@ -49,7 +49,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Private runtimeConfig
     nuxt.options.runtimeConfig.directus = defu<ModuleOptionsPrivate, Partial<ModuleOptionsPrivate>[]>(
-      nuxt.options.runtimeConfig.directus as ModuleOptionsPrivate,
+      nuxt.options.runtimeConfig.directus,
       {
         staticToken: options.staticTokenServer,
         moduleConfig: {
@@ -63,7 +63,7 @@ export default defineNuxtModule<ModuleOptions>({
 
     // Public runtimeConfig
     nuxt.options.runtimeConfig.public.directus = defu<ModuleOptionsPublic, Partial<ModuleOptionsPublic>[]>(
-      nuxt.options.runtimeConfig.public.directus as ModuleOptionsPublic,
+      nuxt.options.runtimeConfig.public.directus,
       {
         url: options.url,
         staticToken: options.staticToken,
@@ -133,12 +133,12 @@ export default defineNuxtModule<ModuleOptions>({
 })
 
 declare module '@nuxt/schema' {
-  interface ConfigSchema {
+  interface NuxtOptions {
     directus?: ModuleOptions;
-    runtimeConfig?: {
-      directus?: ModuleOptionsPrivate;
-      public?: {
-        directus?: ModuleOptionsPublic;
+    runtimeConfig: {
+      directus: ModuleOptionsPrivate;
+      public: {
+        directus: ModuleOptionsPublic;
       }
     };
   }
