@@ -1,6 +1,6 @@
 export default defineAppConfig({
   docus: {
-    title: 'Nuxt Directus',
+    title: 'Nuxt Directus [NEXT]',
     description: 'Easily connect your Nuxt application to your directus server',
     image: '/cover.png',
     socials: {
@@ -12,7 +12,8 @@ export default defineAppConfig({
     },
     github: {
       owner: 'intevel',
-      repo: 'nuxt-directus'
+      repo: 'nuxt-directus',
+      branch: 'dev'
     }
   }
 })

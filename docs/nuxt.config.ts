@@ -3,7 +3,7 @@ export default defineNuxtConfig({
   modules: ['@nuxtjs/plausible'],
   plausible: {
     apiHost: 'https://plausible.conner.host',
-    domain: 'nuxt-directus.site',
+    domain: 'next.nuxt-directus.site',
     trackLocalhost: false,
     autoOutboundTracking: true,
     autoPageviews: true,

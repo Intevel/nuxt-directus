@@ -1,6 +1,6 @@
 [![nuxt-directus](https://raw.githubusercontent.com/Intevel/nuxt-directus/main/docs/public/cover.png)](https://nuxt-directus.site/)
 
-# Nuxt Directus
+# Nuxt Directus [Next]
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -22,19 +22,19 @@ Integrate [Directus](https://directus.io/) to your [Nuxt](https://nuxt.com/) app
 ## Setup
 
 ```sh
-yarn add nuxt-directus # yarn
-npm i nuxt-directus # npm
+yarn add nuxt-directus-next # yarn
+npm i nuxt-directus-next # npm
 ```
 
 ## Basic usage
 
-Add `nuxt-directus` to your Nuxt config:
+Add `nuxt-directus-next` to your Nuxt config:
 
 ```javascript
 // nuxt.config.ts
 
 export default defineNuxtConfig({
-  modules: ["nuxt-directus"],
+  modules: ["nuxt-directus-next"],
 });
 ```
 
@@ -47,7 +47,7 @@ export default defineNuxtConfig({
 
 ## License
 
-Copyright (c) 2022 Conner Luka Bachmann
+Copyright (c) 2024 Conner Luka Bachmann
 [MIT License](./LICENSE)
 
 <!-- Badges -->

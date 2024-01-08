@@ -1,16 +1,18 @@
 {
-  "name": "nuxt-directus",
-  "version": "5.5.0",
+  "name": "nuxt-directus-next",
+  "version": "0.0.1",
   "license": "MIT",
-  "repository": "https://github.com/intevel/nuxt-directus",
-  "homepage": "https://nuxt-directus.netlify.app/",
+  "repository": "https://github.com/Intevel/nuxt-directus/tree/dev",
+  "homepage": "https://next.nuxt-directus.site/",
   "type": "module",
   "author": {
     "name": "Conner Luka Bachmann",
     "email": "github@conner-bachmann.de"
   },
   "contributors": [
-    "Intevel <github@conner-bachmann.de>"
+    "Intevel <github@conner-bachmann.de>",
+    "Sandro Circi <sandro.circi@digitoolmedia.com>",
+    "Casual Matt"
   ],
   "exports": {
     ".": {
