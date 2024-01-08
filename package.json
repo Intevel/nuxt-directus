@@ -34,11 +34,11 @@
   },
   "dependencies": {
     "@directus/sdk": "^14.0.0",
-    "@nuxt/kit": "^3.7.3",
+    "@nuxt/kit": "^3.9.1",
     "ws": "^8.14.2"
   },
   "devDependencies": {
-    "@nuxt/devtools": "^0.4.6",
+    "@nuxt/devtools": "^1.0.6",
     "@nuxt/module-builder": "latest",
     "@nuxtjs/eslint-config-typescript": "latest",
     "@types/node": "^18.17.17",
