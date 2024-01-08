@@ -1,12 +1,12 @@
-import {
+import type {
   AuthenticationConfig,
   ClientOptions,
   RestConfig,
   GraphqlConfig,
   WebSocketConfig
 } from './index'
-import { WebSocket } from 'ws'
-import { FetchOptions } from 'ofetch'
+import type { WebSocket } from 'ws'
+import type { FetchOptions } from 'ofetch'
 
 export interface DirectusClientOptions {
   /**

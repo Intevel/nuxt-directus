@@ -13,7 +13,7 @@ import type {
   ModuleOptions,
   ModuleOptionsPrivate,
   ModuleOptionsPublic
-} from './runtime/types'
+} from './runtime/types/module-options'
 
 export default defineNuxtModule<ModuleOptions>({
   meta: {
