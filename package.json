@@ -9,6 +9,14 @@
     "name": "Conner Luka Bachmann",
     "email": "github@conner-bachmann.de"
   },
+  "build": {
+    "failOnWarn": false,
+    "externals": [
+      "defu",
+      "ofetch",
+      "ufo"
+    ]
+  },
   "contributors": [
     "Intevel <github@conner-bachmann.de>",
     "Sandro Circi <sandro.circi@digitoolmedia.com>",
@@ -64,8 +72,5 @@
     "nuxtdirectus",
     "nuxt-community"
   ],
-  "unbuild": {
-    "failOnWarn": false
-  },
   "packageManager": "pnpm@8.7.6"
 }
