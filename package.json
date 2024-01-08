@@ -26,10 +26,10 @@
     "dist"
   ],
   "scripts": {
-    "prepack": "nuxt-module-build",
+    "prepack": "nuxt-module-build build",
     "dev": "nuxi dev playground",
     "dev:build": "nuxi build playground",
-    "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
+    "dev:prepare": "nuxt-module-build build --stub && nuxi prepare playground",
     "docs": "cd docs && pnpm dev",
     "release": "nuxt-module-build && changelogen --release --push && pnpm publish",
     "lint": "eslint . --fix"
