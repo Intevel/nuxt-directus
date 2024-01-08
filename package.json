@@ -13,7 +13,6 @@
     "failOnWarn": false,
     "externals": [
       "defu",
-      "ofetch",
       "ufo"
     ]
   },
