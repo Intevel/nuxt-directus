@@ -25,8 +25,8 @@ export default defineNuxtModule<ModuleOptions>({
   },
   defaults: {
     url: '',
-    privateStaticToken: '',
-    publicStaticToken: '',
+    staticToken: '',
+    staticTokenServer: '',
     authConfig: {
       authStateName: 'directus.auth',
       userStateName: 'directus.user',
@@ -48,10 +48,10 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     // Private runtimeConfig
-    nuxt.options.runtimeConfig.directus = defu(
-      nuxt.options.runtimeConfig.directus,
+    nuxt.options.runtimeConfig.directus = defu<ModuleOptionsPrivate, Partial<ModuleOptionsPrivate>[]>(
+      nuxt.options.runtimeConfig.directus as ModuleOptionsPrivate,
       {
-        staticToken: options.privateStaticToken,
+        staticToken: options.staticTokenServer,
         moduleConfig: {
           devtools: options.moduleConfig.devtools,
           autoImport: options.moduleConfig.autoImport,
@@ -62,19 +62,18 @@ export default defineNuxtModule<ModuleOptions>({
     )
 
     // Public runtimeConfig
-    nuxt.options.runtimeConfig.public.directus = defu(
-      nuxt.options.runtimeConfig.public.directus,
+    nuxt.options.runtimeConfig.public.directus = defu<ModuleOptionsPublic, Partial<ModuleOptionsPublic>[]>(
+      nuxt.options.runtimeConfig.public.directus as ModuleOptionsPublic,
       {
         url: options.url,
-        staticToken: options.publicStaticToken,
+        staticToken: options.staticToken,
         authConfig: {
           authStateName: options.authConfig.authStateName,
           userStateName: options.authConfig.userStateName,
           useNuxtCookies: options.authConfig.useNuxtCookies,
           refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
-          customCookie: options.authConfig.useNuxtCookies,
           cookieHttpOnly: options.authConfig.cookieHttpOnly,
-          cookieSameSite: options.authConfig.cookieSameSite as boolean | string | undefined, // TODO: understand if it is possible to fix the type mismatch
+          cookieSameSite: options.authConfig.cookieSameSite, // TODO: understand if it is possible to fix the type mismatch
           cookieSecure: options.authConfig.cookieSecure
         },
         moduleConfig: {

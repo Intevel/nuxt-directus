@@ -28,7 +28,7 @@ export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOp
 }
 
 export const useDirectusRest = <T extends Object>(options?: Partial<Omit<DirectusRestConfig, 'authConfig'>>) => {
-  const { staticToken: privateToken } = useRuntimeConfig().directus
+  const { staticTokenServer: privateToken } = useRuntimeConfig().directus
 
   const defaultOptions: Partial<Omit<DirectusRestConfig, 'authConfig'>> = {
     useStaticToken: true,
