@@ -1,8 +1,5 @@
-import NuxtDirectus from '..'
-
 export default defineNuxtConfig({
-  // @ts-ignore
-  modules: [NuxtDirectus],
+  modules: ['../src/module'],
   devtools: true,
   directus: {
     url: 'http://localhost:8055/',

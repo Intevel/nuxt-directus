@@ -7,7 +7,7 @@ import {
   deleteCollection as sdkDeleteCollection
 } from '@directus/sdk'
 import type {
-  DirectusClientConfig,
+  DirectusRestConfig,
   DirectusCollection,
   DirectusCollectionsOptions,
   DirectusCollectionsOptionsAsyncData,
@@ -16,12 +16,8 @@ import type {
 } from '../types'
 import { useAsyncData, computed, toRef, unref } from '#imports'
 
-export function useDirectusCollections<TSchema extends object> (useStaticToken?: boolean | string) {
-  const client = (useStaticToken?: boolean | string) => {
-    return useDirectusRest<TSchema>({
-      useStaticToken
-    })
-  }
+export function useDirectusCollections<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
+  const client = useDirectusRest<TSchema>(config)
 
   async function createCollection <
     TQuery extends Query<TSchema, DirectusCollection<TSchema>>
@@ -30,7 +26,7 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
     params?: DirectusCollectionsOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkCreateCollection(item, params?.query))
+      return await client.request(sdkCreateCollection(item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't create collection.", error.message)
@@ -40,9 +36,11 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
     }
   }
 
-  async function readCollection (
+  async function readCollection <
+    TQuery extends Query<TSchema, DirectusCollection<TSchema>>
+  > (
     collection: Ref<string> | string,
-    params?: DirectusCollectionsOptionsAsyncData
+    params?: DirectusCollectionsOptionsAsyncData<TQuery>
   ) {
     const collectionRef = toRef(collection)
     const key = computed(() => {
@@ -54,12 +52,15 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadCollection(collectionRef.value)), params?.params
+      () => client.request(sdkReadCollection(collectionRef.value)),
+      params?.params
     )
   }
 
-  async function readCollections (
-    params?: DirectusCollectionsOptionsAsyncData
+  async function readCollections <
+    TQuery extends Query<TSchema, DirectusCollection<TSchema>>
+  > (
+    params?: DirectusCollectionsOptionsAsyncData<TQuery>
   ) {
     const key = computed(() => {
       return hash([
@@ -69,7 +70,8 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadCollections()), params?.params
+      () => client.request(sdkReadCollections()),
+      params?.params
     )
   }
 
@@ -81,7 +83,7 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
     params?: DirectusCollectionsOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateCollection(collection, item, params?.query))
+      return await client.request(sdkUpdateCollection(collection, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update collection.", error.message)
@@ -92,11 +94,10 @@ export function useDirectusCollections<TSchema extends object> (useStaticToken?:
   }
 
   async function deleteCollection (
-    collection: string,
-    params?: DirectusClientConfig
+    collection: string
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteCollection(collection))
+      return await client.request(sdkDeleteCollection(collection))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't delete collection.", error.message)

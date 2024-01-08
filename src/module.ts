@@ -4,7 +4,8 @@ import {
   createResolver,
   defineNuxtModule,
   addImportsDir,
-  addPlugin
+  addPlugin,
+  addServerImportsDir
 } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
@@ -19,13 +20,13 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-directus',
     configKey: 'directus',
     compatibility: {
-      nuxt: '^3.0.0'
+      nuxt: '^3.8.0'
     }
   },
   defaults: {
     url: '',
-    privateStaticToken: '',
-    publicStaticToken: '',
+    staticToken: '',
+    staticTokenServer: '',
     authConfig: {
       authStateName: 'directus.auth',
       userStateName: 'directus.user',
@@ -47,10 +48,10 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     // Private runtimeConfig
-    nuxt.options.runtimeConfig.directus = defu(
+    nuxt.options.runtimeConfig.directus = defu<ModuleOptionsPrivate, Partial<ModuleOptionsPrivate>[]>(
       nuxt.options.runtimeConfig.directus,
       {
-        staticToken: options.privateStaticToken,
+        staticToken: options.staticTokenServer,
         moduleConfig: {
           devtools: options.moduleConfig.devtools,
           autoImport: options.moduleConfig.autoImport,
@@ -61,19 +62,18 @@ export default defineNuxtModule<ModuleOptions>({
     )
 
     // Public runtimeConfig
-    nuxt.options.runtimeConfig.public.directus = defu(
+    nuxt.options.runtimeConfig.public.directus = defu<ModuleOptionsPublic, Partial<ModuleOptionsPublic>[]>(
       nuxt.options.runtimeConfig.public.directus,
       {
         url: options.url,
-        staticToken: options.publicStaticToken,
+        staticToken: options.staticToken,
         authConfig: {
           authStateName: options.authConfig.authStateName,
           userStateName: options.authConfig.userStateName,
           useNuxtCookies: options.authConfig.useNuxtCookies,
           refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
-          customCookie: options.authConfig.useNuxtCookies,
           cookieHttpOnly: options.authConfig.cookieHttpOnly,
-          cookieSameSite: options.authConfig.cookieSameSite as boolean | string | undefined, // TODO: understand if it is possible to fix the type mismatch
+          cookieSameSite: options.authConfig.cookieSameSite, // TODO: understand if it is possible to fix the type mismatch
           cookieSecure: options.authConfig.cookieSecure
         },
         moduleConfig: {
@@ -109,6 +109,7 @@ export default defineNuxtModule<ModuleOptions>({
     }
 
     addImportsDir(resolve(runtimeDir, 'composables'))
+    addServerImportsDir(resolve(runtimeDir, 'server', 'utils'))
 
     // Enable Directus inside Nuxt Devtools
     if (options.moduleConfig.devtools) {
@@ -132,12 +133,12 @@ export default defineNuxtModule<ModuleOptions>({
 })
 
 declare module '@nuxt/schema' {
-  interface ConfigSchema {
+  interface NuxtOptions {
     directus?: ModuleOptions;
-    runtimeConfig?: {
-      directus?: ModuleOptionsPrivate;
-      public?: {
-        directus?: ModuleOptionsPublic;
+    runtimeConfig: {
+      directus: ModuleOptionsPrivate;
+      public: {
+        directus: ModuleOptionsPublic;
       }
     };
   }

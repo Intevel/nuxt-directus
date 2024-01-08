@@ -42,11 +42,20 @@
       </button>
       <div>
         List Posts
-        <ul>
+        <ul style="width: fit-content;">
           <li v-for="post in posts" :key="post.id">
-            <h3>{{ post.title }}</h3>
-            <sub>{{ post.slug }} | {{ post.id }}</sub>
-            <p>{{ post.content }}</p>
+            <div>
+              <span
+                style="width: 100%; display: inline-flex; justify-content: space-between; gap: 1rem; align-items: center;"
+              >
+                <h3>{{ post.title }}</h3>
+                <sub>{{ post.status }}</sub>
+              </span>
+              <div>
+                <sub>{{ post.slug }} | {{ post.id }}</sub>
+                <p>{{ post.content }}</p>
+              </div>
+            </div>
           </li>
         </ul>
       </div>
@@ -67,7 +76,7 @@
           <h3>Update or Delete a Post</h3>
           <div>
             <div v-for="post in posts" :key="post.id">
-              <input :id="post.id.toString" v-model="postId" type="radio" :value="post.id">
+              <input :id="post.id" v-model="postId" type="radio" :value="post.id">
               <label for="post.id">{{ post.title }}</label>
             </div>
             <input v-model="postUpdateData.title" type="text" placeholder="Post title">
@@ -111,20 +120,19 @@ interface Schema {
   posts: Post[]
 }
 
-const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
+const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ useStaticToken: true })
 
-const { data: global, error: globalError } = await readSingleton('global', { useStaticToken: true })
+const { data: global, error: globalError } = await readSingleton('global')
 if (!global.value && globalError.value) {
   console.error('Global fetch error:', globalError.value)
 }
 const { data: posts, pending: pendingPosts, refresh: refreshPosts, error: postsError } = await readItems('posts', {
   query: {
-    fields: ['title', 'id', 'slug', 'content']
+    fields: ['title', 'id', 'slug', 'content', 'status']
   },
   params: {
     watch: [user]
-  },
-  useStaticToken: false
+  }
 })
 if (!posts.value && postsError.value) {
   console.error('Posts fetch error:', postsError.value)

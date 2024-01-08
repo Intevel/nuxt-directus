@@ -1,9 +1,8 @@
 import type  {
-  DirectusClientConfig,
   DirectusUser
 } from './index'
 
-export interface DirectusUsersOptions<TQuery> extends DirectusClientConfig {
+export interface DirectusUsersOptions<TQuery> {
   query?: TQuery | undefined;
 }
 

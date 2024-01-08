@@ -10,7 +10,7 @@ import {
   deleteNotifications as sdkDeleteNotifications
 } from '@directus/sdk'
 import type {
-  DirectusClientConfig,
+  DirectusRestConfig,
   DirectusNotification,
   DirectusNotificationsOptions,
   DirectusNotificationsOptionsAsyncData,
@@ -18,12 +18,8 @@ import type {
 } from '../types'
 import { useAsyncData, computed, toRef, unref } from '#imports'
 
-export function useDirectusNotifications<TSchema extends object> (useStaticToken?: boolean | string) {
-  const client = (useStaticToken?: boolean | string) => {
-    return useDirectusRest<TSchema>({
-      useStaticToken
-    })
-  }
+export function useDirectusNotifications<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
+  const client = useDirectusRest<TSchema>(config)
 
   async function createNotification <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
@@ -32,7 +28,7 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
     params?: DirectusNotificationsOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkCreateNotification(item, params?.query))
+      return await client.request(sdkCreateNotification(item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't create notification.", error.message)
@@ -49,7 +45,7 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
     params?: DirectusNotificationsOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkCreateNotifications(item, params?.query))
+      return await client.request(sdkCreateNotifications(item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't create notifications.", error.message)
@@ -75,7 +71,8 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadNotification(idRef.value, params?.query)), params?.params
+      () => client.request(sdkReadNotification(idRef.value, params?.query)),
+      params?.params
     )
   }
 
@@ -92,7 +89,8 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadNotifications(params?.query)), params?.params
+      () => client.request(sdkReadNotifications(params?.query)),
+      params?.params
     )
   }
 
@@ -104,7 +102,7 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
     params?: DirectusNotificationsOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateNotification(id, item, params?.query))
+      return await client.request(sdkUpdateNotification(id, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't read notification.", error.message)
@@ -122,7 +120,7 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
     params?: DirectusNotificationsOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateNotifications(id, item, params?.query))
+      return await client.request(sdkUpdateNotifications(id, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't read notification.", error.message)
@@ -133,11 +131,10 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
   }
 
   async function deleteNotification (
-    id: DirectusNotification<TSchema>['id'],
-    params?: DirectusClientConfig
+    id: DirectusNotification<TSchema>['id']
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteNotification(id))
+      return await client.request(sdkDeleteNotification(id))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't read notification.", error.message)
@@ -148,11 +145,10 @@ export function useDirectusNotifications<TSchema extends object> (useStaticToken
   }
 
   async function deleteNotifications (
-    id: DirectusNotification<TSchema>['id'][],
-    params?: DirectusClientConfig
+    id: DirectusNotification<TSchema>['id'][]
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteNotifications(id))
+      return await client.request(sdkDeleteNotifications(id))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't read notification.", error.message)

@@ -4,7 +4,7 @@ export interface ModuleOptionsPrivate {
    * @default ''
    * @type string
    */
-  privateStaticToken?: string;
+  staticToken?: string;
   /**
   * A series of configs that let you define how the module should be used by Nuxt.
   * @type object
@@ -50,7 +50,7 @@ export interface ModuleOptionsPublic {
    * @default ''
    * @type string
    */
-  publicStaticToken?: string;
+  staticToken?: string;
   /**
   * A series of configs that let you define Nuxt as the auth cookie handler.
   * @default Directus handles auth cookies
@@ -114,4 +114,4 @@ export interface ModuleOptionsPublic {
   }
 }
 
-export type ModuleOptions = ModuleOptionsPrivate & ModuleOptionsPublic;
+export type ModuleOptions = Omit<ModuleOptionsPrivate, 'staticToken'> & { staticTokenServer?: string } & ModuleOptionsPublic;

@@ -10,7 +10,7 @@ import {
   deleteFiles as sdkDeleteFiles
 } from '@directus/sdk'
 import type {
-  DirectusClientConfig,
+  DirectusRestConfig,
   DirectusFile,
   DirectusFilesOptions,
   DirectusFilesOptionsAsyncData,
@@ -18,12 +18,8 @@ import type {
 } from '../types'
 import { useAsyncData, computed, toRef, unref } from '#imports'
 
-export function useDirectusFiles<TSchema extends object> (useStaticToken?: boolean | string) {
-  const client = (useStaticToken?: boolean | string) => {
-    return useDirectusRest<TSchema>({
-      useStaticToken
-    })
-  }
+export function useDirectusFiles<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
+  const client = useDirectusRest<TSchema>(config)
 
   async function uploadFiles <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
@@ -32,7 +28,7 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
     params?: DirectusFilesOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUploadFiles(data, params?.query))
+      return await client.request(sdkUploadFiles(data, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't upload files.", error.message)
@@ -50,7 +46,7 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
     params?: DirectusFilesOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkImportFile(url, data, params?.query))
+      return await client.request(sdkImportFile(url, data, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't import file.", error.message)
@@ -76,7 +72,8 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadFile(idRef.value, params?.query)), params?.params
+      () => client.request(sdkReadFile(idRef.value, params?.query)),
+      params?.params
     )
   }
 
@@ -93,7 +90,8 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      async () => await client(params?.useStaticToken || useStaticToken).request(sdkReadFiles(params?.query)), params?.params
+      () => client.request(sdkReadFiles(params?.query)),
+      params?.params
     )
   }
 
@@ -105,7 +103,7 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
     params?: DirectusFilesOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateFile(id, item, params?.query))
+      return await client.request(sdkUpdateFile(id, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update file.", error.message)
@@ -123,7 +121,7 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
     params?: DirectusFilesOptions<TQuery>
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkUpdateFiles(id, item, params?.query))
+      return await client.request(sdkUpdateFiles(id, item, params?.query))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't update files.", error.message)
@@ -134,11 +132,10 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
   }
 
   async function deleteFile (
-    id: DirectusFile<TSchema>['id'],
-    params?: DirectusClientConfig
+    id: DirectusFile<TSchema>['id']
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteFile(id))
+      return await client.request(sdkDeleteFile(id))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't delete file.", error.message)
@@ -149,11 +146,10 @@ export function useDirectusFiles<TSchema extends object> (useStaticToken?: boole
   }
 
   async function deleteFiles (
-    id: DirectusFile<TSchema>['id'][],
-    params?: DirectusClientConfig
+    id: DirectusFile<TSchema>['id'][]
   ) {
     try {
-      return await client(params?.useStaticToken || useStaticToken).request(sdkDeleteFiles(id))
+      return await client.request(sdkDeleteFiles(id))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't delete files.", error.message)

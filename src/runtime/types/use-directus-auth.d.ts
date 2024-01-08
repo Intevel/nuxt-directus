@@ -1,7 +1,3 @@
-import {
-  DirectusClientConfig
-} from './index'
-
-export interface DirectusInviteUser extends DirectusClientConfig {
+export interface DirectusInviteUser {
   invite_url?: string;
 }

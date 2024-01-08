@@ -1,8 +1,6 @@
-import type  {
-  DirectusClientConfig
-} from './index'
+import type { AsyncDataOptions } from '#app'
 
-export interface DirectusFilesOptions<TQuery> extends DirectusClientConfig {
+export interface DirectusFilesOptions<TQuery> {
   query?: TQuery | undefined;
 }
 

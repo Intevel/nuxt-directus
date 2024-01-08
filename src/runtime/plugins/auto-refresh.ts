@@ -9,7 +9,7 @@ export default defineNuxtPlugin((nuxtApp) => {
     const { setUser } = useDirectusUsers()
 
     if (!tokens.value?.access_token && (refreshToken().value || !useNuxtCookies)) {
-      const client = useDirectusRest()
+      const client = useDirectusRest({ useStaticToken: false })
       const { data: refreshData, error: refreshError } = await useAsyncData<{ tokens: AuthenticationData, user: DirectusUser<any>}>(
         async () => {
           const tokens = await client.request(useNuxtCookies ? refresh('json', refreshToken().value) : refresh('cookie'))

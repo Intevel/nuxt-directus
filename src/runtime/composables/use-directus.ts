@@ -8,86 +8,96 @@ import {
 } from '@directus/sdk'
 import WebSocket from 'ws'
 import type {
-  ClientOptions,
   DirectusRealtimeConfig,
   DirectusClientOptions,
   DirectusGraphqlConfig,
-  DirectusRestConfig,
-  GraphqlConfig,
-  RestConfig
+  DirectusRestConfig
 } from '../types'
 import { useRuntimeConfig } from '#imports'
 
-export const useDirectus = <T extends Object>(options?: DirectusClientOptions) => {
-  const configUrl = useRuntimeConfig().public.directus.url
+export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOptions>) => {
+  const { url } = useRuntimeConfig().public.directus
 
-  const defaultOptions: ClientOptions = {
-    globals: {
-      fetch: $fetch.create(options?.fetchOptions ?? {})
+  const defaultOptions: DirectusClientOptions = {
+    url,
+    clientOptions: {
+      globals: {
+        fetch: $fetch.create(options?.fetchOptions ?? {})
+      }
     }
   }
 
-  const clientOptions = defu(options, defaultOptions)
+  const config = defu(options, defaultOptions)
 
-  return createDirectus<T>(options?.url ?? configUrl, clientOptions)
+  return createDirectus<T>(config.url!, config.clientOptions)
 }
 
-export const useDirectusRest = <T extends Object>(config?: DirectusRestConfig) => {
-  const { moduleConfig, authConfig } = useRuntimeConfig().public.directus
+export const useDirectusRest = <T extends Object>(options?: Partial<DirectusRestConfig>) => {
+  const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  // TODO: add configs for oFetch once the following is fixed and released and check if `credentials: 'include'` works
-  // https://github.com/directus/directus/issues/19747
-  const defaultConfig: RestConfig = {
-    credentials: 'include'
+  const defaultOptions: Partial<DirectusRestConfig> = {
+    authConfig: {
+      autoRefresh,
+      storage: useDirectusTokens(options?.useStaticToken)
+    },
+    restConfig: {
+      credentials: 'include'
+    }
   }
 
-  const options = defu(config, defaultConfig)
+  const config = defu(options, defaultOptions)
 
-  const client = useDirectus<T>(config?.clientOptions).with(authentication(
-    authConfig.useNuxtCookies ? 'json' : 'cookie', {
-      autoRefresh: moduleConfig.autoRefresh,
-      storage: useDirectusTokens(config?.useStaticToken)
-    })).with(rest(options))
+  const client = useDirectus<T>(config?.options)
+    .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
+    .with(rest(config.restConfig))
 
   return client
 }
 
-export const useDirectusGraphql = <T extends Object>(config?: DirectusGraphqlConfig) => {
-  const { moduleConfig, authConfig } = useRuntimeConfig().public.directus
+export const useDirectusGraphql = <T extends Object>(options?: Partial<DirectusGraphqlConfig>) => {
+  const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const defaultConfig: GraphqlConfig = {
-    credentials: 'include'
+  const defaultOptions: Partial<DirectusGraphqlConfig> = {
+    authConfig: {
+      autoRefresh,
+      storage: useDirectusTokens(options?.useStaticToken)
+    },
+    graphqlConfig: {
+      credentials: 'include'
+    }
   }
 
-  const options = defu(config, defaultConfig)
+  const config = defu(options, defaultOptions)
 
-  const client = useDirectus<T>(config?.clientOptions).with(authentication(
-    authConfig.useNuxtCookies ? 'json' : 'cookie', {
-      autoRefresh: moduleConfig.autoRefresh,
-      credentials: 'include',
-      storage: useDirectusTokens(config?.useStaticToken)
-    })).with(graphql(options))
+  const client = useDirectus<T>(config?.options)
+    .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
+    .with(graphql(config.graphqlConfig))
 
   return client
 }
 
-export const useDirectusRealtime = <T extends Object>(config?: DirectusRealtimeConfig) => {
-  const { moduleConfig, authConfig } = useRuntimeConfig().public.directus
+export const useDirectusRealtime = <T extends Object>(options?: Partial<DirectusRealtimeConfig>) => {
+  const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const defaultOptions: ClientOptions = {
-    globals: {
-      WebSocket
+  const defaultOptions: Partial<DirectusRealtimeConfig> = {
+    authConfig: {
+      autoRefresh,
+      storage: useDirectusTokens(options?.useStaticToken)
+    },
+    options: {
+      clientOptions: {
+        globals: {
+          WebSocket
+        }
+      }
     }
   }
 
-  const options = defu(config?.clientOptions, defaultOptions)
+  const config = defu(options, defaultOptions)
 
-  const client = useDirectus<T>(options).with(authentication(
-    authConfig.useNuxtCookies ? 'json' : 'cookie', {
-      autoRefresh: moduleConfig.autoRefresh,
-      credentials: 'include',
-      storage: useDirectusTokens(config?.useStaticToken)
-    })).with(realtime(config?.websocketConfig))
+  const client = useDirectus<T>(config?.options)
+    .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
+    .with(realtime(config?.websocketConfig))
 
   return client
 }
