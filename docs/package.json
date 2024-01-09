@@ -12,13 +12,13 @@
   "author": "Conner Bachmann <github@conner-bachmann.de>",
   "license": "MIT",
   "devDependencies": {
-    "@nuxt-themes/docus": "^1.8.1",
-    "@nuxthq/studio": "^0.7.2",
-    "@nuxtjs/plausible": "^0.2.1",
-    "@types/uuid": "^9.0.1",
-    "nuxt": "^3.2.0"
+    "@nuxt-themes/docus": "^1.15.0",
+    "@nuxthq/studio": "^1.0.6",
+    "@nuxtjs/plausible": "^0.2.4",
+    "@types/uuid": "^9.0.7",
+    "nuxt": "^3.9.1"
   },
   "dependencies": {
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.1"
   }
 }
