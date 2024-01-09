@@ -235,6 +235,7 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
   }
 
   return {
+    client,
     createItem,
     createItems,
     readItem,

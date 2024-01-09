@@ -108,6 +108,7 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
   }
 
   return {
+    client,
     createCollection,
     readCollection,
     readCollections,

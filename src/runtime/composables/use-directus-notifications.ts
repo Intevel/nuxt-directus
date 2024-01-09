@@ -159,6 +159,7 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
   }
 
   return {
+    client,
     createNotification,
     createNotifications,
     readNotification,

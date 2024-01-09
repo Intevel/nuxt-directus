@@ -45,6 +45,7 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
   }
 
   return {
+    client,
     readRevision,
     readRevisions
   }

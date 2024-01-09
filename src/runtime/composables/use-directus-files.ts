@@ -160,6 +160,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   }
 
   return {
+    client,
     uploadFiles,
     importFile,
     readFile,

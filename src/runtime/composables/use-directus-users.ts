@@ -231,6 +231,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   const user = useState<Partial<DirectusUser<TSchema>> | undefined>(userStateName, () => undefined)
 
   return {
+    client,
     createUser,
     createUsers,
     deleteUser,

@@ -174,6 +174,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
 
   return {
     acceptUserInvite,
+    client,
     inviteUser,
     login,
     logout,
