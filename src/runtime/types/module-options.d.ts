@@ -106,7 +106,7 @@ export interface ModuleOptionsPublic {
   */
   moduleConfig: {
     /**
-     * Whether to automatically refresh the access token when it expires.
+     * Whether to automatically refresh the access token and user data.
      * @default true
      * @type boolean
      */
