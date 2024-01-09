@@ -3,6 +3,7 @@ import { defu } from 'defu'
 import {
   createResolver,
   defineNuxtModule,
+  addImports,
   addImportsDir,
   addPlugin,
   addServerImportsDir
@@ -87,18 +88,13 @@ export default defineNuxtModule<ModuleOptions>({
       const prefix = options.moduleConfig.autoImportPrefix
       const suffix = options.moduleConfig.autoImportSuffix
 
-      const directusImports = Object.keys(DirectusSDK).map((key) => {
-        return prefix + (prefix ? (key.charAt(0).toUpperCase() + key.slice(1)) : key) + suffix
-      })
-
-      nuxt.options.imports = defu(nuxt.options.imports, {
-        presets: [
-          {
-            from: '@directus/sdk',
-            imports: directusImports
-          }
-        ]
-      })
+      Object.keys(DirectusSDK).forEach(name =>
+        addImports({
+          name,
+          as: (prefix + (prefix ? (name.charAt(0).toUpperCase() + name.slice(1)) : name) + suffix),
+          from: '@directus/sdk'
+        })
+      )
     }
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
