@@ -40,7 +40,7 @@ export default defineNuxtModule<ModuleOptions>({
       devtools: false,
       autoRefresh: true,
       autoImport: false,
-      autoImportPrefix: '',
+      autoImportPrefix: 'sdk',
       autoImportSuffix: ''
     }
   },
