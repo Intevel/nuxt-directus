@@ -39,7 +39,7 @@ function submitFeedback (feedback: string) {
 <style scoped>
 .feedback-box-wrapper {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   flex-direction: column;
   text-align: start;
   padding: 1rem;
@@ -59,7 +59,7 @@ h2 {
 
 .feedback-box-list {
   display: flex;
-  justify-content: start;
+  justify-content: flex-start;
   flex-direction: row;
   margin-top: 1rem;
 }
