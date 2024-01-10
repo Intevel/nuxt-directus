@@ -21,6 +21,14 @@ import { useAsyncData, computed, toRef, unref } from '#imports'
 export function useDirectusFiles<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
 
+  /**
+   * Upload/create a new file.
+   *
+   * @param data Formdata object.
+   * @param query The query parameters.
+   *
+   * @returns Returns the file object for the uploaded file, or an array of file objects if multiple files were uploaded at once.
+   */
   async function uploadFiles <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
@@ -38,6 +46,15 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Import a file from the web.
+   *
+   * @param url The url to import the file from.
+   * @param data Formdata object.
+   * @param query The query parameters.
+   *
+   * @returns Returns the file object for the imported file.
+   */
   async function importFile <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
@@ -56,6 +73,16 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Retrieve a single file by primary key.
+   *
+   * @param key The primary key of the file.
+   * @param query The query parameters.
+   *
+   * @returns Returns a file object if a valid primary key was provided.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function readFile <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
@@ -77,6 +104,13 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     )
   }
 
+  /**
+ * List all files that exist in Directus.
+ *
+ * @param query The query parameters.
+ *
+ * @returns An array of up to limit file objects. If no items are available, data will be an empty array.
+ */
   async function readFiles <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
@@ -95,6 +129,17 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     )
   }
 
+  /**
+   * Update an existing file, and/or replace it's file contents.
+   *
+   * @param key The primary key of the file.
+   * @param item
+   * @param query The query parameters.
+   *
+   * @returns Returns the file object for the updated file.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function updateFile <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
@@ -113,6 +158,17 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Update multiple files at the same time.
+   *
+   * @param keys The primary key of the file.
+   * @param item
+   * @param query The query parameters.
+   *
+   * @returns Returns the file objects for the updated files.
+   *
+   * @throws Will throw if keys is empty
+   */
   async function updateFiles <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
@@ -131,6 +187,15 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Delete an existing file.
+   *
+   * @param key The primary key of the file.
+   *
+   * @returns Nothing.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function deleteFile (
     id: DirectusFile<TSchema>['id']
   ) {
@@ -145,6 +210,15 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+ * Delete multiple files at once.
+ *
+ * @param keys The primary keys of the files
+ *
+ * @returns Nothing.
+ *
+ * @throws Will throw if keys is empty.
+ */
   async function deleteFiles (
     id: DirectusFile<TSchema>['id'][]
   ) {
@@ -160,6 +234,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   }
 
   return {
+    client,
     uploadFiles,
     importFile,
     readFile,

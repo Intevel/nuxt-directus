@@ -16,7 +16,7 @@
           </button>
         </form>
       </div>
-      <span v-if="user">
+      <span v-else>
         <button @click="logout()">
           Sign out
         </button>

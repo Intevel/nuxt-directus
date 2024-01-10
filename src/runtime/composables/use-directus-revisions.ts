@@ -14,6 +14,16 @@ import { useAsyncData, computed, toRef, unref } from '#imports'
 export function useDirectusRevisions<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
 
+  /**
+   * List an existing Revision by primary key.
+   *
+   * @param key The primary key of the dashboard.
+   * @param query The query parameters.
+   *
+   * @returns Returns a Revision object if a valid primary key was provided.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function readRevision<
     TQuery extends Query<TSchema, DirectusRevision<TSchema>>
   > (
@@ -31,6 +41,13 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
     )
   }
 
+  /**
+   * List all Revisions that exist in Directus.
+   *
+   * @param query The query parameters.
+   *
+   * @returns An array of up to limit Revision objects. If no items are available, data will be an empty array.
+   */
   async function readRevisions<
     TQuery extends Query<TSchema, DirectusRevision<TSchema>>
   > (params?: DirectusRevisionsOptionsAsyncData<TQuery>) {
@@ -45,6 +62,7 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
   }
 
   return {
+    client,
     readRevision,
     readRevisions
   }

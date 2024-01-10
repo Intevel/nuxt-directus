@@ -21,6 +21,14 @@ import { useAsyncData, computed, toRef, unref } from '#imports'
 export function useDirectusNotifications<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
 
+  /**
+   * Create a new notification.
+   *
+   * @param item The notification to create.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the notification object for the created notification.
+   */
   async function createNotification <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
@@ -38,6 +46,14 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     }
   }
 
+  /**
+   * Create multiple new notifications.
+   *
+   * @param items The notifications to create.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the notification object for the created notification.
+   */
   async function createNotifications <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
@@ -55,6 +71,16 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     }
   }
 
+  /**
+   * List an existing notification by primary key.
+   *
+   * @param key The primary key of the dashboard.
+   * @param query The query parameters.
+   *
+   * @returns Returns the requested notification object.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function readNotification <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
@@ -76,6 +102,13 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     )
   }
 
+  /**
+   * List all notifications that exist in Directus.
+   *
+   * @param query The query parameters.
+   *
+   * @returns An array of up to limit notification objects. If no items are available, data will be an empty array.
+   */
   async function readNotifications <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
@@ -94,6 +127,17 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     )
   }
 
+  /**
+   * Update an existing notification.
+   *
+   * @param key The primary key of the notification.
+   * @param item
+   * @param query
+   *
+   * @returns Returns the notification object for the updated notification.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function updateNotification <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
@@ -112,6 +156,17 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     }
   }
 
+  /**
+   * Update multiple existing notifications.
+   *
+   * @param keys The primary keys of the notifications.
+   * @param item
+   * @param query
+   *
+   * @returns Returns the notification objects for the updated notifications.
+   *
+   * @throws Will throw if keys is empty.
+   */
   async function updateNotifications <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
@@ -130,6 +185,15 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     }
   }
 
+  /**
+   * Delete an existing notification.
+   *
+   * @param key The primary key of the notifications.
+   *
+   * @returns Nothing.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function deleteNotification (
     id: DirectusNotification<TSchema>['id']
   ) {
@@ -144,6 +208,15 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     }
   }
 
+  /**
+   * Delete multiple existing notifications.
+   *
+   * @param keys The primary keys of the notifications.
+   *
+   * @returns Nothing.
+   *
+   * @throws Will throw if keys is empty.
+   */
   async function deleteNotifications (
     id: DirectusNotification<TSchema>['id'][]
   ) {
@@ -159,6 +232,7 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
   }
 
   return {
+    client,
     createNotification,
     createNotifications,
     readNotification,

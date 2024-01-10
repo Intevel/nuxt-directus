@@ -38,6 +38,14 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
   const { tokens } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
 
+  /**
+   * Create a new user.
+   *
+   * @param userInfo The user to create.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the user object for the created user.
+   */
   async function createUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
@@ -55,6 +63,14 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     }
   }
 
+  /**
+   * Create multiple new users.
+   *
+   * @param userInfo The user to create.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the user objects for the created users.
+   */
   async function createUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
@@ -76,6 +92,13 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     user.value = value
   }
 
+  /**
+   * Retrieve the currently authenticated user.
+   *
+   * @param query The query parameters.
+   *
+   * @returns Returns the user object for the currently authenticated user.
+   */
   async function readMe <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
@@ -100,6 +123,16 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     }
   }
 
+  /**
+   * List an existing user by primary key.
+   *
+   * @param key The primary key of the user.
+   * @param query The query parameters.
+   *
+   * @returns Returns the requested user object.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function readUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
@@ -121,6 +154,13 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     )
   }
 
+  /**
+   * List all users that exist in Directus.
+   *
+   * @param query The query parameters.
+   *
+   * @returns An array of up to limit user objects. If no items are available, data will be an empty array.
+   */
   async function readUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
@@ -139,6 +179,14 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     )
   }
 
+  /**
+   * Update the authenticated user.
+   *
+   * @param item The user data to update.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the updated user object for the authenticated user.
+   */
   async function updateMe <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
@@ -162,6 +210,17 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     }
   }
 
+  /**
+   * Update an existing user.
+   *
+   * @param key The primary key of the user.
+   * @param item The user data to update.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the user object for the updated user.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function updateUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
@@ -180,6 +239,17 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     }
   }
 
+  /**
+   * Update multiple existing users.
+   *
+   * @param keys The primary key of the users.
+   * @param item The user data to update.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the user objects for the updated users.
+   *
+   * @throws Will throw if keys is empty.
+   */
   async function updateUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
@@ -198,9 +268,17 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     }
   }
 
+  /**
+   * Delete an existing user.
+   *
+   * @param key The primary key of the user.
+   *
+   * @returns Nothing.
+   *
+   * @throws Will throw if key is empty.
+   */
   async function deleteUser (
-    id: DirectusUser<TSchema>['id'],
-    params: DirectusClientConfig
+    id: DirectusUser<TSchema>['id']
   ) {
     try {
       return await client.request(sdkDeleteUser(id))
@@ -213,9 +291,17 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     }
   }
 
+  /**
+   * Delete multiple existing users.
+   *
+   * @param keys The primary key of the users.
+   *
+   * @returns Nothing.
+   *
+   * @throws Will throw if keys is empty.
+   */
   async function deleteUsers (
-    id: DirectusUser<TSchema>['id'][],
-    params: DirectusClientConfig
+    id: DirectusUser<TSchema>['id'][]
   ) {
     try {
       return await client.request(sdkDeleteUsers(id))
@@ -231,6 +317,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   const user = useState<Partial<DirectusUser<TSchema>> | undefined>(userStateName, () => undefined)
 
   return {
+    client,
     createUser,
     createUsers,
     deleteUser,

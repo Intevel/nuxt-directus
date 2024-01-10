@@ -15,6 +15,11 @@ import type {
 } from '../types'
 import { useRuntimeConfig } from '#imports'
 
+/**
+ * Provides the core functionalities to create a custom Directus client.
+ *
+ * @returns createDirectus.
+ */
 export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOptions>) => {
   const { url } = useRuntimeConfig().public.directus
 
@@ -32,6 +37,11 @@ export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOp
   return createDirectus<T>(config.url!, config.clientOptions)
 }
 
+/**
+ * Creates a client to communicate with the Directus REST API.
+ *
+ * @returns A Directus REST client.
+ */
 export const useDirectusRest = <T extends Object>(options?: Partial<DirectusRestConfig>) => {
   const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
@@ -54,6 +64,11 @@ export const useDirectusRest = <T extends Object>(options?: Partial<DirectusRest
   return client
 }
 
+/**
+ * Creates a client to communicate with the Directus GraphQL API.
+ *
+ * @returns A Directus GraphQL client.
+ */
 export const useDirectusGraphql = <T extends Object>(options?: Partial<DirectusGraphqlConfig>) => {
   const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
@@ -76,6 +91,11 @@ export const useDirectusGraphql = <T extends Object>(options?: Partial<DirectusG
   return client
 }
 
+/**
+ * Creates a client to communicate with the Directus Realtime API.
+ *
+ * @returns A Directus Realtime client.
+ */
 export const useDirectusRealtime = <T extends Object>(options?: Partial<DirectusRealtimeConfig>) => {
   const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 

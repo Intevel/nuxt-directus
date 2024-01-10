@@ -19,6 +19,14 @@ import { useAsyncData, computed, toRef, unref } from '#imports'
 export function useDirectusCollections<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
 
+  /**
+   * Create a new Collection. This will create a new table in the database as well.
+   *
+   * @param item This endpoint doesn't currently support any query parameters.
+   * @param query Optional return data query.
+   *
+   * @returns The collection object for the collection created in this request.
+   */
   async function createCollection <
     TQuery extends Query<TSchema, DirectusCollection<TSchema>>
   > (
@@ -36,6 +44,16 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
     }
   }
 
+  /**
+   * Retrieve a single collection by table name.
+   *
+   * @param collection The collection name.
+   * @param params useAsyncData params.
+   *
+   * @returns A collection object.
+   *
+   * @throws Will throw if collection is empty.
+   */
   async function readCollection <
     TQuery extends Query<TSchema, DirectusCollection<TSchema>>
   > (
@@ -57,6 +75,13 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
     )
   }
 
+  /**
+   * List the available collections.
+   *
+   * @param params useAsyncData params.
+   *
+   * @returns An array of collection objects.
+   */
   async function readCollections <
     TQuery extends Query<TSchema, DirectusCollection<TSchema>>
   > (
@@ -75,6 +100,17 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
     )
   }
 
+  /**
+   * Update the metadata for an existing collection.
+   *
+   * @param collection The collection name.
+   * @param item
+   * @param query
+   *
+   * @returns The collection object for the updated collection in this request.
+   *
+   * @throws Will throw if collection is empty.
+   */
   async function updateCollection <
     TQuery extends Query<TSchema, DirectusCollection<TSchema>>
   > (
@@ -93,6 +129,13 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
     }
   }
 
+  /**
+   * Delete a collection.
+   *
+   * @param collection The collection name.
+   *
+   * @returns Nothing.
+   */
   async function deleteCollection (
     collection: string
   ) {
@@ -108,6 +151,7 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
   }
 
   return {
+    client,
     createCollection,
     readCollection,
     readCollections,
