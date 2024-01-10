@@ -36,6 +36,15 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
   } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
   const defaultMode: AuthenticationMode = useNuxtCookies ? 'json' : 'cookie'
 
+  /**
+   * Retrieve a temporary access token and refresh token.
+   *
+   * @param identifier Email address of the user you're retrieving the access token for.
+   * @param password Password of the user.
+   * @param options Optional login settings
+   *
+   * @returns The access and refresh tokens for the session
+   */
   async function login (
     identifier: string, password: string, options?: LoginOptions
   ) {
@@ -65,6 +74,14 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     }
   }
 
+  /**
+   * Retrieve a new access token using a refresh token.
+   *
+   * @param mode Whether to retrieve the refresh token in the JSON response, or in a httpOnly secure cookie. One of json, cookie.
+   * @param refreshToken The refresh token to use. If you have the refresh token in a cookie through /auth/login, you don't have to submit it here.
+   *
+   * @returns The new access and refresh tokens for the session.
+   */
   async function refreshTokens ({
     refreshToken,
     mode
@@ -101,6 +118,13 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     }
   }
 
+  /**
+   * Invalidate the refresh token thus destroying the user's session.
+   *
+   * @param refreshToken The refresh token to invalidate. If you have the refresh token in a cookie through /auth/login, you don't have to submit it here.
+   *
+   * @returns Empty body.
+   */
   async function logout (
     refreshToken?: string
   ) {
@@ -117,6 +141,14 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     }
   }
 
+  /**
+   * Request a password reset email to be sent to the given user.
+   *
+   * @param email Email address of the user you're requesting a password reset for.
+   * @param resetUrl Provide a custom reset url which the link in the email will lead to. The reset token will be passed as a parameter.
+   *
+   * @returns Empty body.
+   */
   async function passwordRequest (
     email: string,
     resetUrl?: string
@@ -132,6 +164,14 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     }
   }
 
+  /**
+   * The request a password reset endpoint sends an email with a link to the admin app (or a custom route) which in turn uses this endpoint to allow the user to reset their password.
+   *
+   * @param token Password reset token, as provided in the email sent by the request endpoint.
+   * @param password New password for the user.
+   *
+   * @returns Empty body.
+   */
   async function passwordReset (
     token: string,
     password: string
@@ -147,6 +187,15 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     }
   }
 
+  /**
+   * Invite a new user by email.
+   *
+   * @param email User email to invite.
+   * @param role Role of the new user.
+   * @param invite_url Provide a custom invite url which the link in the email will lead to. The invite token will be passed as a parameter.
+   *
+   * @returns Nothing.
+   */
   async function inviteUser (
     email: string,
     role: string,
@@ -163,6 +212,14 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     }
   }
 
+  /**
+   * Accept your invite. The invite user endpoint sends the email a link to the Admin App.
+   *
+   * @param token Accept invite token.
+   * @param password Password for the user.
+   *
+   * @returns Nothing.
+   */
   async function acceptUserInvite (
     token: string,
     password: string

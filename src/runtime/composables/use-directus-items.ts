@@ -46,6 +46,15 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+ * Create new items in the given collection.
+ *
+ * @param collection The collection of the item.
+ * @param items The items to create.
+ * @param query Optional return data query.
+ *
+ * @returns Returns the item objects of the item that were created.
+ */
   async function createItems <
     Collection extends keyof TSchema,
     Item extends Partial<UnpackList<TSchema[Collection]>>[],
@@ -66,6 +75,19 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Get an item that exist in a particular Directus collection.
+   *
+   * @param collection The collection of the item.
+   * @param id The primary key of the item.
+   * @param params The query parameters.
+   *
+   * @returns Returns an item object if a valid primary key was provided.
+   *
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if collection is empty.
+   * @throws Will throw if key is empty.
+   */
   async function readItem <
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
@@ -91,6 +113,17 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     )
   }
 
+  /**
+   * List all items that exist in a particular Directus collection.
+   *
+   * @param collection The collection of the items.
+   * @param params The query parameters.
+   *
+   * @returns An array of up to limit item objects. If no items are available, data will be an empty array.
+   *
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if collection is empty.
+   */
   async function readItems <
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
@@ -113,6 +146,17 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     )
   }
 
+  /**
+   * List the singleton item in Directus.
+   *
+   * @param collection The collection of the items.
+   * @param params The query parameters.
+   *
+   * @returns An array of up to limit item objects. If no items are available, data will be an empty array.
+   *
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if collection is empty.
+   */
   async function readSingleton <
     Collection extends SingletonCollections<TSchema>,
     TQuery extends Query<TSchema, TSchema[Collection]>
@@ -135,6 +179,20 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     )
   }
 
+  /**
+   * Update an existing item.
+   *
+   * @param collection The collection of the item.
+   * @param key The primary key of the item.
+   * @param item The item data to update.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the item object of the item that was updated.
+   *
+   * @throws Will throw if key is empty.
+   * @throws Will throw if collection is empty.
+   * @throws Will throw if collection is a core collection.
+   */
   async function updateItem <
     Collection extends keyof TSchema,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
@@ -156,6 +214,20 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Update multiple items at the same time.
+   *
+   * @param collection The collection of the items.
+   * @param keysOrQuery The primary keys or a query.
+   * @param item The item data to update.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the item objects for the updated items.
+   *
+   * @throws Will throw if keysOrQuery is empty.
+   * @throws Will throw if collection is empty.
+   * @throws Will throw if collection is a core collection.
+   */
   async function updateItems <
     Collection extends keyof TSchema,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
@@ -177,6 +249,18 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Update a singleton item.
+   *
+   * @param collection The collection of the items.
+   * @param item The item data to update.
+   * @param query The query parameters.
+   *
+   * @returns An array of up to limit item objects. If no items are available, data will be an empty array.
+   *
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if collection is empty.
+   */
   async function updateSingleton <
     Collection extends SingletonCollections<TSchema>,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
@@ -197,6 +281,18 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Delete an existing item.
+   *
+   * @param collection The collection of the item.
+   * @param key The primary key of the item.
+   *
+   * @returns Nothing.
+   *
+   * @throws Will throw if collection is empty.
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if key is empty.
+   */
   async function deleteItem <
     Collection extends keyof TSchema,
     ID extends string | number
@@ -215,6 +311,18 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     }
   }
 
+  /**
+   * Delete multiple existing items.
+   *
+   * @param collection The collection of the items.
+   * @param keysOrQuery The primary keys or a query.
+   *
+   * @returns Nothing.
+   *
+   * @throws Will throw if collection is empty.
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if keysOrQuery is empty.
+   */
   async function deleteItems <
     Collection extends keyof TSchema,
     TQuery extends Query<TSchema, TSchema[Collection]>,
