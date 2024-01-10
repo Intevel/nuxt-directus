@@ -12,7 +12,7 @@ export interface DirectusClientOptions {
   /**
    * The URL of the Directus instance. The default value is defined in the Nuxt runtime config.
    */
-  url: string;
+  baseURL: string;
   clientOptions: ClientOptions;
   fetchOptions?: Omit<FetchOptions, 'baseURL'>;
 }

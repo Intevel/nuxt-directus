@@ -13,8 +13,12 @@ import { useRuntimeConfig } from '#imports'
 export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOptions>) => {
   const { url } = useRuntimeConfig().public.directus
 
+  if (!url) {
+    throw new Error('The Directus URL is not defined. Please define it in your Nuxt runtimeConfig.')
+  }
+
   const defaultOptions: DirectusClientOptions = {
-    url,
+    baseURL: url,
     clientOptions: {
       globals: {
         fetch: $fetch.create(options?.fetchOptions ?? {})
@@ -24,7 +28,7 @@ export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOp
 
   const config = defu(options, defaultOptions)
 
-  return createDirectus<T>(config.url!, config.clientOptions)
+  return createDirectus<T>(config.baseURL!, config.clientOptions)
 }
 
 export const useDirectusRest = <T extends Object>(options?: Partial<Omit<DirectusRestConfig, 'authConfig'>>) => {
