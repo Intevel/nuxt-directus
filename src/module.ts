@@ -49,39 +49,39 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     // Private runtimeConfig
-    nuxt.options.runtimeConfig.directus = defu<ModuleOptionsPrivate, Partial<ModuleOptionsPrivate>[]>(
-      nuxt.options.runtimeConfig.directus,
-      {
-        staticToken: options.staticTokenServer,
-        moduleConfig: {
-          devtools: options.moduleConfig.devtools,
-          autoImport: options.moduleConfig.autoImport,
-          autoImportPrefix: options.moduleConfig.autoImportPrefix,
-          autoImportSuffix: options.moduleConfig.autoImportSuffix
-        }
+    nuxt.options.runtimeConfig.directus = defu<
+      ModuleOptionsPrivate,
+      Partial<ModuleOptionsPrivate>[]
+    >(nuxt.options.runtimeConfig.directus, {
+      staticToken: options.staticTokenServer,
+      moduleConfig: {
+        devtools: options.moduleConfig.devtools,
+        autoImport: options.moduleConfig.autoImport,
+        autoImportPrefix: options.moduleConfig.autoImportPrefix,
+        autoImportSuffix: options.moduleConfig.autoImportSuffix
       }
-    )
+    })
 
     // Public runtimeConfig
-    nuxt.options.runtimeConfig.public.directus = defu<ModuleOptionsPublic, Partial<ModuleOptionsPublic>[]>(
-      nuxt.options.runtimeConfig.public.directus,
-      {
-        url: options.url,
-        staticToken: options.staticToken,
-        authConfig: {
-          authStateName: options.authConfig.authStateName,
-          userStateName: options.authConfig.userStateName,
-          useNuxtCookies: options.authConfig.useNuxtCookies,
-          refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
-          cookieHttpOnly: options.authConfig.cookieHttpOnly,
-          cookieSameSite: options.authConfig.cookieSameSite, // TODO: understand if it is possible to fix the type mismatch
-          cookieSecure: options.authConfig.cookieSecure
-        },
-        moduleConfig: {
-          autoRefresh: options.moduleConfig.autoRefresh
-        }
+    nuxt.options.runtimeConfig.public.directus = defu<
+      ModuleOptionsPublic,
+      Partial<ModuleOptionsPublic>[]
+    >(nuxt.options.runtimeConfig.public.directus, {
+      url: options.url,
+      staticToken: options.staticToken,
+      authConfig: {
+        authStateName: options.authConfig.authStateName,
+        userStateName: options.authConfig.userStateName,
+        useNuxtCookies: options.authConfig.useNuxtCookies,
+        refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
+        cookieHttpOnly: options.authConfig.cookieHttpOnly,
+        cookieSameSite: options.authConfig.cookieSameSite, // TODO: understand if it is possible to fix the type mismatch
+        cookieSecure: options.authConfig.cookieSecure
+      },
+      moduleConfig: {
+        autoRefresh: options.moduleConfig.autoRefresh
       }
-    )
+    })
 
     // Auto import native components
     if (options.moduleConfig.autoImport) {
@@ -91,7 +91,10 @@ export default defineNuxtModule<ModuleOptions>({
       Object.keys(DirectusSDK).forEach(name =>
         addImports({
           name,
-          as: (prefix + (prefix ? (name.charAt(0).toUpperCase() + name.slice(1)) : name) + suffix),
+          as:
+            prefix +
+            (prefix ? name.charAt(0).toUpperCase() + name.slice(1) : name) +
+            suffix,
           from: '@directus/sdk'
         })
       )
@@ -101,30 +104,33 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.build.transpile.push(runtimeDir)
 
     if (nuxt.options.runtimeConfig.public.directus.moduleConfig.autoRefresh) {
-      addPlugin(resolve(runtimeDir, './plugins/auto-refresh'), { append: true })
+      addPlugin(resolve(runtimeDir, './plugins/auto-refresh'), {
+        append: true
+      })
     }
 
     addImportsDir(resolve(runtimeDir, 'composables'))
     addServerImportsDir(resolve(runtimeDir, 'server', 'utils'))
 
-    // Enable Directus inside Nuxt Devtools
-    if (options.moduleConfig.devtools) {
-      const adminUrl = joinURL(
-        nuxt.options.runtimeConfig.public.directus.url,
-        '/admin/'
-      )
-      nuxt.hook('devtools:customTabs', (iframeTabs) => {
-        iframeTabs.push({
-          name: 'directus',
-          title: 'Directus',
-          icon: 'simple-icons:directus',
-          view: {
-            type: 'iframe',
-            src: adminUrl
-          }
-        })
-      })
-    }
+    // TODO: Fix devtools
+    // // Enable Directus inside Nuxt Devtools
+    // if (options.moduleConfig.devtools) {
+    //   const adminUrl = joinURL(
+    //     nuxt.options.runtimeConfig.public.directus.url,
+    //     '/admin/'
+    //   )
+    //   nuxt.hook('devtools:customTabs', (iframeTabs) => {
+    //     iframeTabs.push({
+    //       name: 'directus',
+    //       title: 'Directus',
+    //       icon: 'simple-icons:directus',
+    //       view: {
+    //         type: 'iframe',
+    //         src: adminUrl
+    //       }
+    //     })
+    //   })
+    // }
   }
 })
 
@@ -135,7 +141,7 @@ declare module '@nuxt/schema' {
       directus: ModuleOptionsPrivate;
       public: {
         directus: ModuleOptionsPublic;
-      }
+      };
     };
   }
 }
