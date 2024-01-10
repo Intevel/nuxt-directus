@@ -9,6 +9,7 @@ import {
   passwordReset as sdkPasswordReset
 } from '@directus/sdk'
 import type {
+  AuthenticationMode,
   DirectusRestConfig,
   DirectusInviteUser,
   LoginOptions
@@ -33,15 +34,13 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     set: setTokens,
     tokens
   } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
+  const defaultMode: AuthenticationMode = useNuxtCookies ? 'json' : 'cookie'
 
   async function login (
     identifier: string, password: string, options?: LoginOptions
   ) {
     try {
-      const defaultOptions = {
-        mode: useNuxtCookies ? 'json' : 'cookie'
-      }
-      const params = defu(options, defaultOptions) as LoginOptions
+      const params = defu(options, { defaultMode })
 
       const authResponse = await client.request(sdkLogin(identifier, password, params))
       if (authResponse.access_token) {
@@ -66,15 +65,20 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     }
   }
 
-  async function refreshTokens (
-    token?: string
-  ) {
+  async function refreshTokens ({
+    refreshToken,
+    mode
+  }: {
+    refreshToken?: string
+    mode?: AuthenticationMode
+  } = {}) {
     try {
-      const refreshToken = token ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
+      const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
       if (!refreshToken && useNuxtCookies) {
         throw new Error('No refresh token found.')
       }
-      const authResponse = await client.request(sdkRefresh(useNuxtCookies ? 'json' : 'cookie', refreshToken ?? undefined))
+
+      const authResponse = await client.request(sdkRefresh(mode ?? defaultMode, token ?? undefined))
       if (authResponse.access_token) {
         nuxtApp.runWithContext(() => {
           setTokens(authResponse)
@@ -97,9 +101,11 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     }
   }
 
-  async function logout () {
+  async function logout (
+    refreshToken?: string
+  ) {
     try {
-      await client.request(sdkLogout(tokens.value?.refresh_token ?? undefined))
+      await client.request(sdkLogout(refreshToken ?? tokens.value?.refresh_token ?? undefined))
       user.value = undefined
       setTokens(null)
     } catch (error: any) {
@@ -173,8 +179,8 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
   }
 
   return {
-    acceptUserInvite,
     client,
+    acceptUserInvite,
     inviteUser,
     login,
     logout,
