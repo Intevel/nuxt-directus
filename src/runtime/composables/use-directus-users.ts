@@ -199,8 +199,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   }
 
   async function deleteUser (
-    id: DirectusUser<TSchema>['id'],
-    params: DirectusClientConfig
+    id: DirectusUser<TSchema>['id']
   ) {
     try {
       return await client.request(sdkDeleteUser(id))
@@ -214,8 +213,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   }
 
   async function deleteUsers (
-    id: DirectusUser<TSchema>['id'][],
-    params: DirectusClientConfig
+    id: DirectusUser<TSchema>['id'][]
   ) {
     try {
       return await client.request(sdkDeleteUsers(id))
