@@ -192,17 +192,17 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
    *
    * @param email User email to invite.
    * @param role Role of the new user.
-   * @param invite_url Provide a custom invite url which the link in the email will lead to. The invite token will be passed as a parameter.
+   * @param inviteUrl Provide a custom invite url which the link in the email will lead to. The invite token will be passed as a parameter.
    *
    * @returns Nothing.
    */
   async function inviteUser (
     email: string,
     role: string,
-    params?: DirectusInviteUser
+    inviteUrl?: string
   ) {
     try {
-      await client.request(sdkInviteUser(email, role, params?.invite_url))
+      await client.request(sdkInviteUser(email, role, inviteUrl))
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't invite user.", error.message)
