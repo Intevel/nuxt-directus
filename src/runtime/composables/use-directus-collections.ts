@@ -14,7 +14,7 @@ import type {
   NestedPartial,
   Query
 } from '../types'
-import { useAsyncData, computed, toRef, unref } from '#imports'
+import { useAsyncData, computed, toRef, unref, useDirectusRest } from '#imports'
 
 export function useDirectusCollections<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)

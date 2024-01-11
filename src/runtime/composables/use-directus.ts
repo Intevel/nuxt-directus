@@ -13,7 +13,7 @@ import type {
   DirectusGraphqlConfig,
   DirectusRestConfig
 } from '../types'
-import { useRuntimeConfig } from '#imports'
+import { useRuntimeConfig, useDirectusTokens } from '#imports'
 
 /**
  * Provides the core functionalities to create a custom Directus client.

@@ -16,7 +16,7 @@ import type {
   DirectusFilesOptionsAsyncData,
   Query
 } from '../types'
-import { useAsyncData, computed, toRef, unref } from '#imports'
+import { useAsyncData, computed, toRef, unref, useDirectusRest } from '#imports'
 
 export function useDirectusFiles<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)

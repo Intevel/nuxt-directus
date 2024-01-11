@@ -13,7 +13,7 @@ import type {
   DirectusRestConfig,
   LoginOptions
 } from '../types'
-import { useRuntimeConfig } from '#imports'
+import { useRuntimeConfig, useDirectusRest, useNuxtApp, useDirectusUsers, useDirectusTokens } from '#imports'
 
 export function useDirectusAuth<TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig

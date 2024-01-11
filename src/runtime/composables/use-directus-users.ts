@@ -27,7 +27,9 @@ import {
   computed,
   toRef,
   unref,
-  useRuntimeConfig
+  useRuntimeConfig,
+  useDirectusRest,
+  useDirectusTokens
 } from '#imports'
 
 export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
