@@ -1,4 +1,4 @@
-import { defineNuxtPlugin } from '#imports'
+import { defineNuxtPlugin, addRouteMiddleware } from '#imports'
 
 export default defineNuxtPlugin((nuxtApp) => {
   addRouteMiddleware((_to, _from) => {
