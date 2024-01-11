@@ -10,6 +10,7 @@ import {
 } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
+import { addCustomTab } from '@nuxt/devtools-kit'
 import type {
   ModuleOptions,
   ModuleOptionsPrivate,
@@ -112,25 +113,23 @@ export default defineNuxtModule<ModuleOptions>({
     addImportsDir(resolve(runtimeDir, 'composables'))
     addServerImportsDir(resolve(runtimeDir, 'server', 'utils'))
 
-    // TODO: Fix devtools
-    // // Enable Directus inside Nuxt Devtools
-    // if (options.moduleConfig.devtools) {
-    //   const adminUrl = joinURL(
-    //     nuxt.options.runtimeConfig.public.directus.url,
-    //     '/admin/'
-    //   )
-    //   nuxt.hook('devtools:customTabs', (iframeTabs) => {
-    //     iframeTabs.push({
-    //       name: 'directus',
-    //       title: 'Directus',
-    //       icon: 'simple-icons:directus',
-    //       view: {
-    //         type: 'iframe',
-    //         src: adminUrl
-    //       }
-    //     })
-    //   })
-    // }
+    // Enable Directus inside Nuxt Devtools
+    if (options.moduleConfig.devtools) {
+      const adminUrl = joinURL(
+        nuxt.options.runtimeConfig.public.directus.url,
+        '/admin/'
+      )
+
+      addCustomTab({
+        name: 'directus',
+        title: 'Directus',
+        icon: 'simple-icons:directus',
+        view: {
+          type: 'iframe',
+          src: adminUrl
+        }
+      })
+    }
   }
 })
 
