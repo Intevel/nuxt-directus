@@ -9,7 +9,8 @@ import type {
 import {
   type Ref,
   useCookie,
-  useState
+  useState,
+  useRuntimeConfig
 } from '#imports'
 
 /**

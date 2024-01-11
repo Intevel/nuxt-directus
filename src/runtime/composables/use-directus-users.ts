@@ -26,7 +26,8 @@ import {
   useAsyncData,
   computed,
   toRef,
-  unref
+  unref,
+  useRuntimeConfig
 } from '#imports'
 
 export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
