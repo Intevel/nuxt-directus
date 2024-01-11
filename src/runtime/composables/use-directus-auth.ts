@@ -49,7 +49,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     identifier: string, password: string, options?: LoginOptions
   ) {
     try {
-      const params = defu(options, { defaultMode })
+      const params = defu(options, { mode: defaultMode })
 
       const authResponse = await client.request(sdkLogin(identifier, password, params))
       if (authResponse.access_token) {
@@ -91,7 +91,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
   } = {}) {
     try {
       const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
-      if (!refreshToken && useNuxtCookies) {
+      if (!token && useNuxtCookies) {
         throw new Error('No refresh token found.')
       }
 
