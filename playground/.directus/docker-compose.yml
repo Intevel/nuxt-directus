@@ -27,3 +27,4 @@ services:
       CORS_ORIGIN: 'true'
       CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_ANCESTORS: 'array:http://localhost:*,self'
       EXTENSIONS_AUTO_RELOAD: 'true'
+      WEBSOCKETS_ENABLED: 'true'
