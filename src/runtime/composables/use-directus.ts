@@ -6,7 +6,7 @@ import {
   graphql,
   rest
 } from '@directus/sdk'
-import WebSocket from 'ws'
+import { WebSocket } from 'ws'
 import type {
   DirectusRealtimeConfig,
   DirectusClientOptions,
