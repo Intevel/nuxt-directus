@@ -6,7 +6,6 @@ import {
   graphql,
   rest
 } from '@directus/sdk'
-// import { WebSocket } from 'ws'
 import type {
   DirectusRealtimeConfig,
   DirectusClientOptions,
@@ -95,33 +94,26 @@ export const useDirectusGraphql = <T extends Object>(options?: Partial<DirectusG
   return client
 }
 
-// /**
-//  * Creates a client to communicate with the Directus Realtime API.
-//  *
-//  * @returns A Directus Realtime client.
-//  */
-// export const useDirectusRealtime = <T extends Object>(options?: Partial<DirectusRealtimeConfig>) => {
-//   const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
+/**
+ * Creates a client to communicate with the Directus Realtime API.
+ *
+ * @returns A Directus Realtime client.
+ */
+export const useDirectusRealtime = <T extends Object>(options?: Partial<DirectusRealtimeConfig>) => {
+  const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-//   const defaultOptions: Partial<DirectusRealtimeConfig> = {
-//     authConfig: {
-//       autoRefresh,
-//       storage: useDirectusTokens(options?.useStaticToken)
-//     },
-//     options: {
-//       clientOptions: {
-//         globals: {
-//           WebSocket
-//         }
-//       }
-//     }
-//   }
+  const defaultOptions: Partial<DirectusRealtimeConfig> = {
+    authConfig: {
+      autoRefresh,
+      storage: useDirectusTokens(options?.useStaticToken)
+    }
+  }
 
-//   const config = defu(options, defaultOptions)
+  const config = defu(options, defaultOptions)
 
-//   const client = useDirectus<T>(config?.options)
-//     .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
-//     .with(realtime(config?.websocketConfig))
+  const client = useDirectus<T>(config?.options)
+    .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
+    .with(realtime(config?.websocketConfig))
 
-//   return client
-// }
+  return client
+}
