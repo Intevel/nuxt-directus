@@ -17,23 +17,23 @@ hero:
       trailing: true
 features:
   title: Features
-  description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  description: Nuxt Directus wraps the Directus SDK and provides a simple way to integrate Directus into your Nuxt application.
   items:
-    - title: Easy to use
-      description: Id laborum laboris duis nostrud excepteur ut velit nulla magna Lorem proident non.
-      icon: i-heroicons-cog
-    - title: Reliable
-      description: Magna Lorem ex cillum fugiat ad enim aute irure sit duis minim.
-      icon: i-heroicons-check
-    - title: Secure
-      description: Proident nostrud excepteur sint ut culpa consectetur aute adipisicing non anim ullamco.
-      icon: i-heroicons-lock-closed
-    - title: Fast
-      description: Qui reprehenderit nostrud dolore nisi ad fugiat labore eiusmod sint aliquip nisi voluptate.
-      icon: i-heroicons-rocket-launch
-    - title: Affordable
-      description: Reprehenderit fugiat elit in do ipsum ut pariatur.
-      icon: i-heroicons-currency-dollar
+    - title: Authentication
+      icon: i-heroicons-finger-print
+      description: Handle authentication with ease using Nuxt's state management.
+    - title: DevTools
+      description: Easy integration of the Directus Dashboard into your Nuxt DevTools.
+      icon: i-heroicons-command-line
+    - title: Realtime
+      description: Build realtime applications with a simple composable and Directus' realtime API.
+      icon: i-heroicons-circle-stack
+    - title: TypeScript
+      description: The module is fully-typed and based on the Directus SDK to provide the best typing experience.
+      icon: i-heroicons-variable
+    - title: Low-Level
+      description: You can use the
+      icon: i-heroicons-chart-bar
     - title: Scalable
       description: Lorem deserunt et eiusmod. Ea in consectetur minim officia ullamco enim deserunt est.
       icon: i-heroicons-chart-bar
