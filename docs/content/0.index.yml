@@ -32,8 +32,8 @@ features:
       description: The module is fully-typed and based on the Directus SDK to provide the best typing experience.
       icon: i-heroicons-variable
     - title: Low-Level
-      description: You can use the
-      icon: i-heroicons-chart-bar
-    - title: Scalable
-      description: Lorem deserunt et eiusmod. Ea in consectetur minim officia ullamco enim deserunt est.
-      icon: i-heroicons-chart-bar
+      description: Access the Directus SDK directly and build your own custom integration, no need to manually configure the SDK.
+      icon: i-heroicons-code-bracket
+    - title: Runs Everywhere
+      description: The module is base on UnJS Ofetch and Nuxt Async Data to run everywhere, on every platform, rendered in every way.
+      icon: i-heroicons-rocket-launch
