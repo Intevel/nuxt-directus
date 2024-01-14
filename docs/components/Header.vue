@@ -18,7 +18,7 @@ const links = [{
 <template>
   <UHeader :links="links">
     <template #logo>
-      Nuxt Directus <UBadge label="v6.0" variant="subtle" class="mb-0.5" />
+      Nuxt Directus <UBadge label="v6.0" variant="subtle" class="mb-0.5" /> <UBadge label="Beta" variant="soft" class="mb-0.5" />
     </template>
 
     <template #right>
