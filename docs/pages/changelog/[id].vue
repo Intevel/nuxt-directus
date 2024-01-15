@@ -65,7 +65,7 @@ defineOgImage({
 
     <UPage>
       <UPageBody prose>
-        <pre>{{ page.body }}</pre>
+        <NuxtMarkdown :source="page.body" />
       </UPageBody>
     </UPage>
   </UContainer>

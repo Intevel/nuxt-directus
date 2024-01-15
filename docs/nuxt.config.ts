@@ -9,6 +9,7 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     '@vueuse/nuxt',
     'nuxt-og-image',
+    'nuxt-markdown-render'
   ],
   ui: {
     icons: ['heroicons', 'simple-icons']
