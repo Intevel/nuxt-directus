@@ -6,5 +6,5 @@ export interface DirectusItemsOptions<TQuery> {
 
 export interface DirectusItemsOptionsAsyncData<TQuery> extends DirectusItemsOptions<TQuery> {
   key?: string;
-  params?: AsyncDataOptions<any>;
+  params?: AsyncDataOptions;
 }
