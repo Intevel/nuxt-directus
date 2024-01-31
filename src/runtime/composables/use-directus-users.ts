@@ -19,6 +19,8 @@ import type {
   DirectusUser,
   Query
 } from '../types'
+import { useDirectusRest } from './use-directus'
+import { useDirectusTokens } from './use-directus-tokens'
 import {
   type Ref,
   useState,
@@ -26,9 +28,7 @@ import {
   computed,
   toRef,
   unref,
-  useRuntimeConfig,
-  useDirectusRest,
-  useDirectusTokens
+  useRuntimeConfig
 } from '#imports'
 
 export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
