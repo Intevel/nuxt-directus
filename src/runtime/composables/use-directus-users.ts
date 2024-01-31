@@ -13,7 +13,6 @@ import {
   deleteUsers as sdkDeleteUsers
 } from '@directus/sdk'
 import type {
-  DirectusClientConfig,
   DirectusRestConfig,
   DirectusUsersOptions,
   DirectusUsersOptionsAsyncData,
