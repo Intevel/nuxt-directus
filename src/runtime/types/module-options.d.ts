@@ -111,6 +111,41 @@ export interface ModuleOptionsPublic {
      * @type boolean
      */
     autoRefresh?: boolean;
+    /**
+     * A series of configs 
+     */
+    authMiddleware?: {
+      /**
+       * Whether to enable a Global Nuxt Middleware.
+       * @default false
+       * @type boolean
+       */
+      enable?: boolean;
+      /**
+       * Sets the middleware as global, validating all routes.
+       * @default false
+       * @type boolean
+       */
+      global?: boolean;
+      /**
+       * The name of the middleware.
+       * @default 'directus-auth-middleware'
+       * @type string
+       */
+      name?: string;
+      /**
+       * The redirect path for unauthenticated users.
+       * @default '/login'
+       * @type string
+       */
+      redirect: string;
+      /**
+       * A blacklist of paths that needs authentication to be accessed.
+       * @default ['/']
+       * @type string[]
+       */
+      to: string[];
+    }
   }
 }
 

@@ -43,7 +43,14 @@ export default defineNuxtModule<ModuleOptions>({
       autoRefresh: true,
       autoImport: false,
       autoImportPrefix: 'sdk',
-      autoImportSuffix: ''
+      autoImportSuffix: '',
+      authMiddleware: {
+        enable: false,
+        global: false,
+        name: 'directus-auth-middleware',
+        redirect: '/login',
+        to: ['/']
+      }
     }
   },
   setup (options, nuxt) {
@@ -80,7 +87,14 @@ export default defineNuxtModule<ModuleOptions>({
         cookieSecure: options.authConfig.cookieSecure
       },
       moduleConfig: {
-        autoRefresh: options.moduleConfig.autoRefresh
+        autoRefresh: options.moduleConfig.autoRefresh,
+        authMiddleware: {
+          enable: options.moduleConfig.authMiddleware?.enable,
+          global: options.moduleConfig.authMiddleware?.global,
+          name: options.moduleConfig.authMiddleware?.name,
+          redirect: options.moduleConfig.authMiddleware!.redirect,
+          to: options.moduleConfig.authMiddleware!.to
+        }
       }
     })
 
@@ -105,9 +119,14 @@ export default defineNuxtModule<ModuleOptions>({
     nuxt.options.build.transpile.push(runtimeDir)
 
     if (nuxt.options.runtimeConfig.public.directus.moduleConfig.autoRefresh) {
-      addPlugin(resolve(runtimeDir, './plugins/auto-refresh'), {
-        append: true
-      })
+      addPlugin({
+        src: resolve(runtimeDir, 'plugins', 'auto-refresh')
+      }, { append: true })
+    }
+    if (nuxt.options.runtimeConfig.public.directus.moduleConfig.authMiddleware?.enable) {
+      addPlugin({
+        src: resolve(runtimeDir, 'plugins', 'auth-middleware')
+      }, { append: true })
     }
 
     addImportsDir(resolve(runtimeDir, 'composables'))
