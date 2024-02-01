@@ -11,7 +11,7 @@
         <form @submit.prevent>
           <input v-model="credentials.email" type="email" placeholder="Email">
           <input v-model="credentials.password" type="password" placeholder="Password">
-          <button @click="login(credentials.email, credentials.password).then(navigateTo('/restricted'))">
+          <button @click="login(credentials.email, credentials.password)">
             Sign in
           </button>
         </form>
@@ -36,4 +36,10 @@ const { login, logout, refreshTokens } = useDirectusAuth()
 const { user } = useDirectusUsers()
 
 const credentials = ref({ email: '', password: '' })
+
+watch(user, (newUser) => {
+  if (newUser) {
+    navigateTo('/restricted')
+  }
+})
 </script>
