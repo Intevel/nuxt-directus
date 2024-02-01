@@ -1,10 +1,10 @@
+import type { CookieRef } from '#app'
 import type {
   AuthenticationData,
   DirectusTokens,
   ModuleOptions
 } from '../types'
 import {
-  type CookieRef,
   type Ref,
   useCookie,
   useState,
