@@ -36,7 +36,7 @@ jobs:
         run: yarn
 
       - name: Lint
-        run: yarn lint
+        run: yarn lint:fix
 
       # - name: Test
       #   run: yarn test
