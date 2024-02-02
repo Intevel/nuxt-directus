@@ -106,24 +106,20 @@ export interface ModuleOptionsPublic {
   */
   moduleConfig: {
     /**
-     * Whether to automatically refresh the access token and user data.
-     * @default true
-     * @type boolean
+     * Configurations to automatically refresh the access token and user data.
+     * @default object
+     * @type object or false
      */
-    autoRefresh?: boolean;
-    /**
-     * A series of configs 
-     */
-    authMiddleware?: {
+    autoRefresh?: {
       /**
        * Whether to enable a Global Nuxt Middleware.
        * @default false
        * @type boolean
        */
-      enable?: boolean;
+      enableMiddleware?: boolean;
       /**
        * Sets the middleware as global, validating all routes.
-       * @default false
+       * @default true
        * @type boolean
        */
       global?: boolean;
@@ -132,20 +128,20 @@ export interface ModuleOptionsPublic {
        * @default 'directus-auth-middleware'
        * @type string
        */
-      name?: string;
+      middlewareName?: string;
       /**
        * The redirect path for unauthenticated users.
        * @default '/login'
        * @type string
        */
-      redirect: string;
+      redirectTo?: string;
       /**
        * A blacklist of paths that needs authentication to be accessed.
-       * @default ['/']
+       * @default undefined
        * @type string[]
        */
-      to: string[];
-    }
+      to?: string[];
+    } | false;
   }
 }
 

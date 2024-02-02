@@ -1,4 +1,5 @@
 export default defineNuxtConfig({
+  ssr: true,
   alias: {
     'nuxt-directus': '../src/module'
   },
@@ -11,13 +12,16 @@ export default defineNuxtConfig({
     },
     moduleConfig: {
       devtools: true,
-      autoImport: true,
-      authMiddleware: {
-        enable: true,
-        redirect: '/login',
-        to: ['/restricted'],
-        global: true
+      autoRefresh: {
+        enableMiddleware: true,
+        redirectTo: '/login',
+        to: ['/restricted']
       }
+    }
+  },
+  routeRules: {
+    '/restricted/**': {
+      ssr: false
     }
   }
 })

@@ -90,8 +90,11 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     }
   }
 
-  function setUser (value: Partial<DirectusUser<TSchema>> | undefined) {
-    user.value = value
+  function setUser (value: Partial<DirectusUser<TSchema>> | undefined): Promise<void> {
+    return new Promise((resolve) => {
+      user.value = value
+      resolve()
+    })
   }
 
   /**
@@ -111,7 +114,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
         const userData = await client.request(sdkReadMe(params?.query))
 
         if (userData && params?.updateState !== false) {
-          setUser(userData as Partial<DirectusUser<TSchema>>)
+          await setUser(userData as Partial<DirectusUser<TSchema>>)
         }
 
         return userData

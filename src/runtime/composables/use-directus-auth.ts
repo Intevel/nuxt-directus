@@ -11,16 +11,18 @@ import {
 import type {
   AuthenticationMode,
   DirectusRestConfig,
-  LoginOptions
+  DirectusUser,
+  DirectusUsersOptions,
+  LoginOptions,
+  Query
 } from '../types'
 import { useDirectusRest } from './use-directus'
 import { useDirectusTokens } from './use-directus-tokens'
 import { useDirectusUsers } from './use-directus-users'
-import { useRuntimeConfig, useNuxtApp } from '#imports'
+import { useRuntimeConfig } from '#imports'
 
 export function useDirectusAuth<TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
-  const nuxtApp = useNuxtApp()
 
   const defaultConfig: Partial<DirectusRestConfig> = {
     useStaticToken: false
@@ -28,7 +30,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
   const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
 
   const {
-    readMe,
+    readMe: readMyself,
     setUser,
     user
   } = useDirectusUsers(defu(config, defaultConfig))
@@ -48,32 +50,47 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
    *
    * @returns The access and refresh tokens for the session
    */
-  async function login (
-    identifier: string, password: string, options?: LoginOptions
+  async function login <
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>
+  > (
+    identifier: string,
+    password: string,
+    {
+      options,
+      updateStates,
+      updateTokens,
+      readMe
+    }: {
+      options?: LoginOptions,
+      updateStates?: boolean,
+      updateTokens?: boolean,
+      readMe?: {
+        params?: DirectusUsersOptions<TQuery>,
+        updateState?: boolean
+      } | false
+    } = {}
   ) {
     try {
-      const params = defu(options, { mode: defaultMode })
+      const authResponse = await client
+        .request(sdkLogin(identifier, password, defu(options, { mode: defaultMode })))
 
-      const authResponse = await client.request(sdkLogin(identifier, password, params))
-      if (authResponse.access_token) {
-        nuxtApp.runWithContext(() => {
-          setTokens(authResponse)
-          readMe()
-        })
+      if (updateStates !== false) {
+        if (updateTokens !== false) {
+          await setTokens(authResponse)
+        }
+        if (readMe !== false) {
+          await readMyself(readMe)
+        }
       }
 
-      return {
-        access_token: authResponse.access_token,
-        refresh_token: authResponse.refresh_token,
-        expires_at: authResponse.expires_at,
-        expires: authResponse.expires
-      }
+      return authResponse
     } catch (error: any) {
       if (error && error.message) {
         console.error("Couldn't login user.", error.message)
       } else {
         console.error(error)
       }
+      return null
     }
   }
 
@@ -82,42 +99,47 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
    *
    * @param mode Whether to retrieve the refresh token in the JSON response, or in a httpOnly secure cookie. One of json, cookie.
    * @param refreshToken The refresh token to use. If you have the refresh token in a cookie through /auth/login, you don't have to submit it here.
+   * @param updateStates Whether to update the user and tokens states. Defaults to true.
+   * @param updateTokens Whether to update the tokens state. Defaults to true.
+   * @param readMe Whether to update the user state. Defaults to true.
    *
    * @returns The new access and refresh tokens for the session.
    */
-  async function refreshTokens ({
+  async function refreshTokens <
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>
+  > ({
+    mode,
     refreshToken,
-    mode
+    updateStates,
+    updateTokens,
+    readMe
   }: {
+    mode?: AuthenticationMode,
     refreshToken?: string
-    mode?: AuthenticationMode
+    updateStates?: boolean,
+    updateTokens?: boolean,
+    readMe?: { params?: DirectusUsersOptions<TQuery>, updateState?: boolean } | false
   } = {}) {
-    try {
-      const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
-      if (!token && useNuxtCookies) {
-        throw new Error('No refresh token found.')
+    const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
+    if (!token && useNuxtCookies) {
+      throw new Error('No refresh token found.')
+    }
+
+    const authResponse = await client.request(sdkRefresh(mode ?? defaultMode, token ?? undefined))
+
+    if (authResponse) {
+      if (updateStates !== false) {
+        if (updateTokens !== false) {
+          await setTokens(authResponse)
+        }
+        if (readMe !== false) {
+          await readMyself(readMe)
+        }
       }
 
-      const authResponse = await client.request(sdkRefresh(mode ?? defaultMode, token ?? undefined))
-      if (authResponse.access_token) {
-        nuxtApp.runWithContext(() => {
-          setTokens(authResponse)
-          readMe()
-        })
-      }
-
-      return {
-        access_token: authResponse.access_token,
-        refresh_token: authResponse.refresh_token,
-        expires_at: authResponse.expires_at,
-        expires: authResponse.expires
-      }
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't refresh tokens.", error.message)
-      } else {
-        console.error(error)
-      }
+      return authResponse
+    } else {
+      return null
     }
   }
 
@@ -248,7 +270,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     passwordReset,
     refreshTokens,
     refreshTokenCookie,
-    readMe,
+    readMe: readMyself,
     setUser,
     setTokens,
     tokens,

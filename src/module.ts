@@ -40,16 +40,15 @@ export default defineNuxtModule<ModuleOptions>({
     },
     moduleConfig: {
       devtools: false,
-      autoRefresh: true,
       autoImport: false,
       autoImportPrefix: 'sdk',
       autoImportSuffix: '',
-      authMiddleware: {
-        enable: false,
-        global: false,
-        name: 'directus-auth-middleware',
-        redirect: '/login',
-        to: ['/']
+      autoRefresh: {
+        enableMiddleware: false,
+        global: true,
+        middlewareName: 'directus-auth-middleware',
+        redirectTo: '/login',
+        to: undefined
       }
     }
   },
@@ -57,7 +56,7 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     // Private runtimeConfig
-    nuxt.options.runtimeConfig.directus = defu<
+    const directus = nuxt.options.runtimeConfig.directus = defu<
       ModuleOptionsPrivate,
       Partial<ModuleOptionsPrivate>[]
     >(nuxt.options.runtimeConfig.directus, {
@@ -71,7 +70,7 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     // Public runtimeConfig
-    nuxt.options.runtimeConfig.public.directus = defu<
+    const directusPublic = nuxt.options.runtimeConfig.public.directus = defu<
       ModuleOptionsPublic,
       Partial<ModuleOptionsPublic>[]
     >(nuxt.options.runtimeConfig.public.directus, {
@@ -83,25 +82,24 @@ export default defineNuxtModule<ModuleOptions>({
         useNuxtCookies: options.authConfig.useNuxtCookies,
         refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
         cookieHttpOnly: options.authConfig.cookieHttpOnly,
-        cookieSameSite: options.authConfig.cookieSameSite, // TODO: understand if it is possible to fix the type mismatch
+        cookieSameSite: options.authConfig.cookieSameSite,
         cookieSecure: options.authConfig.cookieSecure
       },
       moduleConfig: {
-        autoRefresh: options.moduleConfig.autoRefresh,
-        authMiddleware: {
-          enable: options.moduleConfig.authMiddleware?.enable,
-          global: options.moduleConfig.authMiddleware?.global,
-          name: options.moduleConfig.authMiddleware?.name,
-          redirect: options.moduleConfig.authMiddleware!.redirect,
-          to: options.moduleConfig.authMiddleware!.to
+        autoRefresh: options.moduleConfig.autoRefresh && {
+          enableMiddleware: options.moduleConfig.autoRefresh.enableMiddleware,
+          global: options.moduleConfig.autoRefresh.global,
+          middlewareName: options.moduleConfig.autoRefresh.middlewareName,
+          redirectTo: options.moduleConfig.autoRefresh.redirectTo,
+          to: options.moduleConfig.autoRefresh.to
         }
       }
     })
 
     // Auto import native components
-    if (options.moduleConfig.autoImport) {
-      const prefix = options.moduleConfig.autoImportPrefix
-      const suffix = options.moduleConfig.autoImportSuffix
+    if (directus.moduleConfig.autoImport) {
+      const prefix = directus.moduleConfig.autoImportPrefix
+      const suffix = directus.moduleConfig.autoImportSuffix
 
       Object.keys(DirectusSDK).forEach(name =>
         addImports({
@@ -118,14 +116,9 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
-    if (nuxt.options.runtimeConfig.public.directus.moduleConfig.autoRefresh) {
+    if (directusPublic.moduleConfig.autoRefresh !== false) {
       addPlugin({
         src: resolve(runtimeDir, 'plugins', 'auto-refresh')
-      }, { append: true })
-    }
-    if (nuxt.options.runtimeConfig.public.directus.moduleConfig.authMiddleware?.enable) {
-      addPlugin({
-        src: resolve(runtimeDir, 'plugins', 'auth-middleware')
       }, { append: true })
     }
 
@@ -133,9 +126,9 @@ export default defineNuxtModule<ModuleOptions>({
     addServerImportsDir(resolve(runtimeDir, 'server', 'utils'))
 
     // Enable Directus inside Nuxt Devtools
-    if (options.moduleConfig.devtools) {
+    if (directus.moduleConfig.devtools) {
       const adminUrl = joinURL(
-        nuxt.options.runtimeConfig.public.directus.url,
+        directusPublic.url,
         '/admin/'
       )
 

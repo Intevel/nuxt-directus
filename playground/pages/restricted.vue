@@ -17,7 +17,7 @@
       </div>
       <div v-else>
         <h3>User not authenticated.</h3>
-        <NuxtLink :to="redirect">
+        <NuxtLink :to="redirectTo">
           Log in
         </NuxtLink>
       </div>
@@ -31,6 +31,6 @@ import {
   useRuntimeConfig
 } from '#imports'
 
-const { redirect } = useRuntimeConfig().public.directus.moduleConfig.authMiddleware
+const { redirectTo } = useRuntimeConfig().public.directus.moduleConfig.autoRefresh
 const { user } = useDirectusUsers()
 </script>
