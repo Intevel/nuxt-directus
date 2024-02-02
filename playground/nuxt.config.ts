@@ -8,12 +8,13 @@ export default defineNuxtConfig({
   directus: {
     url: 'http://localhost:8055/',
     authConfig: {
+      useNuxtCookies: true,
       refreshTokenCookieName: 'nuxt-directus_refresh_token'
     },
     moduleConfig: {
       devtools: true,
       autoRefresh: {
-        enableMiddleware: true,
+        enableMiddleware: false,
         redirectTo: '/login',
         to: ['/restricted']
       }
