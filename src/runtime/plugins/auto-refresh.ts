@@ -41,9 +41,6 @@ export default defineNuxtPlugin((nuxtApp) => {
       const restricted = (!toArray.length || !!toArray.find((p: string) => p === to.path))
 
       nuxtApp.hook('app:mounted', async () => {
-        if (!tokens.value?.access_token && (!!refreshTokenCookie().value || !useNuxtCookies)) {
-          await refreshTokens()
-        }
         if (!user.value && to.path !== redirectTo && restricted) {
           await navigateTo(redirectTo)
         }
