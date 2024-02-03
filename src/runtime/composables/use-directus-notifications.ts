@@ -17,6 +17,7 @@ import type {
   Query
 } from '../types'
 import { useDirectusRest } from './use-directus'
+import { recursiveUnref } from './internal-utils/recursive-unref'
 import { type Ref, useAsyncData, computed, toRef, unref } from '#imports'
 
 export function useDirectusNotifications<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
@@ -93,7 +94,7 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
       return hash([
         'readNotification',
         unref(idRef),
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(
@@ -118,7 +119,7 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     const key = computed(() => {
       return hash([
         'readNotifications',
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(

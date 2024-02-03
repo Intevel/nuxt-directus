@@ -22,6 +22,7 @@ import type {
   UnpackList
 } from '../types'
 import { useDirectusRest } from './use-directus'
+import { recursiveUnref } from './internal-utils/recursive-unref'
 import { type Ref, useAsyncData, computed, toRef, unref } from '#imports'
 
 export function useDirectusItems<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
@@ -104,7 +105,7 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
         'readItem',
         unref(collectionRef),
         unref(idRef),
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(
@@ -137,7 +138,7 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
       return hash([
         'readItems',
         unref(collectionRef),
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(
@@ -170,7 +171,7 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
       return hash([
         'readSingleton',
         unref(collectionRef),
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(

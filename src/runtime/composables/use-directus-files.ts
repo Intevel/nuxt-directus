@@ -17,6 +17,7 @@ import type {
   Query
 } from '../types'
 import { useDirectusRest } from './use-directus'
+import { recursiveUnref } from './internal-utils/recursive-unref'
 import { type Ref, useAsyncData, computed, toRef, unref } from '#imports'
 
 export function useDirectusFiles<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
@@ -95,7 +96,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
       return hash([
         'readFile',
         unref(idRef),
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(
@@ -120,7 +121,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     const key = computed(() => {
       return hash([
         'readFiles',
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(

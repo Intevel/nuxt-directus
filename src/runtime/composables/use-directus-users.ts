@@ -21,6 +21,7 @@ import type {
 } from '../types'
 import { useDirectusRest } from './use-directus'
 import { useDirectusTokens } from './use-directus-tokens'
+import { recursiveUnref } from './internal-utils/recursive-unref'
 import {
   type Ref,
   useState,
@@ -149,7 +150,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
       return hash([
         'readUser',
         unref(idRef),
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(
@@ -174,7 +175,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     const key = computed(() => {
       return hash([
         'readUsers',
-        params?.toString()
+        recursiveUnref(params)
       ])
     })
     return await useAsyncData(

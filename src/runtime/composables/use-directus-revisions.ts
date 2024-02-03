@@ -10,6 +10,7 @@ import type {
   Query
 } from '../types'
 import { useDirectusRest } from './use-directus'
+import { recursiveUnref } from './internal-utils/recursive-unref'
 import { type Ref, useAsyncData, computed, toRef, unref } from '#imports'
 
 export function useDirectusRevisions<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
@@ -33,7 +34,7 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
   ) {
     const idRef = toRef(id) as Ref<DirectusRevision<TSchema>['id']>
     const key = computed(() => {
-      return hash(['readRevision', unref(idRef), params?.toString()])
+      return hash(['readRevision', unref(idRef), recursiveUnref(params)])
     })
     return await useAsyncData(
       params?.key ?? key.value,
@@ -53,7 +54,7 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
     TQuery extends Query<TSchema, DirectusRevision<TSchema>>
   > (params?: DirectusRevisionsOptionsAsyncData<TQuery>) {
     const key = computed(() => {
-      return hash(['readRevisions', params?.toString()])
+      return hash(['readRevisions', recursiveUnref(params)])
     })
     return await useAsyncData(
       params?.key ?? key.value,
