@@ -88,27 +88,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { navigateTo, useDirectusAuth, useDirectusUsers, useDirectusItems } from '#imports'
+import type { Post, Schema } from '../types'
 
 const { logout } = useDirectusAuth()
 const { user } = useDirectusUsers()
-
-interface Global {
-  title: string
-  description: string
-}
-
-interface Post {
-  id: string | number
-  title: string
-  slug: string
-  content: string
-  status: string
-}
-
-interface Schema {
-  global: Global
-  posts: Post[]
-}
 
 const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ useStaticToken: true })
 
