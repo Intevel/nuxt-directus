@@ -4,13 +4,25 @@ import {
   addRouteMiddleware,
   defineNuxtPlugin,
   navigateTo,
+  useRequestHeader,
   useRuntimeConfig
 } from '#imports'
 
-export default defineNuxtPlugin((nuxtApp) => {
+function cookieParser (cookie: string | undefined): Record<string, string> | undefined {
+  if (!cookie) { return undefined }
+  return cookie.split(';').reduce((acc: Record<string, string>, cookie) => {
+    const [key, value] = cookie.split('=')
+    acc[key.trim()] = value
+    return acc
+  }, {})
+}
+
+export default defineNuxtPlugin(async (nuxtApp) => {
   const {
+    url,
     authConfig: {
-      useNuxtCookies
+      useNuxtCookies,
+      refreshTokenCookieName
     },
     moduleConfig: {
       autoRefresh: {
@@ -30,10 +42,44 @@ export default defineNuxtPlugin((nuxtApp) => {
     user
   } = useDirectusAuth({ useStaticToken: false })
 
-  if (!tokens.value?.access_token && (!!refreshTokenCookie().value || !useNuxtCookies)) {
-    nuxtApp.hook('app:mounted', async () => {
-      await refreshTokens()
-    })
+  if (process.server && useNuxtCookies && !tokens.value?.access_token) {
+    const cookies = cookieParser(useRequestHeader('cookie'))
+
+    if (cookies && cookies[refreshTokenCookieName]) {
+      tokens.value = await refreshTokens({
+        refreshToken: cookies[refreshTokenCookieName],
+        updateStates: false
+      })
+
+      refreshTokenCookie(tokens.value?.expires).value = tokens.value?.refresh_token
+    }
+
+    if (tokens.value && tokens.value.access_token) {
+      user.value = await $fetch('users/me', {
+        baseURL: url,
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${tokens.value.access_token}`
+        }
+      })
+    }
+  } else if (process.client && !tokens.value?.access_token && (refreshTokenCookie().value || !useNuxtCookies)) {
+    // Workaround for single routes that are `ssr: false` to prevent page flashing on client-side auth
+    if (useNuxtCookies) {
+      nuxtApp.hook('app:beforeMount', async () => {
+        await refreshTokens().catch((e) => {
+          if (e.message.includes('401 Unauthorized')) {
+            refreshTokenCookie().value = null
+          } else {
+            throw e
+          }
+        })
+      })
+    } else {
+      nuxtApp.hook('app:mounted', async () => {
+        await refreshTokens()
+      })
+    }
   }
 
   if (enableMiddleware) {

@@ -127,20 +127,16 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
 
     const authResponse = await client.request(sdkRefresh(mode ?? defaultMode, token ?? undefined))
 
-    if (authResponse) {
-      if (updateStates !== false) {
-        if (updateTokens !== false) {
-          await setTokens(authResponse)
-        }
-        if (readMe !== false) {
-          await readMyself(readMe)
-        }
+    if (updateStates !== false) {
+      if (updateTokens !== false) {
+        await setTokens(authResponse ?? null)
       }
-
-      return authResponse
-    } else {
-      return null
+      if (readMe !== false) {
+        await readMyself(readMe)
+      }
     }
+
+    return authResponse
   }
 
   /**
