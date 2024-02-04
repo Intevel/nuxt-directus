@@ -5,7 +5,6 @@ import type {
   ModuleOptions
 } from '../types'
 import {
-  type Ref,
   useCookie,
   useState,
   useRuntimeConfig
@@ -29,7 +28,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
     cookieSecure: secure
   } = directusConfig.authConfig as ModuleOptions['authConfig']
 
-  const tokens: Ref<AuthenticationData | null> = useState(authStateName)
+  const tokens = useState<AuthenticationData | null>(authStateName, () => null)
 
   function refreshToken (maxAge?: number | undefined): CookieRef<string | null | undefined> {
     const cookie = useCookie<string | null>(refreshTokenCookieName!, { maxAge, httpOnly, sameSite, secure })
@@ -37,6 +36,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
   }
 
   const refreshTokenCookie = refreshToken().value
+
   return {
     get: () => {
       if ((useStaticToken === true || typeof useStaticToken === 'string') || (!tokens.value?.access_token && useStaticToken !== false)) {
