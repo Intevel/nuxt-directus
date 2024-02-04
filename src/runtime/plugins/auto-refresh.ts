@@ -4,11 +4,12 @@ import {
   addRouteMiddleware,
   defineNuxtPlugin,
   navigateTo,
-  useRequestHeaders,
+  useRequestHeader,
   useRuntimeConfig
 } from '#imports'
 
-function cookieParser (cookie: string): Record<string, string> {
+function cookieParser (cookie: string | undefined): Record<string, string> | undefined {
+  if (!cookie) { return undefined }
   return cookie.split(';').reduce((acc: Record<string, string>, cookie) => {
     const [key, value] = cookie.split('=')
     acc[key.trim()] = value
@@ -41,34 +42,17 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     user
   } = useDirectusAuth({ useStaticToken: false })
 
-  const headers = useRequestHeaders(['cookie'])
+  if (process.server && useNuxtCookies) {
+    const cookies = cookieParser(useRequestHeader('cookie'))
 
-  if (process.server && headers.cookie) {
-    if (useNuxtCookies) {
-      const cookies = cookieParser(headers.cookie)
+    if (cookies && cookies[refreshTokenCookieName]) {
+      tokens.value = await refreshTokens({
+        refreshToken: cookies[refreshTokenCookieName],
+        updateStates: false
+      }).catch(e => console.error(e))
 
-      if (cookies[refreshTokenCookieName]) {
-        tokens.value = await refreshTokens({
-          refreshToken: cookies[refreshTokenCookieName],
-          updateStates: false
-        }).catch(e => console.error(e))
-
-        refreshTokenCookie().value = tokens.value?.refresh_token
-      }
-    } // else {
-    //   console.log('headers.cookie', headers.cookie)
-    //   const resp = await $fetch.raw('auth/refresh', {
-    //     baseURL: url,
-    //     method: 'POST',
-    //     headers,
-    //     body: {
-    //       mode: 'cookie'
-    //     }
-    //   }).catch(e => console.error(e))
-    //   tokens.value = resp?._data
-    //   const resHeaders = resp?.headers
-    //   console.log('tokens.value', resp?.headers)
-    // }
+      refreshTokenCookie(tokens.value?.expires).value = tokens.value?.refresh_token
+    }
 
     if (tokens.value && tokens.value.access_token) {
       user.value = await $fetch('users/me', {
@@ -79,9 +63,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         }
       })
     }
-  }
-
-  if (process.client && !tokens.value?.access_token && (!!refreshTokenCookie().value || !useNuxtCookies)) {
+  } else if (process.client && !tokens.value?.access_token) {
+    // Workaround for single routes that are `ssr: false` to prevent page flashing on client-side auth
     if (useNuxtCookies) {
       nuxtApp.hook('app:beforeMount', async () => {
         await refreshTokens()
