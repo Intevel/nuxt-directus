@@ -1,27 +1,54 @@
 <template>
   <div>
-    <input v-model="collectionName" type="text" placeholder="Collection">
-    <input v-model="fieldParam" type="text" placeholder="Field Param">
-    <input v-model="searchParam" type="text" placeholder="Search posts">
-    <button @click="refresh(); refreshToo(); refreshThree(); refreshFour();">
-      Refresh
-    </button>
-    <pre v-if="notWorking && notWorking.length > 0">
-      useAsyncData (not working)
-      {{ notWorking }}
-    </pre>
-    <pre v-if="notWorkingToo && notWorkingToo.length > 0">
-      Local Composable (not working)
-      {{ notWorkingToo }}
-    </pre>
-    <pre v-if="working && working.length > 0">
-      SDK (working)
-      {{ working }}
-    </pre>
-    <pre v-if="workingToo && workingToo.length > 0">
-      myComposable (working)
-      {{ workingToo }}
-    </pre>
+    <div style="margin-bottom: 1rem;">
+      <label for="collection">Collection</label>
+      <select id="collection" v-model="collectionName">
+        <option value="posts">
+          Posts
+        </option>
+        <option value="tests">
+          Tests
+        </option>
+      </select>
+      <button @click="refresh(); refreshToo(); refreshThree(); refreshFour();">
+        Refresh
+      </button>
+      <br>
+      <input v-model="fieldParam" type="text" placeholder="Field Param">
+      <input v-model="searchParam" type="text" placeholder="Search posts">
+    </div>
+    <div v-if="notWorking && notWorking.length > 0">
+      <strong>
+        Composable with useAsyncData + SDK (not working)
+      </strong>
+      <pre>
+        {{ notWorking }}
+      </pre>
+    </div>
+    <div v-if="notWorkingToo && notWorkingToo.length > 0">
+      <strong>
+        Composable with useAsyncData + Test Promise (not working)
+      </strong>
+      <pre>
+        {{ notWorkingToo }}
+      </pre>
+    </div>
+    <div v-if="working && working.length > 0">
+      <strong>
+        useAsyncData + SDK (working)
+      </strong>
+      <pre>
+        {{ working }}
+      </pre>
+    </div>
+    <div v-if="workingToo && workingToo.length > 0">
+      <strong>
+        Composable with useAsyncData + SDK(only specific parameters) (working)
+      </strong>
+      <pre>
+        {{ workingToo }}
+      </pre>
+    </div>
   </div>
 </template>
 
@@ -65,7 +92,10 @@ const { data: working, refresh: refreshToo } = await useAsyncData(
 const { readItemsTest, testReadItems } = myComposable()
 
 const { data: workingToo, refresh: refreshThree } =
-  await readItemsTest(collectionName, fieldParam, searchParam)
+  await readItemsTest(collectionName, fieldParam, searchParam, {
+    immediate: false,
+    watch: [collectionName, fieldParam, searchParam]
+  })
 const { data: notWorkingToo, refresh: refreshFour } =
   await testReadItems(collectionName.value, {
     query: {
@@ -78,3 +108,9 @@ const { data: notWorkingToo, refresh: refreshFour } =
     }
   })
 </script>
+
+<style scoped>
+strong {
+  font-size: large;
+}
+</style>
