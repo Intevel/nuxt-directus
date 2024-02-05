@@ -105,7 +105,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
    *
    * @returns The new access and refresh tokens for the session.
    */
-  async function refreshTokens <
+  async function refresh <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > ({
     mode,
@@ -264,7 +264,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     logout,
     passwordRequest,
     passwordReset,
-    refreshTokens,
+    refresh,
     refreshTokenCookie,
     readMe: readMyself,
     setUser,

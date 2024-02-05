@@ -37,7 +37,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const {
     refreshTokenCookie,
-    refreshTokens,
+    refresh,
     tokens,
     user
   } = useDirectusAuth({ useStaticToken: false })
@@ -46,7 +46,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     const cookies = cookieParser(useRequestHeader('cookie'))
 
     if (cookies && cookies[refreshTokenCookieName]) {
-      tokens.value = await refreshTokens({
+      tokens.value = await refresh({
         refreshToken: cookies[refreshTokenCookieName],
         updateStates: false
       })
@@ -67,7 +67,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     // Workaround for single routes that are `ssr: false` to prevent page flashing on client-side auth
     if (useNuxtCookies) {
       nuxtApp.hook('app:beforeMount', async () => {
-        await refreshTokens().catch((e) => {
+        await refresh().catch((e) => {
           if (e.message.includes('401 Unauthorized')) {
             refreshTokenCookie().value = null
           } else {
@@ -77,7 +77,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       })
     } else {
       nuxtApp.hook('app:mounted', async () => {
-        await refreshTokens()
+        await refresh()
       })
     }
   }
