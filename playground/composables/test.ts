@@ -9,9 +9,10 @@ import type { Schema } from '../types'
 export function myComposable () {
   const { client } = useDirectusItems<Schema>()
 
-  async function readItemsTest (collectionName: Ref<RegularCollections<Schema>>, fieldParam: Ref<string>, searchParam: Ref<string>, params?: AsyncDataOptions<any>) {
+  async function readItemsTest (collectionName: MaybeRef<RegularCollections<Schema>>, fieldParam: Ref<string>, searchParam: Ref<string>, params?: AsyncDataOptions<any>) {
+    const collection = toRef(collectionName)
     return await useAsyncData(
-      () => client.request(readItemsSDK(collectionName.value, {
+      () => client.request(readItemsSDK(collection.value, {
         fields: [fieldParam.value],
         search: searchParam.value
       })), params
@@ -20,24 +21,24 @@ export function myComposable () {
 
   async function testReadItems <
   Collection extends RegularCollections<Schema>,
-  TQuery extends Query<Schema, CollectionType<Schema, Collection>>
+  TQuery extends MaybeRef<Query<Schema, CollectionType<Schema, Collection>>>
   > (
     collection: MaybeRef<Collection>,
     params?: DirectusItemsOptionsAsyncData<TQuery>
   ) {
-    const collectionRef = toRef(collection) as Ref<Collection>
+    const collectionRef = toRef(collection)
     const queryRef = params?.query ? reactive<TQuery>(params.query) : undefined
     const key = computed(() => {
       return hash([
         'readItems',
-        unref(collectionRef),
+        collectionRef.value,
         'only-a-test'
       ])
     })
     return await useAsyncData(
       params?.key ?? key.value,
       () => Promise.resolve([{
-        collection: collectionRef.value,
+        collection: collectionRef.value as Collection,
         query: queryRef,
         params: params?.params
       }]),
