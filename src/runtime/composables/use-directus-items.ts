@@ -23,7 +23,7 @@ import type {
 } from '../types'
 import { useDirectusRest } from './use-directus'
 import { recursiveUnref } from './internal-utils/recursive-unref'
-import { type Ref, useAsyncData, computed, toRef, unref } from '#imports'
+import { type MaybeRef, useAsyncData, computed, toRef } from '#imports'
 
 export function useDirectusItems<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
@@ -94,23 +94,23 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
-    collection: Ref<Collection> | Collection,
-    id: Ref<string | number> | string | number,
+    collection: MaybeRef<Collection>,
+    id: MaybeRef<string | number>,
     params?: DirectusItemsOptionsAsyncData<TQuery>
   ) {
-    const collectionRef = toRef(collection) as Ref<Collection>
-    const idRef = toRef(id) as Ref<string | number>
+    const collectionRef = toRef(collection)
+    const idRef = toRef(id)
     const key = computed(() => {
       return hash([
         'readItem',
-        unref(collectionRef),
-        unref(idRef),
+        collectionRef.value,
+        idRef.value,
         recursiveUnref(params)
       ])
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      () => client.request(sdkReadItem(collectionRef.value, idRef.value, params?.query)),
+      () => client.request(sdkReadItem(collectionRef.value as Collection, idRef.value, params?.query)),
       params?.params
     )
   }
@@ -130,20 +130,20 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
-    collection: Ref<Collection> | Collection,
+    collection: MaybeRef<Collection>,
     params?: DirectusItemsOptionsAsyncData<TQuery>
   ) {
-    const collectionRef = toRef(collection) as Ref<Collection>
+    const collectionRef = toRef(collection)
     const key = computed(() => {
       return hash([
         'readItems',
-        unref(collectionRef),
+        collectionRef.value,
         recursiveUnref(params)
       ])
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      () => client.request(sdkReadItems(collectionRef.value, params?.query)),
+      () => client.request(sdkReadItems(collectionRef.value as Collection, params?.query)),
       params?.params
     )
   }
@@ -163,20 +163,20 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     Collection extends SingletonCollections<TSchema>,
     TQuery extends Query<TSchema, TSchema[Collection]>
   > (
-    collection: Ref<Collection> | Collection,
+    collection: MaybeRef<Collection>,
     params?: DirectusItemsOptionsAsyncData<TQuery>
   ) {
-    const collectionRef = toRef(collection) as Ref<Collection>
+    const collectionRef = toRef(collection)
     const key = computed(() => {
       return hash([
         'readSingleton',
-        unref(collectionRef),
+        collectionRef.value,
         recursiveUnref(params)
       ])
     })
     return await useAsyncData(
       params?.key ?? key.value,
-      () => client.request(sdkReadSingleton(collectionRef.value, params?.query)),
+      () => client.request(sdkReadSingleton(collectionRef.value as Collection, params?.query)),
       params?.params
     )
   }

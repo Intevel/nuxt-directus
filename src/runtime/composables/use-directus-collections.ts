@@ -16,7 +16,7 @@ import type {
 } from '../types'
 import { useDirectusRest } from './use-directus'
 import { recursiveUnref } from './internal-utils/recursive-unref'
-import { type Ref, useAsyncData, computed, toRef, unref } from '#imports'
+import { type MaybeRef, useAsyncData, computed, toRef } from '#imports'
 
 export function useDirectusCollections<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
@@ -59,14 +59,14 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
   async function readCollection <
     TQuery extends Query<TSchema, DirectusCollection<TSchema>>
   > (
-    collection: Ref<string> | string,
+    collection: MaybeRef<string>,
     params?: DirectusCollectionsOptionsAsyncData<TQuery>
   ) {
     const collectionRef = toRef(collection)
     const key = computed(() => {
       return hash([
         'readCollection',
-        unref(collectionRef),
+        collectionRef.value,
         recursiveUnref(params)
       ])
     })

@@ -23,12 +23,11 @@ import { useDirectusRest } from './use-directus'
 import { useDirectusTokens } from './use-directus-tokens'
 import { recursiveUnref } from './internal-utils/recursive-unref'
 import {
-  type Ref,
+  type MaybeRef,
   useState,
   useAsyncData,
   computed,
   toRef,
-  unref,
   useRuntimeConfig
 } from '#imports'
 
@@ -142,14 +141,14 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   async function readUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    id: DirectusUser<TSchema>['id'] | Ref<DirectusUser<TSchema>['id']>,
+    id: MaybeRef<DirectusUser<TSchema>['id']>,
     params?: DirectusUsersOptionsAsyncData<TQuery>
   ) {
-    const idRef = toRef(id) as Ref<DirectusUser<TSchema>['id']>
+    const idRef = toRef(id)
     const key = computed(() => {
       return hash([
         'readUser',
-        unref(idRef),
+        idRef.value,
         recursiveUnref(params)
       ])
     })
