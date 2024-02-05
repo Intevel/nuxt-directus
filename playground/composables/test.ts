@@ -8,14 +8,14 @@ import type { Schema } from '../types'
 export function myComposable () {
   const { client } = useDirectusItems<Schema>()
 
-  async function readItemsTest (fieldParam: Ref<string>, searchParam: Ref<string>) {
+  async function readItemsTest (collectionName: Ref<RegularCollections<Schema>>, fieldParam: Ref<string>, searchParam: Ref<string>) {
     return await useAsyncData(
-      () => client.request(readItemsSDK('posts', {
+      () => client.request(readItemsSDK(collectionName.value, {
         fields: [fieldParam.value],
         search: searchParam.value
       })), {
         immediate: false,
-        watch: [fieldParam, searchParam]
+        watch: [collectionName, fieldParam, searchParam]
       }
     )
   }

@@ -11,7 +11,14 @@ export interface Post {
   status: string
 }
 
+export interface Test {
+  id: string | number
+  name: string
+  description: string
+}
+
 export interface Schema {
   global: Global
   posts: Post[]
+  tests: Test[]
 }
