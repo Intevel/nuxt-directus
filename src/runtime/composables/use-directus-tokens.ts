@@ -35,6 +35,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
     return cookie
   }
 
+  // TODO: fix getter and setter to reliably use native authentication functions
   const refreshTokenCookie = refreshToken().value
 
   return {

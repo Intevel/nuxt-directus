@@ -20,19 +20,17 @@ import { useRuntimeConfig } from '#imports'
  *
  * @returns createDirectus.
  */
-export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOptions>) => {
+export const useDirectus = <T extends Object>(options?: DirectusClientOptions) => {
   const { url } = useRuntimeConfig().public.directus
 
-  const defaultOptions: DirectusClientOptions = {
+  const config = defu(options, {
     baseURL: url,
     clientOptions: {
       globals: {
         fetch: $fetch.create(options?.fetchOptions ?? {})
       }
     }
-  }
-
-  const config = defu(options, defaultOptions)
+  })
 
   if (!config.baseURL) {
     throw new Error('Please provide a Directus URL either via Nuxt runtimeConfig or via the options parameter.')
@@ -46,24 +44,26 @@ export const useDirectus = <T extends Object>(options?: Partial<DirectusClientOp
  *
  * @returns A Directus REST client.
  */
-export const useDirectusRest = <T extends Object>(options?: Partial<DirectusRestConfig>) => {
-  const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
+export const useDirectusRest = <T extends Object>(options?: DirectusRestConfig) => {
+  const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const defaultOptions: Partial<DirectusRestConfig> = {
+  const config = defu<
+    DirectusRestConfig,
+    DirectusRestConfig[]
+  >(options, {
     authConfig: {
-      autoRefresh,
+      autoRefresh: true,
+      msRefreshBeforeExpires: 1000 * 60 * 5,
       storage: useDirectusTokens(options?.useStaticToken)
     },
     restConfig: {
       credentials: 'include'
     }
-  }
-
-  const config = defu(options, defaultOptions)
+  })
 
   const client = useDirectus<T>(config?.options)
     .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
-    .with(rest(config.restConfig))
+    .with(rest(config?.restConfig))
 
   return client
 }
@@ -73,20 +73,21 @@ export const useDirectusRest = <T extends Object>(options?: Partial<DirectusRest
  *
  * @returns A Directus GraphQL client.
  */
-export const useDirectusGraphql = <T extends Object>(options?: Partial<DirectusGraphqlConfig>) => {
-  const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
+export const useDirectusGraphql = <T extends Object>(options?: DirectusGraphqlConfig) => {
+  const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const defaultOptions: Partial<DirectusGraphqlConfig> = {
+  const config = defu<
+    DirectusGraphqlConfig,
+    DirectusGraphqlConfig[]
+  >(options, {
     authConfig: {
-      autoRefresh,
+      autoRefresh: true,
       storage: useDirectusTokens(options?.useStaticToken)
     },
     graphqlConfig: {
       credentials: 'include'
     }
-  }
-
-  const config = defu(options, defaultOptions)
+  })
 
   const client = useDirectus<T>(config?.options)
     .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
@@ -100,17 +101,15 @@ export const useDirectusGraphql = <T extends Object>(options?: Partial<DirectusG
  *
  * @returns A Directus Realtime client.
  */
-export const useDirectusRealtime = <T extends Object>(options?: Partial<DirectusRealtimeConfig>) => {
-  const { moduleConfig: { autoRefresh }, authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
+export const useDirectusRealtime = <T extends Object>(options?: DirectusRealtimeConfig) => {
+  const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const defaultOptions: Partial<DirectusRealtimeConfig> = {
+  const config = defu(options, {
     authConfig: {
-      autoRefresh,
+      autoRefresh: true,
       storage: useDirectusTokens(options?.useStaticToken)
     }
-  }
-
-  const config = defu(options, defaultOptions)
+  })
 
   const client = useDirectus<T>(config?.options)
     .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))

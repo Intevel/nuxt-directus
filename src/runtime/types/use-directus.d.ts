@@ -12,8 +12,8 @@ export interface DirectusClientOptions {
   /**
    * The URL of the Directus instance. The default value is defined in the Nuxt runtime config.
    */
-  baseURL: string;
-  clientOptions: ClientOptions;
+  baseURL?: string;
+  clientOptions?: ClientOptions;
   fetchOptions?: Omit<FetchOptions, 'baseURL'>;
 }
 
@@ -23,19 +23,19 @@ export interface DirectusClientConfig {
    * @default undefined
    * @type boolean | string | undefined
   */
-  useStaticToken: boolean | string | undefined;
-  options: Partial<DirectusClientOptions>;
-  authConfig: Partial<AuthenticationConfig>;
+  useStaticToken?: boolean | string | undefined;
+  options?: DirectusClientOptions;
+  authConfig?: Partial<AuthenticationConfig>;
 }
 
-export interface DirectusRestConfig extends Partial<DirectusClientConfig> {
-  restConfig: RestConfig;
+export interface DirectusRestConfig extends DirectusClientConfig {
+  restConfig?: RestConfig;
 }
 
-export interface DirectusGraphqlConfig extends Partial<DirectusClientConfig> {
-  graphqlConfig: GraphqlConfig;
+export interface DirectusGraphqlConfig extends DirectusClientConfig {
+  graphqlConfig?: GraphqlConfig;
 }
 
-export interface DirectusRealtimeConfig extends Partial<DirectusClientConfig> {
-  websocketConfig: WebSocketConfig;
+export interface DirectusRealtimeConfig extends DirectusClientConfig {
+  websocketConfig?: WebSocketConfig;
 }
