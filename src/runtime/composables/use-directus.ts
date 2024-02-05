@@ -54,6 +54,7 @@ export const useDirectusRest = <T extends Object>(options?: DirectusRestConfig) 
     authConfig: {
       autoRefresh: true,
       msRefreshBeforeExpires: 1000 * 60 * 5,
+      credentials: 'include',
       storage: useDirectusTokens(options?.useStaticToken)
     },
     restConfig: {
@@ -82,6 +83,8 @@ export const useDirectusGraphql = <T extends Object>(options?: DirectusGraphqlCo
   >(options, {
     authConfig: {
       autoRefresh: true,
+      msRefreshBeforeExpires: 1000 * 60 * 5,
+      credentials: 'include',
       storage: useDirectusTokens(options?.useStaticToken)
     },
     graphqlConfig: {
@@ -104,9 +107,14 @@ export const useDirectusGraphql = <T extends Object>(options?: DirectusGraphqlCo
 export const useDirectusRealtime = <T extends Object>(options?: DirectusRealtimeConfig) => {
   const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
-  const config = defu(options, {
+  const config = defu<
+    DirectusRealtimeConfig,
+    DirectusRealtimeConfig[]
+  >(options, {
     authConfig: {
       autoRefresh: true,
+      msRefreshBeforeExpires: 1000 * 60 * 5,
+      credentials: 'include',
       storage: useDirectusTokens(options?.useStaticToken)
     }
   })

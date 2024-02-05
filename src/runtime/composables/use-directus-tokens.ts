@@ -7,6 +7,7 @@ import type {
 import {
   useCookie,
   useState,
+  useNuxtApp,
   useRuntimeConfig
 } from '#imports'
 
@@ -28,6 +29,8 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
     cookieSecure: secure
   } = directusConfig.authConfig as ModuleOptions['authConfig']
 
+  const { runWithContext } = useNuxtApp()
+
   const tokens = useState<AuthenticationData | null>(authStateName, () => null)
 
   function refreshToken (maxAge?: number | undefined): CookieRef<string | null | undefined> {
@@ -35,11 +38,8 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
     return cookie
   }
 
-  // TODO: fix getter and setter to reliably use native authentication functions
-  const refreshTokenCookie = refreshToken().value
-
   return {
-    get: () => {
+    get: () => runWithContext(() => {
       if ((useStaticToken === true || typeof useStaticToken === 'string') || (!tokens.value?.access_token && useStaticToken !== false)) {
         return {
           access_token: typeof useStaticToken === 'string' ? useStaticToken : directusConfig.staticToken,
@@ -50,18 +50,18 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
       } else {
         return {
           access_token: tokens.value?.access_token ?? null,
-          refresh_token: useNuxtCookies ? refreshTokenCookie : tokens.value?.refresh_token,
+          refresh_token: useNuxtCookies ? refreshToken().value : tokens.value?.refresh_token,
           expires_at: tokens.value?.expires_at ?? null,
           expires: tokens.value?.expires ?? null
         } as AuthenticationData
       }
-    },
-    set: (value: AuthenticationData | null) => {
+    }),
+    set: (value: AuthenticationData | null) => runWithContext(() => {
       tokens.value = value
       if (useNuxtCookies) {
         refreshToken(value?.expires || undefined).value = value?.refresh_token
       }
-    },
+    }),
     tokens,
     refreshToken
   }
