@@ -40,7 +40,8 @@ export function myComposable () {
       params?.key ?? key.value,
       () => Promise.resolve([{
         collection: collectionRef.value,
-        query: queryRef
+        query: queryRef,
+        params: params?.params
       }]),
       params?.params
     )
