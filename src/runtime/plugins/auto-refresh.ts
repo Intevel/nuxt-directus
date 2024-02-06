@@ -1,25 +1,15 @@
+import { getCookie } from 'h3'
 import { useDirectusAuth } from '../composables/use-directus-auth'
 import {
   abortNavigation,
   addRouteMiddleware,
   defineNuxtPlugin,
   navigateTo,
-  useRequestHeader,
   useRuntimeConfig
 } from '#imports'
 
-function cookieParser (cookie: string | undefined): Record<string, string> | undefined {
-  if (!cookie) { return undefined }
-  return cookie.split(';').reduce((acc: Record<string, string>, cookie) => {
-    const [key, value] = cookie.split('=')
-    acc[key.trim()] = value
-    return acc
-  }, {})
-}
-
 export default defineNuxtPlugin(async (nuxtApp) => {
   const {
-    url,
     authConfig: {
       useNuxtCookies,
       refreshTokenCookieName
@@ -36,61 +26,32 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   } = useRuntimeConfig().public.directus
 
   const {
-    refreshTokenCookie,
     refresh,
     tokens,
     user
   } = useDirectusAuth({ useStaticToken: false })
 
-  if (process.server && useNuxtCookies && !tokens.value?.access_token) {
-    const cookies = cookieParser(useRequestHeader('cookie'))
+  const event = nuxtApp?.ssrContext?.event
 
-    if (cookies && cookies[refreshTokenCookieName]) {
-      tokens.value = await refresh({
-        refreshToken: cookies[refreshTokenCookieName],
-        updateStates: false
-      })
-
-      refreshTokenCookie(tokens.value?.expires).value = tokens.value?.refresh_token
-    }
-
-    if (tokens.value && tokens.value.access_token) {
-      user.value = await $fetch('users/me', {
-        baseURL: url,
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${tokens.value.access_token}`
-        }
-      })
-    }
-  } else if (process.client && !tokens.value?.access_token && (refreshTokenCookie().value || !useNuxtCookies)) {
-    // Workaround for single routes that are `ssr: false` to prevent page flashing on client-side auth
+  if (process.server && event) {
     if (useNuxtCookies) {
-      nuxtApp.hook('app:beforeMount', async () => {
-        await refresh().catch((e) => {
-          if (e.message.includes('401 Unauthorized')) {
-            refreshTokenCookie().value = null
-          } else {
-            throw e
-          }
-        })
-      })
+      const refreshToken = getCookie(event, refreshTokenCookieName)
+
+      if (refreshToken) { await refresh({ refreshToken }) }
     } else {
-      nuxtApp.hook('app:mounted', async () => {
-        await refresh()
-      })
+      // TODO: Add server side auth refresh for `useNuxtCookies: false`
     }
+  } else if (process.client && (!tokens.value?.access_token || !user.value)) {
+    nuxtApp.hook('app:mounted', async () => { await refresh().catch(_e => null) })
   }
 
   if (enableMiddleware) {
-    addRouteMiddleware(middlewareName, (to, _from) => {
+    addRouteMiddleware(middlewareName, async (to, _from) => {
       const restricted = (!toArray.length || !!toArray.find((p: string) => p === to.path))
 
-      nuxtApp.hook('app:mounted', async () => {
-        if (!user.value && to.path !== redirectTo && restricted) {
-          await navigateTo(redirectTo)
-        }
-      })
+      if (!user.value && to.path !== redirectTo && restricted) {
+        await navigateTo(redirectTo)
+      }
 
       if (process.client && !nuxtApp.isHydrating && !user.value && to.path !== redirectTo && restricted) {
         return abortNavigation()

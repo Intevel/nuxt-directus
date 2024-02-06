@@ -331,6 +331,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     readUser,
     readUsers,
     setUser,
+    tokens,
     updateMe,
     updateUser,
     updateUsers,
