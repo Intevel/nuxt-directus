@@ -68,15 +68,13 @@ const collectionName = ref<RegularCollections<Schema>>('posts')
 const fieldParam = ref<string>('id')
 const searchParam = ref<string>('')
 
-const { data: notWorking, refresh } = await readItems(collectionName.value, {
-  query: {
-    fields: [fieldParam.value],
-    search: searchParam.value
-  },
-  params: {
-    immediate: false,
-    watch: [collectionName, fieldParam, searchParam]
-  }
+const { data: notWorking, refresh } = await useAsyncData(() => readItems(collectionName.value, {
+  fields: [fieldParam.value],
+  search: searchParam.value,
+  nuxtData: false
+}), {
+  immediate: false,
+  watch: [collectionName, fieldParam, searchParam]
 })
 
 const { data: working, refresh: refreshToo } = await useAsyncData(

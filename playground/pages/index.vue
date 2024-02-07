@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!pendingPosts && !!global">
+    <div v-if="!!global">
       <h1>{{ global.title }}</h1>
       <p>{{ global.description }}</p>
     </div>
@@ -95,17 +95,12 @@ const { user } = useDirectusUsers()
 
 const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ useStaticToken: true })
 
-const { data: global, error: globalError } = await readSingleton('global')
-if (!global.value && globalError.value) {
-  console.error('Global fetch error:', globalError.value)
-}
-const { data: posts, pending: pendingPosts, refresh: refreshPosts, error: postsError } = await readItems('posts', {
-  query: {
-    fields: ['title', 'id', 'slug', 'content', 'status']
-  },
-  params: {
-    watch: [user]
-  }
+const global = await readSingleton('global')
+const { data: posts, refresh: refreshPosts, error: postsError } = await useAsyncData(() => readItems('posts', {
+  fields: ['title', 'id', 'slug', 'content', 'status'],
+  nuxtPayload: false
+}), {
+  watch: [user]
 })
 if (!posts.value && postsError.value) {
   console.error('Posts fetch error:', postsError.value)

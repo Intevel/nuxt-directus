@@ -3,7 +3,7 @@ import type { Ref } from 'vue'
 import { readItems as readItemsSDK } from '@directus/sdk'
 import type { AsyncDataOptions } from '#app'
 import { useAsyncData, useDirectusItems } from '#imports'
-import type { RegularCollections, Query, CollectionType, DirectusItemsOptionsAsyncData } from '../../src/runtime/types'
+import type { RegularCollections, Query, CollectionType } from '../../src/runtime/types'
 import type { Schema } from '../types'
 
 export function myComposable () {
@@ -24,10 +24,14 @@ export function myComposable () {
   TQuery extends MaybeRef<Query<Schema, CollectionType<Schema, Collection>>>
   > (
     collection: MaybeRef<Collection>,
-    params?: DirectusItemsOptionsAsyncData<TQuery>
+    params?: {
+      query?: TQuery
+      params?: AsyncDataOptions<any>
+      key?: string
+    }
   ) {
     const collectionRef = toRef(collection)
-    const queryRef = params?.query ? reactive<TQuery>(params.query) : undefined
+    const queryRef = toRef(params?.query)
     const key = computed(() => {
       return hash([
         'readItems',
@@ -35,13 +39,14 @@ export function myComposable () {
         'only-a-test'
       ])
     })
+    const promise = Promise.resolve([{
+      collection: collectionRef.value as Collection,
+      query: queryRef,
+      params: params?.params
+    }])
     return await useAsyncData(
       params?.key ?? key.value,
-      () => Promise.resolve([{
-        collection: collectionRef.value as Collection,
-        query: queryRef,
-        params: params?.params
-      }]),
+      () => promise,
       params?.params
     )
   }
