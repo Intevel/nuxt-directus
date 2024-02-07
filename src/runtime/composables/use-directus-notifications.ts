@@ -13,15 +13,14 @@ import type {
   DirectusRestConfig,
   DirectusNotification,
   DirectusNotificationsOptions,
-  DirectusNotificationsOptionsAsyncData,
   Query
 } from '../types'
-import { useDirectusRest } from './use-directus'
 import { recursiveUnref } from './internal-utils/recursive-unref'
-import { type MaybeRef, useAsyncData, computed, toRef } from '#imports'
+import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData  } from '#imports'
 
 export function useDirectusNotifications<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
+  const { runWithContext } = useNuxtApp()
 
   /**
    * Create a new notification.
@@ -35,13 +34,13 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
     item: Partial<DirectusNotification<TSchema>>,
-    params?: DirectusNotificationsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkCreateNotification(item, params?.query))
+      return await client.request(sdkCreateNotification(item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create notification.", error.message)
+        console.error("Couldn't create notification:", error.message)
       } else {
         console.error(error)
       }
@@ -60,13 +59,13 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
     item: Partial<DirectusNotification<TSchema>>[],
-    params?: DirectusNotificationsOptions<TQuery>
+    query?: DirectusNotificationsOptions<TQuery>
   ) {
     try {
-      return await client.request(sdkCreateNotifications(item, params?.query))
+      return await client.request(sdkCreateNotifications(item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create notifications.", error.message)
+        console.error("Couldn't create notifications:", error.message)
       } else {
         console.error(error)
       }
@@ -86,22 +85,38 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
   async function readNotification <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
-    id: MaybeRef<DirectusNotification<TSchema>['id']>,
-    params?: DirectusNotificationsOptionsAsyncData<TQuery>
+    id: DirectusNotification<TSchema>['id'],
+    _query?: DirectusNotificationsOptions<TQuery>
   ) {
-    const idRef = toRef(id)
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
+      return 'D_' + hash([
         'readNotification',
-        idRef.value,
-        recursiveUnref(params)
+        id,
+        recursiveUnref(query)
       ])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadNotification(idRef.value, params?.query)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadNotification(id, query)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read notification:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -114,19 +129,35 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
   async function readNotifications <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
-    params?: DirectusNotificationsOptionsAsyncData<TQuery>
+    _query?: DirectusNotificationsOptions<TQuery>
   ) {
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
+      return 'D_' + hash([
         'readNotifications',
-        recursiveUnref(params)
+        recursiveUnref(query)
       ])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadNotifications(params?.query)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadNotifications(query)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read notifications:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -145,13 +176,13 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
   > (
     id: DirectusNotification<TSchema>['id'],
     item: Partial<DirectusNotification<TSchema>>,
-    params?: DirectusNotificationsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateNotification(id, item, params?.query))
+      return await client.request(sdkUpdateNotification(id, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't read notification.", error.message)
+        console.error("Couldn't read notification:", error.message)
       } else {
         console.error(error)
       }
@@ -174,13 +205,13 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
   > (
     id: DirectusNotification<TSchema>['id'][],
     item: Partial<DirectusNotification<TSchema>>,
-    params?: DirectusNotificationsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateNotifications(id, item, params?.query))
+      return await client.request(sdkUpdateNotifications(id, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't read notification.", error.message)
+        console.error("Couldn't read notification:", error.message)
       } else {
         console.error(error)
       }
@@ -203,7 +234,7 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
       return await client.request(sdkDeleteNotification(id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't read notification.", error.message)
+        console.error("Couldn't read notification:", error.message)
       } else {
         console.error(error)
       }
@@ -226,7 +257,7 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
       return await client.request(sdkDeleteNotifications(id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't read notification.", error.message)
+        console.error("Couldn't read notification:", error.message)
       } else {
         console.error(error)
       }

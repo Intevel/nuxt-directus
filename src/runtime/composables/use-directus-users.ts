@@ -15,24 +15,24 @@ import {
 import type {
   DirectusRestConfig,
   DirectusUsersOptions,
-  DirectusUsersOptionsAsyncData,
   DirectusUser,
   Query
 } from '../types'
-import { useDirectusRest } from './use-directus'
-import { useDirectusTokens } from './use-directus-tokens'
 import { recursiveUnref } from './internal-utils/recursive-unref'
 import {
-  type MaybeRef,
-  useState,
-  useAsyncData,
   computed,
-  toRef,
-  useRuntimeConfig
+  ref,
+  useDirectusRest,
+  useDirectusTokens,
+  useNuxtApp,
+  useNuxtData,
+  useRuntimeConfig,
+  useState,
 } from '#imports'
 
 export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
   const { userStateName } = useRuntimeConfig().public.directus.authConfig
+  const { runWithContext } = useNuxtApp()
 
   const defaultConfig: Partial<DirectusRestConfig> = {
     useStaticToken: false
@@ -52,13 +52,13 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     userInfo: Partial<DirectusUser<TSchema>>,
-    params?: DirectusUsersOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkCreateUser(userInfo, params?.query))
+      return await client.request(sdkCreateUser(userInfo, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create user.", error.message)
+        console.error("Couldn't create user:", error.message)
       } else {
         console.error(error)
       }
@@ -77,13 +77,13 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     userInfo: Partial<DirectusUser<TSchema>>[],
-    params?: DirectusUsersOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkCreateUsers(userInfo, params?.query))
+      return await client.request(sdkCreateUsers(userInfo, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create users.", error.message)
+        console.error("Couldn't create users:", error.message)
       } else {
         console.error(error)
       }
@@ -107,20 +107,21 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   async function readMe <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    params?: DirectusUsersOptions<TQuery> & { updateState?: boolean }
+    _query?: TQuery & { updateState?: boolean }
   ) {
     if (tokens.value?.access_token) {
+      const { updateState, ...query } = _query ?? {}
       try {
-        const userData = await client.request(sdkReadMe(params?.query))
+        const userData = await client.request(sdkReadMe(query))
 
-        if (userData && params?.updateState !== false) {
+        if (userData && updateState !== false) {
           await setUser(userData as Partial<DirectusUser<TSchema>>)
         }
 
         return userData
       } catch (error: any) {
         if (error && error.message) {
-          console.error("Couldn't fetch authenticated user.", error.message)
+          console.error("Couldn't fetch authenticated user:", error.message)
         } else {
           console.error(error)
         }
@@ -141,22 +142,36 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   async function readUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    id: MaybeRef<DirectusUser<TSchema>['id']>,
-    params?: DirectusUsersOptionsAsyncData<TQuery>
+    id: DirectusUser<TSchema>['id'],
+    _query?: DirectusUsersOptions<TQuery>
   ) {
-    const idRef = toRef(id)
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
+      return 'D_' + hash([
         'readUser',
-        idRef.value,
-        recursiveUnref(params)
+        id,
+        recursiveUnref(query)
       ])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadUser(idRef.value, params?.query)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadUser(id, query)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((error: any) => {
+        if (error && error.message) {
+          console.error("Couldn't read user:", error.message)
+        } else {
+          console.error(error)
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -169,19 +184,34 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   async function readUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    params?: DirectusUsersOptionsAsyncData<TQuery>
+    _query?: DirectusUsersOptions<TQuery>
   ) {
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
+      return 'D_' + hash([
         'readUsers',
-        recursiveUnref(params)
+        recursiveUnref(query)
       ])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadUsers(params?.query)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadUsers(query)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((error: any) => {
+        if (error && error.message) {
+          console.error("Couldn't read users:", error.message)
+        } else {
+          console.error(error)
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -196,19 +226,20 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     userInfo: Partial<DirectusUser<TSchema>>,
-    params: DirectusUsersOptions<TQuery> & { updateState?: boolean }
+    _query: TQuery & { updateState?: boolean }
   ) {
     try {
-      const userData = await client.request(sdkUpdateMe(userInfo, params.query))
+      const { updateState, ...query } = _query
+      const userData = await client.request(sdkUpdateMe(userInfo, query))
 
-      if (userData && params?.updateState !== false) {
+      if (userData && updateState !== false) {
         setUser(userData as Partial<DirectusUser<TSchema>>)
       }
 
       return userData
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update authenticated user.", error.message)
+        console.error("Couldn't update authenticated user:", error.message)
       } else {
         console.error(error)
       }
@@ -231,13 +262,13 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   > (
     id: DirectusUser<TSchema>['id'],
     userInfo: Partial<DirectusUser<TSchema>>,
-    params: DirectusUsersOptions<TQuery>
+    query: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateUser(id, userInfo, params.query))
+      return await client.request(sdkUpdateUser(id, userInfo, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update user.", error.message)
+        console.error("Couldn't update user:", error.message)
       } else {
         console.error(error)
       }
@@ -260,13 +291,13 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   > (
     id: DirectusUser<TSchema>['id'][],
     userInfo: Partial<DirectusUser<TSchema>>,
-    params: DirectusUsersOptions<TQuery>
+    query: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateUsers(id, userInfo, params.query))
+      return await client.request(sdkUpdateUsers(id, userInfo, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update users.", error.message)
+        console.error("Couldn't update users:", error.message)
       } else {
         console.error(error)
       }
@@ -289,7 +320,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
       return await client.request(sdkDeleteUser(id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete user.", error.message)
+        console.error("Couldn't delete user:", error.message)
       } else {
         console.error(error)
       }
@@ -312,7 +343,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
       return await client.request(sdkDeleteUsers(id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete users.", error.message)
+        console.error("Couldn't delete users:", error.message)
       } else {
         console.error(error)
       }

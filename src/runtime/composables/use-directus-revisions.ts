@@ -6,15 +6,15 @@ import {
 import type {
   DirectusRestConfig,
   DirectusRevision,
-  DirectusRevisionsOptionsAsyncData,
+  DirectusRevisionsOptions,
   Query
 } from '../types'
-import { useDirectusRest } from './use-directus'
 import { recursiveUnref } from './internal-utils/recursive-unref'
-import { type MaybeRef, useAsyncData, computed, toRef } from '#imports'
+import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
 
 export function useDirectusRevisions<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
+  const { runWithContext } = useNuxtApp()
 
   /**
    * List an existing Revision by primary key.
@@ -29,18 +29,32 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
   async function readRevision<
     TQuery extends Query<TSchema, DirectusRevision<TSchema>>
   > (
-    id: MaybeRef<DirectusRevision<TSchema>['id']>,
-    params?: DirectusRevisionsOptionsAsyncData<TQuery>
+    id: DirectusRevision<TSchema>['id'],
+    _query?: DirectusRevisionsOptions<TQuery>
   ) {
-    const idRef = toRef(id)
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash(['readRevision', idRef.value, recursiveUnref(params)])
+      return 'D_' + hash(['readRevision', id, recursiveUnref(query)])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadRevision(idRef.value, params?.query)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadRevision(id, query)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((error: any) => {
+        if (error && error.message) {
+          console.error("Couldn't read revision:", error.message)
+        } else {
+          console.error(error)
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -52,15 +66,32 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
    */
   async function readRevisions<
     TQuery extends Query<TSchema, DirectusRevision<TSchema>>
-  > (params?: DirectusRevisionsOptionsAsyncData<TQuery>) {
+  > (
+    _query?: DirectusRevisionsOptions<TQuery>
+  ) {
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash(['readRevisions', recursiveUnref(params)])
+      return 'D_' + hash(['readRevisions', recursiveUnref(query)])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadRevisions(params?.query)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadRevisions(query)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((error: any) => {
+        if (error && error.message) {
+          console.error("Couldn't read revisions:", error.message)
+        } else {
+          console.error(error)
+        }
+      })
+      return data.value
+    }
   }
 
   return {

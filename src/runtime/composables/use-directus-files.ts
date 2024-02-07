@@ -13,15 +13,14 @@ import type {
   DirectusRestConfig,
   DirectusFile,
   DirectusFilesOptions,
-  DirectusFilesOptionsAsyncData,
   Query
 } from '../types'
-import { useDirectusRest } from './use-directus'
 import { recursiveUnref } from './internal-utils/recursive-unref'
-import { type MaybeRef, useAsyncData, computed, toRef } from '#imports'
+import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
 
 export function useDirectusFiles<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
+  const { runWithContext } = useNuxtApp()
 
   /**
    * Upload/create a new file.
@@ -35,13 +34,13 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
     data: FormData,
-    params?: DirectusFilesOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUploadFiles(data, params?.query))
+      return await client.request(sdkUploadFiles(data, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't upload files.", error.message)
+        console.error("Couldn't upload files:", error.message)
       } else {
         console.error(error)
       }
@@ -62,13 +61,13 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   > (
     url: string,
     data: Partial<DirectusFile<TSchema>>,
-    params?: DirectusFilesOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkImportFile(url, data, params?.query))
+      return await client.request(sdkImportFile(url, data, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't import file.", error.message)
+        console.error("Couldn't import file:", error.message)
       } else {
         console.error(error)
       }
@@ -88,22 +87,38 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   async function readFile <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
-    id: MaybeRef<DirectusFile<TSchema>['id']>,
-    params?: DirectusFilesOptionsAsyncData<TQuery>
+    id: DirectusFile<TSchema>['id'],
+    _query?: DirectusFilesOptions<TQuery>
   ) {
-    const idRef = toRef(id)
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
+      return 'D_' + hash([
         'readFile',
-        idRef.value,
-        recursiveUnref(params)
+        id,
+        recursiveUnref(query)
       ])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadFile(idRef.value, params?.query)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadFile(id, query)))
+    
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read file:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -116,19 +131,36 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   async function readFiles <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
-    params?: DirectusFilesOptionsAsyncData<TQuery>
+    _query?: DirectusFilesOptions<TQuery>
   ) {
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
+      return 'D_' + hash([
         'readFiles',
-        recursiveUnref(params)
+        recursiveUnref(query)
       ])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadFiles(params?.query)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadFiles(query)))
+    
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read files:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -147,13 +179,13 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   > (
     id: DirectusFile<TSchema>['id'],
     item: Partial<DirectusFile<TSchema>>,
-    params?: DirectusFilesOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateFile(id, item, params?.query))
+      return await client.request(sdkUpdateFile(id, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update file.", error.message)
+        console.error("Couldn't update file:", error.message)
       } else {
         console.error(error)
       }
@@ -176,13 +208,13 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   > (
     id: DirectusFile<TSchema>['id'][],
     item: Partial<DirectusFile<TSchema>>,
-    params?: DirectusFilesOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateFiles(id, item, params?.query))
+      return await client.request(sdkUpdateFiles(id, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update files.", error.message)
+        console.error("Couldn't update files:", error.message)
       } else {
         console.error(error)
       }
@@ -205,7 +237,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
       return await client.request(sdkDeleteFile(id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete file.", error.message)
+        console.error("Couldn't delete file:", error.message)
       } else {
         console.error(error)
       }
@@ -228,7 +260,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
       return await client.request(sdkDeleteFiles(id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete files.", error.message)
+        console.error("Couldn't delete files:", error.message)
       } else {
         console.error(error)
       }

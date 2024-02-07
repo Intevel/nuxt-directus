@@ -14,19 +14,18 @@ import {
 import type {
   CollectionType,
   DirectusItemsOptions,
-  DirectusItemsOptionsAsyncData,
   DirectusRestConfig,
   RegularCollections,
   SingletonCollections,
   Query,
   UnpackList
 } from '../types'
-import { useDirectusRest } from './use-directus'
 import { recursiveUnref } from './internal-utils/recursive-unref'
-import { type MaybeRef, useAsyncData, computed, toRef } from '#imports'
+import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
 
 export function useDirectusItems<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
+  const { runWithContext } = useNuxtApp()
 
   async function createItem <
     Collection extends keyof TSchema,
@@ -35,13 +34,13 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
   > (
     collection: Collection,
     item: Item,
-    options?: DirectusItemsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkCreateItem(collection, item, options?.query))
+      return await client.request(sdkCreateItem(collection, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create item.", error.message)
+        console.error("Couldn't create item:", error.message)
       } else {
         console.error(error)
       }
@@ -64,13 +63,13 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
   > (
     collection: Collection,
     items: Item,
-    options?: DirectusItemsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkCreateItems(collection, items, options?.query))
+      return await client.request(sdkCreateItems(collection, items, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create items.", error.message)
+        console.error("Couldn't create items:", error.message)
       } else {
         console.error(error)
       }
@@ -82,7 +81,7 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
    *
    * @param collection The collection of the item.
    * @param id The primary key of the item.
-   * @param params The query parameters.
+   * @param query The query parameters.
    *
    * @returns Returns an item object if a valid primary key was provided.
    *
@@ -94,32 +93,42 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
-    collection: MaybeRef<Collection>,
-    id: MaybeRef<string | number>,
-    params?: DirectusItemsOptionsAsyncData<TQuery>
+    collection: Collection,
+    id: string | number,
+    _query?: DirectusItemsOptions<TQuery>
   ) {
-    const collectionRef = toRef(collection)
-    const idRef = toRef(id)
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
-        'readItem',
-        collectionRef.value,
-        idRef.value,
-        recursiveUnref(params)
-      ])
+      return 'D_' + hash(['readItem', collection, id, recursiveUnref(query)])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadItem(collectionRef.value as Collection, idRef.value, params?.query)),
-      params?.params
-    )
+
+    const promise = runWithContext(() => client.request(sdkReadItem(collection, id, query)))
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read item:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
    * List all items that exist in a particular Directus collection.
    *
    * @param collection The collection of the items.
-   * @param params The query parameters.
+   * @param query The query parameters.
    *
    * @returns An array of up to limit item objects. If no items are available, data will be an empty array.
    *
@@ -130,29 +139,41 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
-    collection: MaybeRef<Collection>,
-    params?: DirectusItemsOptionsAsyncData<TQuery>
+    collection: Collection,
+    _query?: DirectusItemsOptions<TQuery>
   ) {
-    const collectionRef = toRef(collection)
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
-        'readItems',
-        collectionRef.value,
-        recursiveUnref(params)
-      ])
+      return 'D_' + hash(['readItems', collection, recursiveUnref(query)])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadItems(collectionRef.value as Collection, params?.query)),
-      params?.params
-    )
+
+    const promise = runWithContext(() => client.request(sdkReadItems(collection, query)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read item:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
    * List the singleton item in Directus.
    *
    * @param collection The collection of the items.
-   * @param params The query parameters.
+   * @param query The query parameters.
    *
    * @returns An array of up to limit item objects. If no items are available, data will be an empty array.
    *
@@ -163,22 +184,35 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     Collection extends SingletonCollections<TSchema>,
     TQuery extends Query<TSchema, TSchema[Collection]>
   > (
-    collection: MaybeRef<Collection>,
-    params?: DirectusItemsOptionsAsyncData<TQuery>
+    collection: Collection,
+    _query?: DirectusItemsOptions<TQuery>
   ) {
-    const collectionRef = toRef(collection)
+    const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return hash([
-        'readSingleton',
-        collectionRef.value,
-        recursiveUnref(params)
-      ])
+      return 'D_' + hash(['readSingleton', collection, recursiveUnref(query)])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadSingleton(collectionRef.value as Collection, params?.query)),
-      params?.params
-    )
+
+    const promise = runWithContext(() => client.request(sdkReadSingleton(collection, query)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read item:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -203,13 +237,13 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     collection: Collection,
     id: string | number,
     item: Item,
-    options?: DirectusItemsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateItem(collection, id, item, options?.query))
+      return await client.request(sdkUpdateItem(collection, id, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update item.", error.message)
+        console.error("Couldn't update item:", error.message)
       } else {
         console.error(error)
       }
@@ -238,13 +272,13 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
     collection: Collection,
     ids: string[] | number[],
     item: Item,
-    options?: DirectusItemsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateItems(collection, ids, item, options?.query))
+      return await client.request(sdkUpdateItems(collection, ids, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update items.", error.message)
+        console.error("Couldn't update items:", error.message)
       } else {
         console.error(error)
       }
@@ -270,13 +304,13 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
   > (
     collection: Collection,
     item: Item,
-    options?: DirectusItemsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateSingleton(collection, item, options?.query))
+      return await client.request(sdkUpdateSingleton(collection, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update singleton.", error.message)
+        console.error("Couldn't update singleton:", error.message)
       } else {
         console.error(error)
       }
@@ -306,7 +340,7 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
       return await client.request(sdkDeleteItem(collection, id))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete item.", error.message)
+        console.error("Couldn't delete item:", error.message)
       } else {
         console.error(error)
       }
@@ -337,7 +371,7 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
       return await client.request(sdkDeleteItems(collection, idOrQuery))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete items.", error.message)
+        console.error("Couldn't delete items:", error.message)
       } else {
         console.error(error)
       }

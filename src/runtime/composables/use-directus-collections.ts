@@ -9,17 +9,14 @@ import {
 import type {
   DirectusRestConfig,
   DirectusCollection,
-  DirectusCollectionsOptions,
-  DirectusCollectionsOptionsAsyncData,
   NestedPartial,
   Query
 } from '../types'
-import { useDirectusRest } from './use-directus'
-import { recursiveUnref } from './internal-utils/recursive-unref'
-import { type MaybeRef, useAsyncData, computed, toRef } from '#imports'
+import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
 
 export function useDirectusCollections<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
+  const { runWithContext } = useNuxtApp()
 
   /**
    * Create a new Collection. This will create a new table in the database as well.
@@ -33,13 +30,13 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
     TQuery extends Query<TSchema, DirectusCollection<TSchema>>
   > (
     item: NestedPartial<DirectusCollection<TSchema>>,
-    params?: DirectusCollectionsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkCreateCollection(item, params?.query))
+      return await client.request(sdkCreateCollection(item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't create collection.", error.message)
+        console.error("Couldn't create collection:", error.message)
       } else {
         console.error(error)
       }
@@ -50,56 +47,80 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
    * Retrieve a single collection by table name.
    *
    * @param collection The collection name.
-   * @param params useAsyncData params.
+   * @param nuxtData chace the response into Nuxt's payload.
    *
    * @returns A collection object.
    *
    * @throws Will throw if collection is empty.
    */
-  async function readCollection <
-    TQuery extends Query<TSchema, DirectusCollection<TSchema>>
-  > (
-    collection: MaybeRef<string>,
-    params?: DirectusCollectionsOptionsAsyncData<TQuery>
+  async function readCollection (
+    collection: string,
+    nuxtData?: string | false
   ) {
-    const collectionRef = toRef(collection)
     const key = computed(() => {
-      return hash([
+      return 'D_' + hash([
         'readCollection',
-        collectionRef.value,
-        recursiveUnref(params)
+        collection
       ])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadCollection(collectionRef.value)),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadCollection(collection)))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      // @ts-ignore TODO: check why Awaited is creating problems
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read collection:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
    * List the available collections.
    *
-   * @param params useAsyncData params.
+   * @param nuxtData chace the response into Nuxt's payload.
    *
    * @returns An array of collection objects.
    */
-  async function readCollections <
-    TQuery extends Query<TSchema, DirectusCollection<TSchema>>
-  > (
-    params?: DirectusCollectionsOptionsAsyncData<TQuery>
+  async function readCollections (
+    nuxtData?: string | false
   ) {
     const key = computed(() => {
-      return hash([
-        'readCollections',
-        recursiveUnref(params)
+      return 'D_' + hash([
+        'readCollections'
       ])
     })
-    return await useAsyncData(
-      params?.key ?? key.value,
-      () => client.request(sdkReadCollections()),
-      params?.params
-    )
+    const promise = runWithContext(() => client.request(sdkReadCollections()))
+
+    const { data } = nuxtData !== false
+      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<Awaited<typeof promise>>() }
+
+    if (data.value) {
+      return data.value
+    } else {
+      data.value = await promise.catch((e: any) => {
+        if (e && e.message) {
+          console.error("Couldn't read collections:", e.message)
+          return null
+        } else {
+          console.error(e)
+          return null
+        }
+      })
+      return data.value
+    }
   }
 
   /**
@@ -118,13 +139,13 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
   > (
     collection: string,
     item: NestedPartial<DirectusCollection<TSchema>>,
-    params?: DirectusCollectionsOptions<TQuery>
+    query?: TQuery
   ) {
     try {
-      return await client.request(sdkUpdateCollection(collection, item, params?.query))
+      return await client.request(sdkUpdateCollection(collection, item, query))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't update collection.", error.message)
+        console.error("Couldn't update collection:", error.message)
       } else {
         console.error(error)
       }
@@ -145,7 +166,7 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
       return await client.request(sdkDeleteCollection(collection))
     } catch (error: any) {
       if (error && error.message) {
-        console.error("Couldn't delete collection.", error.message)
+        console.error("Couldn't delete collection:", error.message)
       } else {
         console.error(error)
       }
