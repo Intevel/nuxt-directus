@@ -37,7 +37,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     if (useNuxtCookies) {
       const refreshToken = getCookie(event, refreshTokenCookieName)
 
-      if (refreshToken) { await refresh({ refreshToken }) }
+      if (refreshToken) { await refresh({ refreshToken }).catch(_e => null) }
     } else {
       // TODO: Add server side auth refresh for `useNuxtCookies: false`
     }
