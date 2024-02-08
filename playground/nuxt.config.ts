@@ -16,6 +16,9 @@ export default defineNuxtConfig({
         enableMiddleware: false,
         redirectTo: '/login',
         to: ['/restricted']
+      },
+      readMeQuery: {
+        fields: ['id', 'email', 'first_name', 'last_name', 'avatar', 'status']
       }
     }
   },
