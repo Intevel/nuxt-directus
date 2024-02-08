@@ -1,14 +1,15 @@
 import { fileURLToPath } from 'url'
 import { defu } from 'defu'
 import {
-  createResolver,
-  defineNuxtModule,
   addImports,
   addImportsDir,
   addPlugin,
-  addServerImportsDir
+  addServerImportsDir,
+  createResolver,
+  defineNuxtModule,
+  installModule
 } from '@nuxt/kit'
-import { joinURL } from 'ufo'
+import { joinURL, withTrailingSlash } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type {
@@ -52,7 +53,7 @@ export default defineNuxtModule<ModuleOptions>({
       }
     }
   },
-  setup (options, nuxt) {
+  async setup (options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
     // Private runtimeConfig
@@ -112,6 +113,14 @@ export default defineNuxtModule<ModuleOptions>({
         })
       )
     }
+
+    // Install @nuxt/image and use directus provider
+    await installModule('@nuxt/image', {
+      provider: 'directus',
+      directus: {
+        baseURL: withTrailingSlash(joinURL(options.url, 'assets'))
+      }
+    })
 
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)

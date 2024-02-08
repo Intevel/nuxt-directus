@@ -29,6 +29,9 @@
         </NuxtLink>
       </div>
     </div>
+    <div v-if="user?.avatar">
+      <NuxtImg :src="`${user.avatar}`" alt="User avatar" />
+    </div>
   </div>
 </template>
 
