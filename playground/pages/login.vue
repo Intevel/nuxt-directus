@@ -20,7 +20,7 @@
         <button @click="logout()">
           Sign out
         </button>
-        <button @click="refreshTokens()">
+        <button @click="refresh()">
           Refresh Tokens
         </button>
       </span>
@@ -32,7 +32,7 @@
 import { ref } from 'vue'
 import { navigateTo, useDirectusAuth, useDirectusUsers } from '#imports'
 
-const { login, logout, refreshTokens } = useDirectusAuth()
+const { login, logout, refresh } = useDirectusAuth()
 const { user } = useDirectusUsers()
 
 const credentials = ref({ email: '', password: '' })
