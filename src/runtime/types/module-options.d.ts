@@ -1,3 +1,5 @@
+import type { DirectusUser, Query } from '@directus/sdk'
+
 export interface ModuleOptionsPrivate {
   /**
    * Directus static token that is available only server side. Customizable at runtime via NUXT_DIRECTUS_STATIC_TOKEN environment variable.
@@ -105,6 +107,12 @@ export interface ModuleOptionsPublic {
   * @type object
   */
   moduleConfig: {
+    /**
+     * The defaults for the readMe query.
+     * @default undefined
+     * @type Query<any, DirectusUser<any>> & { updateState?: boolean }
+     */
+    readMeQuery?: Query<any, DirectusUser<any>> & { updateState?: boolean };
     /**
      * Configurations to automatically refresh the access token and user data.
      * @default object

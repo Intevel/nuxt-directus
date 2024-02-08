@@ -50,7 +50,8 @@ export default defineNuxtModule<ModuleOptions>({
         middlewareName: 'directus-auth-middleware',
         redirectTo: '/login',
         to: undefined
-      }
+      },
+      readMeQuery: undefined
     }
   },
   async setup (options, nuxt) {
@@ -93,7 +94,8 @@ export default defineNuxtModule<ModuleOptions>({
           middlewareName: options.moduleConfig.autoRefresh.middlewareName,
           redirectTo: options.moduleConfig.autoRefresh.redirectTo,
           to: options.moduleConfig.autoRefresh.to
-        }
+        },
+        readMeQuery: options.moduleConfig.readMeQuery
       }
     })
 

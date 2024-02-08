@@ -31,7 +31,14 @@ import {
 } from '#imports'
 
 export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
-  const { userStateName } = useRuntimeConfig().public.directus.authConfig
+  const {
+    authConfig: {
+      userStateName
+    },
+    moduleConfig: {
+      readMeQuery
+    }
+  } = useRuntimeConfig().public.directus
   const { runWithContext } = useNuxtApp()
 
   const defaultConfig: Partial<DirectusRestConfig> = {
@@ -110,7 +117,7 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
     _query?: TQuery & { updateState?: boolean }
   ) {
     if (tokens.value?.access_token) {
-      const { updateState, ...query } = _query ?? {}
+      const { updateState, ...query } = defu(_query, readMeQuery)
       try {
         const userData = await client.request(sdkReadMe(query))
 
