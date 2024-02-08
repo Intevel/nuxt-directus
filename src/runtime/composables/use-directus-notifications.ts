@@ -16,7 +16,7 @@ import type {
   Query
 } from '../types'
 import { recursiveUnref } from './internal-utils/recursive-unref'
-import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData  } from '#imports'
+import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
 
 export function useDirectusNotifications<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)

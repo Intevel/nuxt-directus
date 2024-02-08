@@ -27,7 +27,7 @@ import {
   useNuxtApp,
   useNuxtData,
   useRuntimeConfig,
-  useState,
+  useState
 } from '#imports'
 
 export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {

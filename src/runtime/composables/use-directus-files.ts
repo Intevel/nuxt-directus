@@ -99,7 +99,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
       ])
     })
     const promise = runWithContext(() => client.request(sdkReadFile(id, query)))
-    
+
     const { data } = nuxtData !== false
       ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
       : { data: ref<Awaited<typeof promise>>() }
@@ -141,7 +141,7 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
       ])
     })
     const promise = runWithContext(() => client.request(sdkReadFiles(query)))
-    
+
     const { data } = nuxtData !== false
       ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
       : { data: ref<Awaited<typeof promise>>() }
