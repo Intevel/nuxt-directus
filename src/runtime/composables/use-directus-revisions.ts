@@ -78,13 +78,12 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
     const promise = runWithContext(() => client.request(sdkReadRevisions(query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
-      : { data: ref<Awaited<typeof promise>>() }
+      ? useNuxtData<void | Awaited<typeof promise>>(nuxtData ?? key.value)
+      : { data: ref<void | Awaited<typeof promise>>() }
 
     if (data.value) {
       return data.value
     } else {
-      // @ts-ignore TODO: check why Awaited is creating problems
       data.value = await promise.catch((error: any) => {
         if (error && error.message) {
           console.error("Couldn't read revisions:", error.message)

@@ -151,7 +151,6 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
     if (data.value) {
       return data.value
     } else {
-      // @ts-ignore TODO: check why Awaited is creating problems
       data.value = await promise.catch((e: any) => {
         if (e && e.message) {
           console.error("Couldn't read files:", e.message)
