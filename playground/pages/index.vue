@@ -98,7 +98,7 @@ const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDire
 const global = await readSingleton('global')
 const { data: posts, refresh: refreshPosts, error: postsError } = await useAsyncData(() => readItems('posts', {
   fields: ['title', 'id', 'slug', 'content', 'status'],
-  nuxtPayload: false
+  nuxtData: false
 }), {
   watch: [user]
 })

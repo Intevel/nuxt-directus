@@ -25,7 +25,7 @@
         {{ notWorking }}
       </pre>
     </div>
-    <div v-if="notWorkingToo && notWorkingToo.length > 0">
+    <div v-if="notWorkingToo">
       <strong>
         Composable with useAsyncData + Test Promise (not working)
       </strong>
@@ -94,17 +94,27 @@ const { data: workingToo, refresh: refreshThree } =
     immediate: false,
     watch: [collectionName, fieldParam, searchParam]
   })
-const { data: notWorkingToo, refresh: refreshFour } =
-  await testReadItems(collectionName.value, {
-    query: {
-      fields: [fieldParam.value],
-      search: searchParam.value
-    },
-    params: {
-      immediate: false,
-      watch: [collectionName, fieldParam, searchParam]
-    }
-  })
+// const { data: notWorkingToo, refresh: refreshFour } =
+//   await testReadItems(collectionName.value, {
+//     query: {
+//       fields: [fieldParam.value],
+//       search: searchParam.value
+//     },
+//     params: {
+//       immediate: false,
+//       watch: [collectionName, fieldParam, searchParam]
+//     }
+//   })
+
+const { data: notWorkingToo, error, refresh: refreshFour } = await useFetch(`/items/${collectionName.value}`, {
+  query: {
+    fields: [fieldParam.value],
+    search: searchParam.value
+  },
+  baseURL: 'http://localhost:8055',
+  immediate: false,
+  watch: [collectionName, fieldParam, searchParam]
+})
 </script>
 
 <style scoped>
