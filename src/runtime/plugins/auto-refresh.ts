@@ -1,4 +1,5 @@
-import { getCookie } from 'h3'
+import { appendResponseHeader, getCookie, getHeader } from 'h3'
+import type { AuthenticationData } from '@directus/sdk'
 import { useDirectusAuth } from '../composables/use-directus-auth'
 import {
   abortNavigation,
@@ -10,6 +11,7 @@ import {
 
 export default defineNuxtPlugin(async (nuxtApp) => {
   const {
+    url: baseURL,
     authConfig: {
       useNuxtCookies,
       refreshTokenCookieName
@@ -28,6 +30,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const {
     refresh,
     tokens,
+    readMe,
     user
   } = useDirectusAuth({ staticToken: false })
 
@@ -39,7 +42,30 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
       if (refreshToken) { await refresh({ refreshToken }).catch(_e => null) }
     } else {
-      // TODO: Add server side auth refresh for `useNuxtCookies: false`
+      const cookie = getHeader(event, 'cookie')
+
+      if (cookie) {
+        const res = await $fetch.raw<{ data: AuthenticationData }>('/auth/refresh', {
+          body: {
+            mode: 'cookie'
+          },
+          baseURL,
+          method: 'POST',
+          headers: {
+            cookie
+          }
+        }).catch(_e => null)
+
+        if (res && res._data && res.headers) {
+          tokens.value = res._data.data
+
+          const resCookies = res.headers.get('set-cookie') || ''
+
+          appendResponseHeader(event, 'set-cookie', resCookies)
+
+          await readMe()
+        }
+      }
     }
   } else if (process.client && (!tokens.value?.access_token || !user.value)) {
     nuxtApp.hook('app:mounted', async () => { await refresh().catch(_e => null) })
