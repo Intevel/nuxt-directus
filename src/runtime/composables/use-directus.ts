@@ -55,7 +55,7 @@ export const useDirectusRest = <T extends Object>(options?: DirectusRestConfig) 
       autoRefresh: true,
       msRefreshBeforeExpires: 1000 * 60 * 5,
       credentials: 'include',
-      storage: useDirectusTokens(options?.useStaticToken)
+      storage: useDirectusTokens(options?.staticToken)
     },
     restConfig: {
       credentials: 'include'
@@ -85,7 +85,7 @@ export const useDirectusGraphql = <T extends Object>(options?: DirectusGraphqlCo
       autoRefresh: true,
       msRefreshBeforeExpires: 1000 * 60 * 5,
       credentials: 'include',
-      storage: useDirectusTokens(options?.useStaticToken)
+      storage: useDirectusTokens(options?.staticToken)
     },
     graphqlConfig: {
       credentials: 'include'
@@ -115,7 +115,7 @@ export const useDirectusRealtime = <T extends Object>(options?: DirectusRealtime
       autoRefresh: true,
       msRefreshBeforeExpires: 1000 * 60 * 5,
       credentials: 'include',
-      storage: useDirectusTokens(options?.useStaticToken)
+      storage: useDirectusTokens(options?.staticToken)
     }
   })
 

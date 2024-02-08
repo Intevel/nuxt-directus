@@ -23,7 +23,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
   const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
 
   const defaultConfig: Partial<DirectusRestConfig> = {
-    useStaticToken: false
+    staticToken: false
   }
   const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
 
@@ -36,7 +36,7 @@ export function useDirectusAuth<TSchema extends Object> (config?: Partial<Direct
     refreshToken: refreshTokenCookie,
     set: setTokens,
     tokens
-  } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
+  } = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken)
   const defaultMode: AuthenticationMode = useNuxtCookies ? 'json' : 'cookie'
 
   /**

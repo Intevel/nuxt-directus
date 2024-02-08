@@ -35,10 +35,10 @@ export function useDirectusUsers <TSchema extends Object> (config?: Partial<Dire
   const { runWithContext } = useNuxtApp()
 
   const defaultConfig: Partial<DirectusRestConfig> = {
-    useStaticToken: false
+    staticToken: false
   }
   const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
-  const { tokens } = useDirectusTokens(config?.useStaticToken ?? defaultConfig.useStaticToken)
+  const { tokens } = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken)
 
   /**
    * Create a new user.

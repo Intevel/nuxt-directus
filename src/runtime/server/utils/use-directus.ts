@@ -49,7 +49,7 @@ export const useDirectusRest = <T extends Object>(options?: Partial<Omit<Directu
   const { staticToken: privateToken } = useRuntimeConfig().directus
 
   const defaultOptions: Partial<Omit<DirectusRestConfig, 'authConfig'>> = {
-    useStaticToken: true,
+    staticToken: true,
     restConfig: {
       credentials: 'include' // TODO: need to confirm how to handle the incoming request's credentials inside `server/api`
     }
@@ -57,10 +57,10 @@ export const useDirectusRest = <T extends Object>(options?: Partial<Omit<Directu
 
   const config = defu(options, defaultOptions)
 
-  const token = config.useStaticToken === true
+  const token = config.staticToken === true
     ? privateToken
-    : typeof config.useStaticToken === 'string'
-      ? config.useStaticToken
+    : typeof config.staticToken === 'string'
+      ? config.staticToken
       : ''
 
   const client = useDirectus<T>(config?.options)
@@ -79,15 +79,15 @@ export const useDirectusRealtime = <T extends Object>(options?: Partial<Directus
   const { staticToken: privateToken } = useRuntimeConfig().directus
 
   const defaultOptions: Partial<Omit<DirectusRealtimeConfig, 'authConfig'>> = {
-    useStaticToken: true
+    staticToken: true
   }
 
   const config = defu(options, defaultOptions)
 
-  const token = config.useStaticToken === true
+  const token = config.staticToken === true
     ? privateToken
-    : typeof config.useStaticToken === 'string'
-      ? config.useStaticToken
+    : typeof config.staticToken === 'string'
+      ? config.staticToken
       : ''
 
   const client = useDirectus<T>(config?.options)

@@ -29,7 +29,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     refresh,
     tokens,
     user
-  } = useDirectusAuth({ useStaticToken: false })
+  } = useDirectusAuth({ staticToken: false })
 
   const event = nuxtApp?.ssrContext?.event
 

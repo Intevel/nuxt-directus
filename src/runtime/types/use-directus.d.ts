@@ -23,7 +23,7 @@ export interface DirectusClientConfig {
    * @default undefined
    * @type boolean | string | undefined
   */
-  useStaticToken?: boolean | string | undefined;
+  staticToken?: boolean | string | undefined;
   options?: DirectusClientOptions;
   authConfig?: Partial<AuthenticationConfig>;
 }
