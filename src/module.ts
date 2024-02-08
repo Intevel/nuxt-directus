@@ -114,16 +114,19 @@ export default defineNuxtModule<ModuleOptions>({
       )
     }
 
-    // Install @nuxt/image and use directus provider
-    await installModule('@nuxt/image', {
-      provider: 'directus',
-      directus: {
-        baseURL: withTrailingSlash(joinURL(directusPublic.url, 'assets'))
-      }
-    })
-
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
+
+    // Install @nuxt/image and use directus provider
+    await installModule('@nuxt/image', {
+      providers: {
+        nuxtDirectus: {
+          name: 'nuxt-directus',
+          provider: resolve(runtimeDir, 'image-providers', 'nuxt-directus')
+        }
+      },
+      provider: 'nuxt-directus'
+    })
 
     if (directusPublic.moduleConfig.autoRefresh !== false) {
       addPlugin({

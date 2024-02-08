@@ -6,7 +6,6 @@ export default defineNuxtConfig({
   modules: ['nuxt-directus'],
   devtools: true,
   directus: {
-    url: 'http://localhost:8055/',
     authConfig: {
       useNuxtCookies: true,
       refreshTokenCookieName: 'nuxt-directus_refresh_token'
