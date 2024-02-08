@@ -10,10 +10,12 @@ import {
   deleteFiles as sdkDeleteFiles
 } from '@directus/sdk'
 import type {
-  DirectusRestConfig,
   DirectusFile,
-  DirectusFilesOptions,
   Query
+} from '@directus/sdk'
+import type {
+  DirectusRestConfig,
+  DirectusFilesOptions
 } from '../types'
 import { recursiveUnref } from './internal-utils/recursive-unref'
 import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'

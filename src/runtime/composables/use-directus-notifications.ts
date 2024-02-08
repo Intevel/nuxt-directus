@@ -10,10 +10,12 @@ import {
   deleteNotifications as sdkDeleteNotifications
 } from '@directus/sdk'
 import type {
-  DirectusRestConfig,
   DirectusNotification,
-  DirectusNotificationsOptions,
   Query
+} from '@directus/sdk'
+import type {
+  DirectusRestConfig,
+  DirectusNotificationsOptions
 } from '../types'
 import { recursiveUnref } from './internal-utils/recursive-unref'
 import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'

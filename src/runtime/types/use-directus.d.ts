@@ -4,7 +4,7 @@ import type {
   RestConfig,
   GraphqlConfig,
   WebSocketConfig
-} from './index'
+} from '@directus/sdk'
 import type { WebSocket } from 'ws'
 import type { FetchOptions } from 'ofetch'
 

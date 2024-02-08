@@ -1,7 +1,7 @@
 import type { 
   AuthenticationData,
   AuthenticationStorage
-} from './index'
+} from '@directus/sdk'
 
 export interface RefreshToken {
   refreshToken: (maxAge?: number | undefined) => CookieRef<string | null | undefined>

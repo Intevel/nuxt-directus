@@ -20,7 +20,7 @@ import { useRuntimeConfig } from '#imports'
  *
  * @returns createDirectus.
  */
-export const useDirectus = <T extends Object>(options?: DirectusClientOptions) => {
+export const useDirectus = <T extends object>(options?: DirectusClientOptions) => {
   const { url } = useRuntimeConfig().public.directus
 
   const config = defu(options, {
@@ -44,7 +44,7 @@ export const useDirectus = <T extends Object>(options?: DirectusClientOptions) =
  *
  * @returns A Directus REST client.
  */
-export const useDirectusRest = <T extends Object>(options?: DirectusRestConfig) => {
+export const useDirectusRest = <T extends object>(options?: DirectusRestConfig) => {
   const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
   const config = defu<
@@ -74,7 +74,7 @@ export const useDirectusRest = <T extends Object>(options?: DirectusRestConfig) 
  *
  * @returns A Directus GraphQL client.
  */
-export const useDirectusGraphql = <T extends Object>(options?: DirectusGraphqlConfig) => {
+export const useDirectusGraphql = <T extends object>(options?: DirectusGraphqlConfig) => {
   const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
   const config = defu<
@@ -104,7 +104,7 @@ export const useDirectusGraphql = <T extends Object>(options?: DirectusGraphqlCo
  *
  * @returns A Directus Realtime client.
  */
-export const useDirectusRealtime = <T extends Object>(options?: DirectusRealtimeConfig) => {
+export const useDirectusRealtime = <T extends object>(options?: DirectusRealtimeConfig) => {
   const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
   const config = defu<

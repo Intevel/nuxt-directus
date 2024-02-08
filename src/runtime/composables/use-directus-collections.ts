@@ -7,10 +7,12 @@ import {
   deleteCollection as sdkDeleteCollection
 } from '@directus/sdk'
 import type {
-  DirectusRestConfig,
   DirectusCollection,
   NestedPartial,
   Query
+} from '@directus/sdk'
+import type {
+  DirectusRestConfig
 } from '../types'
 import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
 

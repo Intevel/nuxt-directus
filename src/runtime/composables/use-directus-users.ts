@@ -13,10 +13,12 @@ import {
   deleteUsers as sdkDeleteUsers
 } from '@directus/sdk'
 import type {
-  DirectusRestConfig,
-  DirectusUsersOptions,
   DirectusUser,
   Query
+} from '@directus/sdk'
+import type {
+  DirectusRestConfig,
+  DirectusUsersOptions
 } from '../types'
 import { recursiveUnref } from './internal-utils/recursive-unref'
 import {
@@ -30,7 +32,7 @@ import {
   useState
 } from '#imports'
 
-export function useDirectusUsers <TSchema extends Object> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusUsers <TSchema extends object> (config?: Partial<DirectusRestConfig>) {
   const {
     authConfig: {
       userStateName

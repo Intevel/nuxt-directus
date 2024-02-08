@@ -13,12 +13,14 @@ import {
 } from '@directus/sdk'
 import type {
   CollectionType,
-  DirectusItemsOptions,
-  DirectusRestConfig,
   RegularCollections,
   SingletonCollections,
   Query,
   UnpackList
+} from '@directus/sdk'
+import type {
+  DirectusItemsOptions,
+  DirectusRestConfig
 } from '../types'
 import { recursiveUnref } from './internal-utils/recursive-unref'
 import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'

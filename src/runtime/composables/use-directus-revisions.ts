@@ -4,10 +4,12 @@ import {
   readRevisions as sdkReadRevisions
 } from '@directus/sdk'
 import type {
-  DirectusRestConfig,
   DirectusRevision,
-  DirectusRevisionsOptions,
   Query
+} from '@directus/sdk'
+import type {
+  DirectusRestConfig,
+  DirectusRevisionsOptions
 } from '../types'
 import { recursiveUnref } from './internal-utils/recursive-unref'
 import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'

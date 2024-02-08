@@ -1,6 +1,8 @@
 import type { CookieRef } from '#app'
 import type {
-  AuthenticationData,
+  AuthenticationData
+} from '@directus/sdk'
+import type {
   DirectusTokens,
   ModuleOptions
 } from '../types'
