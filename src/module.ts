@@ -118,7 +118,7 @@ export default defineNuxtModule<ModuleOptions>({
     await installModule('@nuxt/image', {
       provider: 'directus',
       directus: {
-        baseURL: withTrailingSlash(joinURL(options.url, 'assets'))
+        baseURL: withTrailingSlash(joinURL(directusPublic.url, 'assets'))
       }
     })
 
