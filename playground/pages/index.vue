@@ -93,7 +93,7 @@ import type { Post, Schema } from '../types'
 const { logout } = useDirectusAuth()
 const { user } = useDirectusUsers()
 
-const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ useStaticToken: true })
+const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ staticToken: true })
 
 const global = await readSingleton('global')
 const { data: posts, refresh: refreshPosts, error: postsError } = await useAsyncData(() => readItems('posts', {
