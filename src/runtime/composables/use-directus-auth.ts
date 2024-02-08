@@ -16,8 +16,7 @@ import type {
   LoginOptions,
   Query
 } from '../types'
-import { useDirectusRest } from './use-directus'
-import { useDirectusTokens } from './use-directus-tokens'
+import { useDirectusRest, useDirectusTokens } from '#imports'
 import { useDirectusUsers } from './use-directus-users'
 import { useRuntimeConfig } from '#imports'
 
