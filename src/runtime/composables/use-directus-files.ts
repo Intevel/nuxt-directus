@@ -94,16 +94,16 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash([
-        'readFile',
-        id,
-        recursiveUnref(query)
-      ])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readFile', id, recursiveUnref(query)])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadFile(id, query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {
@@ -137,15 +137,16 @@ export function useDirectusFiles<TSchema extends object> (config?: Partial<Direc
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash([
-        'readFiles',
-        recursiveUnref(query)
-      ])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readFiles', recursiveUnref(query)])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadFiles(query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {

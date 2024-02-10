@@ -57,18 +57,19 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
    */
   async function readCollection (
     collection: string,
-    nuxtData?: string | false
+    nuxtData?: string | boolean
   ) {
     const key = computed(() => {
-      return 'D_' + hash([
-        'readCollection',
-        collection
-      ])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readCollection', collection])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadCollection(collection)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {
@@ -96,17 +97,19 @@ export function useDirectusCollections<TSchema extends object> (config?: Partial
    * @returns An array of collection objects.
    */
   async function readCollections (
-    nuxtData?: string | false
+    nuxtData?: string | boolean
   ) {
     const key = computed(() => {
-      return 'D_' + hash([
-        'readCollections'
-      ])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readCollections'])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadCollections()))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {

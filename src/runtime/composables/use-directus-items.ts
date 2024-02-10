@@ -101,12 +101,16 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash(['readItem', collection, id, recursiveUnref(query)])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readItem', collection, id, recursiveUnref(query)])
+      }
     })
 
     const promise = runWithContext(() => client.request(sdkReadItem(collection, id, query)))
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {
@@ -146,13 +150,17 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash(['readItems', collection, recursiveUnref(query)])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readItems', collection, recursiveUnref(query)])
+      }
     })
 
     const promise = runWithContext(() => client.request(sdkReadItems(collection, query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {
@@ -191,13 +199,17 @@ export function useDirectusItems<TSchema extends object> (config?: Partial<Direc
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash(['readSingleton', collection, recursiveUnref(query)])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readSingleton', collection, recursiveUnref(query)])
+      }
     })
 
     const promise = runWithContext(() => client.request(sdkReadSingleton(collection, query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {

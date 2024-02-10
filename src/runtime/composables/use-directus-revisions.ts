@@ -36,12 +36,16 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash(['readRevision', id, recursiveUnref(query)])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readRevision', id, recursiveUnref(query)])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadRevision(id, query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {
@@ -73,12 +77,16 @@ export function useDirectusRevisions<TSchema extends object> (config?: Partial<D
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash(['readRevisions', recursiveUnref(query)])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readRevisions', recursiveUnref(query)])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadRevisions(query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<void | Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<void | Awaited<typeof promise>>(key.value)
       : { data: ref<void | Awaited<typeof promise>>() }
 
     if (data.value) {

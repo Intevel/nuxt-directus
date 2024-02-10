@@ -92,16 +92,16 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash([
-        'readNotification',
-        id,
-        recursiveUnref(query)
-      ])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readNotification', id, recursiveUnref(query)])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadNotification(id, query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {
@@ -135,15 +135,16 @@ export function useDirectusNotifications<TSchema extends object> (config?: Parti
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash([
-        'readNotifications',
-        recursiveUnref(query)
-      ])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readNotifications', recursiveUnref(query)])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadNotifications(query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {

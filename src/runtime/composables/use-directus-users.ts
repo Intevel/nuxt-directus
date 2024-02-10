@@ -156,16 +156,16 @@ export function useDirectusUsers <TSchema extends object> (config?: Partial<Dire
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash([
-        'readUser',
-        id,
-        recursiveUnref(query)
-      ])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readUser', id, recursiveUnref(query)])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadUser(id, query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<Awaited<typeof promise>>(key.value)
       : { data: ref<Awaited<typeof promise>>() }
 
     if (data.value) {
@@ -197,15 +197,16 @@ export function useDirectusUsers <TSchema extends object> (config?: Partial<Dire
   ) {
     const { nuxtData, ...query } = _query ?? {}
     const key = computed(() => {
-      return 'D_' + hash([
-        'readUsers',
-        recursiveUnref(query)
-      ])
+      if (typeof nuxtData === 'string') {
+        return nuxtData
+      } else {
+        return 'D_' + hash(['readUsers', recursiveUnref(query)])
+      }
     })
     const promise = runWithContext(() => client.request(sdkReadUsers(query)))
 
     const { data } = nuxtData !== false
-      ? useNuxtData<void | Awaited<typeof promise>>(nuxtData ?? key.value)
+      ? useNuxtData<void | Awaited<typeof promise>>(key.value)
       : { data: ref<void | Awaited<typeof promise>>() }
 
     if (data.value) {

@@ -1,3 +1,3 @@
 export type DirectusUsersOptions<T> = T & {
-  nuxtData: string | false;
+  nuxtData: string | boolean;
 }
