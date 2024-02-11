@@ -119,6 +119,8 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
+    nuxt.options.alias['#nuxt-directus'] = runtimeDir
+
     // Install @nuxt/image and use directus provider
     await installModule('@nuxt/image', {
       providers: {
