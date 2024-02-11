@@ -1,5 +1,10 @@
 import { defu } from 'defu'
 import {
+  type DirectusClient,
+  type AuthenticationClient,
+  type RestClient,
+  type GraphqlClient,
+  type WebSocketClient,
   authentication,
   createDirectus,
   realtime,
@@ -44,7 +49,7 @@ export const useDirectus = <T extends object>(options?: DirectusClientOptions) =
  *
  * @returns A Directus REST client.
  */
-export const useDirectusRest = <T extends object>(options?: DirectusRestConfig) => {
+export const useDirectusRest = <T extends object>(options?: DirectusRestConfig): DirectusClient<T> & AuthenticationClient<T> & RestClient<T> => {
   const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
   const config = defu<
@@ -62,11 +67,9 @@ export const useDirectusRest = <T extends object>(options?: DirectusRestConfig) 
     }
   })
 
-  const client = useDirectus<T>(config?.options)
+  return useDirectus<T>(config?.options)
     .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
     .with(rest(config?.restConfig))
-
-  return client
 }
 
 /**
@@ -74,7 +77,7 @@ export const useDirectusRest = <T extends object>(options?: DirectusRestConfig) 
  *
  * @returns A Directus GraphQL client.
  */
-export const useDirectusGraphql = <T extends object>(options?: DirectusGraphqlConfig) => {
+export const useDirectusGraphql = <T extends object>(options?: DirectusGraphqlConfig): DirectusClient<T> & AuthenticationClient<T> & GraphqlClient<T> => {
   const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
   const config = defu<
@@ -92,11 +95,9 @@ export const useDirectusGraphql = <T extends object>(options?: DirectusGraphqlCo
     }
   })
 
-  const client = useDirectus<T>(config?.options)
+  return useDirectus<T>(config?.options)
     .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
     .with(graphql(config.graphqlConfig))
-
-  return client
 }
 
 /**
@@ -104,7 +105,7 @@ export const useDirectusGraphql = <T extends object>(options?: DirectusGraphqlCo
  *
  * @returns A Directus Realtime client.
  */
-export const useDirectusRealtime = <T extends object>(options?: DirectusRealtimeConfig) => {
+export const useDirectusRealtime = <T extends object>(options?: DirectusRealtimeConfig): DirectusClient<T> & AuthenticationClient<T> & WebSocketClient<T> => {
   const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
 
   const config = defu<
@@ -119,9 +120,7 @@ export const useDirectusRealtime = <T extends object>(options?: DirectusRealtime
     }
   })
 
-  const client = useDirectus<T>(config?.options)
+  return useDirectus<T>(config?.options)
     .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
     .with(realtime(config?.websocketConfig))
-
-  return client
 }

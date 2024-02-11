@@ -5,7 +5,6 @@ import type {
   GraphqlConfig,
   WebSocketConfig
 } from '@directus/sdk'
-import type { WebSocket } from 'ws'
 import type { FetchOptions } from 'ofetch'
 
 export interface DirectusClientOptions {
