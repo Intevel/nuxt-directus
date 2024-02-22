@@ -2,7 +2,7 @@
   <div>
     <div style="margin-bottom: 1rem;">
       <label for="collection">Collection</label>
-      <select id="collection" v-model="collectionName">
+      <select id="collection" v-model="collection">
         <option value="posts">
           Posts
         </option>
@@ -10,43 +10,27 @@
           Tests
         </option>
       </select>
-      <button @click="refresh(); refreshToo(); refreshThree(); refreshFour();">
+      <button @click="refresh(); useFetchRefresh()">
         Refresh
       </button>
       <br>
-      <input v-model="fieldParam" type="text" placeholder="Field Param">
-      <input v-model="searchParam" type="text" placeholder="Search posts">
+      <input v-model="fields" type="text" placeholder="Field Param">
+      <input v-model="search" type="text" placeholder="Search posts">
     </div>
-    <div v-if="notWorking && notWorking.length > 0">
+    <div v-if="data && data.length > 0">
       <strong>
-        Composable with useAsyncData + SDK (not working)
+        Composable with useAsyncData + SDK
       </strong>
       <pre>
-        {{ notWorking }}
+        {{ data }}
       </pre>
     </div>
-    <div v-if="notWorkingToo">
+    <div v-if="useFetchData && useFetchData.data">
       <strong>
-        Composable with useAsyncData + Test Promise (not working)
+        useFetch
       </strong>
       <pre>
-        {{ notWorkingToo }}
-      </pre>
-    </div>
-    <div v-if="working && working.length > 0">
-      <strong>
-        useAsyncData + SDK (working)
-      </strong>
-      <pre>
-        {{ working }}
-      </pre>
-    </div>
-    <div v-if="workingToo && workingToo.length > 0">
-      <strong>
-        Composable with useAsyncData + SDK(only specific parameters) (working)
-      </strong>
-      <pre>
-        {{ workingToo }}
+        {{ useFetchData.data }}
       </pre>
     </div>
   </div>
@@ -54,66 +38,42 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import {
-  type RegularCollections,
-  readItems as readItemsSDK
+import type {
+  RegularCollections,
+  QueryFields
 } from '@directus/sdk'
-import { useAsyncData, useDirectusItems } from '#imports'
+import { useRuntimeConfig } from '#imports'
 import { myComposable } from '../composables/test'
-import type { Schema } from '../types'
+import type { Schema, Post, Test } from '../types'
 
-const { readItems, client } = useDirectusItems<Schema>()
+// @ts-ignore
+const { staticToken } = useRuntimeConfig().public.directus
+const { readItems } = myComposable<Schema>()
 
-const collectionName = ref<RegularCollections<Schema>>('posts')
-const fieldParam = ref<string>('id')
-const searchParam = ref<string>('')
+const collection = ref<RegularCollections<Schema>>('posts')
+const fields = ref<QueryFields<Schema, Post | Test>>(['id'])
+const search = ref('')
 
-const { data: notWorking, refresh } = await useAsyncData(() => readItems(collectionName.value, {
-  fields: [fieldParam.value],
-  search: searchParam.value,
-  nuxtData: false
-}), {
+const { data, refresh } = await readItems(collection, {
+  query: {
+    fields,
+    search
+  },
   immediate: false,
-  watch: [collectionName, fieldParam, searchParam]
+  watch: [collection, fields, search]
 })
 
-const { data: working, refresh: refreshToo } = await useAsyncData(
-  () => client.request(readItemsSDK(collectionName.value, {
-    fields: [fieldParam.value],
-    search: searchParam.value
-  })), {
-    immediate: false,
-    watch: [collectionName, fieldParam, searchParam]
-  }
-)
-
-const { readItemsTest, testReadItems } = myComposable()
-
-const { data: workingToo, refresh: refreshThree } =
-  await readItemsTest(collectionName, fieldParam, searchParam, {
-    immediate: false,
-    watch: [collectionName, fieldParam, searchParam]
-  })
-// const { data: notWorkingToo, refresh: refreshFour } =
-//   await testReadItems(collectionName.value, {
-//     query: {
-//       fields: [fieldParam.value],
-//       search: searchParam.value
-//     },
-//     params: {
-//       immediate: false,
-//       watch: [collectionName, fieldParam, searchParam]
-//     }
-//   })
-
-const { data: notWorkingToo, error, refresh: refreshFour } = await useFetch(`/items/${collectionName.value}`, {
+const { data: useFetchData, refresh: useFetchRefresh } = await useFetch<{ data: Array<object> }>(collection, {
   query: {
-    fields: [fieldParam.value],
-    search: searchParam.value
+    fields,
+    search
   },
-  baseURL: 'http://localhost:8055',
+  baseURL: 'http://localhost:8055/items',
   immediate: false,
-  watch: [collectionName, fieldParam, searchParam]
+  watch: [collection, fields, search],
+  headers: {
+    Authorization: `Bearer ${staticToken}`
+  }
 })
 </script>
 

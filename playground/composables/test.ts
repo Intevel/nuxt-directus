@@ -1,73 +1,49 @@
 import { hash } from 'ohash'
-import type { Ref } from 'vue'
-import { readItems as readItemsSDK } from '@directus/sdk'
-import type { AsyncDataOptions } from '#app'
-import { reactive, useAsyncData, useDirectusItems } from '#imports'
+import type { WatchSource } from 'vue'
+import { readItems as sdkReadItems } from '@directus/sdk'
+import { type MaybeRef, toValue, useAsyncData } from '#imports'
 import type { RegularCollections, Query, CollectionType } from '../../src/runtime/types'
-import type { Schema } from '../types'
+import { recursiveUnref } from '../../src/runtime/composables/internal-utils/recursive-unref'
 
-export function myComposable () {
-  const { client } = useDirectusItems<Schema>()
+type RecursiveMaybeRef<T> = {
+  [P in keyof T]: MaybeRef<T[P]>
+}
 
-  async function readItemsTest (collectionName: MaybeRef<RegularCollections<Schema>>, fieldParam: Ref<string>, searchParam: Ref<string>, params?: AsyncDataOptions<any>) {
-    const collection = toRef(collectionName)
-    return await useAsyncData(
-      () => client.request(readItemsSDK(collection.value, {
-        fields: [fieldParam.value],
-        search: searchParam.value
-      })), params
-    )
-  }
+type MultiWatchSources = (WatchSource<unknown> | object)[]
 
-  async function testReadItems <
-  Collection extends RegularCollections<Schema>,
-  TQuery extends MaybeRef<Query<Schema, CollectionType<Schema, Collection>>>
-  > (
+interface FakeAsyncDataOptions<DefaultT = null> {
+  server?: boolean
+  lazy?: boolean
+  default?: () => DefaultT | Ref<DefaultT>
+  getCachedData?: any
+  transform?: any
+  // pick?: PickKeys TODO: understand why this breaks everything
+  watch?: MultiWatchSources
+  immediate?: boolean
+  deep?: boolean
+  dedupe?: 'cancel' | 'defer'
+}
+
+export function myComposable <T extends object = any> () {
+  const client = useDirectusRest<T>()
+
+  async function readItems <
+      Collection extends RegularCollections<T>,
+      TQuery extends Query<T, CollectionType<T, Collection>>
+    > (
     collection: MaybeRef<Collection>,
-    _params?: MaybeRef<{
-      query?: TQuery
-      params?: AsyncDataOptions<any>
-      key?: string
-    }>
+    _params?: FakeAsyncDataOptions & { key?: string, query?: RecursiveMaybeRef<TQuery>}
   ) {
-    const { key, params, query } = toRef(_params).value ?? {}
+    const { key, query, ...params } = _params ?? {}
     const _key = computed(() => {
-      return hash([
-        'readItems',
-        collection,
-        'only-a-test'
-      ])
+      return key ?? 'D_' + hash(['readItems', collection, recursiveUnref(query)])
     })
 
-    const {
-      watch,
-      ...otherParams
-    } = params ?? {}
-
-    const _request = ref({
-      collection,
-      query,
-    })
-
-    const _asyncOptions = {
-      watch: [_request, ...(watch || [])],
-      ...otherParams
-    }
-
-    return await useAsyncData(
-      key ?? _key.value,
-      () => {
-        return Promise.resolve([{
-          collection: _request.value.collection,
-          query: _request.value.query,
-        }])
-      },
-      _asyncOptions
-    )
+    return await useAsyncData(_key.value, () => client.request(sdkReadItems(toValue(collection), reactive(query ?? {}))), params)
   }
 
   return {
-    readItemsTest,
-    testReadItems
+    client,
+    readItems
   }
 }
