@@ -32,12 +32,24 @@ export const useDirectus = <T extends object = any>(options?: DirectusClientOpti
     baseURL: url,
     clientOptions: {
       globals: {
-        fetch: $fetch.create(options?.fetchOptions ?? {})
+        fetch: $fetch.create({
+          onRequestError: ({ request, options, error }) => {
+            if (process.dev) {
+              console.error('Request error:', request, options, error)
+            }
+          },
+          onResponseError: ({ request, options, response, error }) => {
+            if (process.dev) {
+              console.error('Response error:', request, options, response, error)
+            }
+          }
+        })
       }
     }
   })
 
   if (!config.baseURL) {
+    // TODO: better error handling
     throw new Error('Please provide a Directus URL either via Nuxt runtimeConfig or via the options parameter.')
   }
 
