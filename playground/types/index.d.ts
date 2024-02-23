@@ -13,7 +13,7 @@ export interface Post {
 
 export interface Test {
   id: string | number
-  name: string
+  title: string
   description: string
 }
 
