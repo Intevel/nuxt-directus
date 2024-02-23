@@ -70,11 +70,8 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
       } | false
     } = {}
   ) {
-    try {
-      const authResponse = await client
-        .request(sdkLogin(identifier, password, defu(options, { mode: defaultMode })))
-
-      if (updateStates !== false) {
+    return await client.request(sdkLogin(identifier, password, defu(options, { mode: defaultMode }))).then(async (authResponse) => {
+      if (authResponse && updateStates !== false) {
         if (updateTokens !== false) {
           await setTokens(authResponse)
         }
@@ -82,16 +79,8 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
           await readMyself(readMe)
         }
       }
-
       return authResponse
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't login user.", error.message)
-      } else {
-        console.error(error)
-      }
-      return null
-    }
+    })
   }
 
   /**
@@ -149,17 +138,10 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
   async function logout (
     refreshToken?: string
   ) {
-    try {
-      await client.request(sdkLogout(refreshToken ?? tokens.value?.refresh_token ?? undefined))
+    return await client.request(sdkLogout(refreshToken ?? tokens.value?.refresh_token ?? undefined)).then(() => {
       user.value = undefined
       setTokens(null)
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't logut user.", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    })
   }
 
   /**
@@ -174,15 +156,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     email: string,
     resetUrl?: string
   ) {
-    try {
-      await client.request(sdkPasswordRequest(email, resetUrl))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't request password reset.", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkPasswordRequest(email, resetUrl))
   }
 
   /**
@@ -197,15 +171,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     token: string,
     password: string
   ) {
-    try {
-      await client.request(sdkPasswordReset(token, password))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't reset password.", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkPasswordReset(token, password))
   }
 
   /**
@@ -222,15 +188,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     role: string,
     inviteUrl?: string
   ) {
-    try {
-      await client.request(sdkInviteUser(email, role, inviteUrl))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't invite user.", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkInviteUser(email, role, inviteUrl))
   }
 
   /**
@@ -245,15 +203,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     token: string,
     password: string
   ) {
-    try {
-      await client.request(sdkAcceptUserInvite(token, password))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't accept user invite.", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkAcceptUserInvite(token, password))
   }
 
   return {

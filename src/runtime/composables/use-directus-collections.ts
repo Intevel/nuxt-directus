@@ -34,15 +34,7 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
     item: NestedPartial<DirectusCollection<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkCreateCollection(item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't create collection:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkCreateCollection(item, query))
   }
 
   /**
@@ -146,15 +138,7 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
     item: NestedPartial<DirectusCollection<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateCollection(collection, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update collection:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateCollection(collection, item, query))
   }
 
   /**
@@ -167,15 +151,7 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
   async function deleteCollection (
     collection: string
   ) {
-    try {
-      return await client.request(sdkDeleteCollection(collection))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't delete collection:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteCollection(collection))
   }
 
   return {

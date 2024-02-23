@@ -38,15 +38,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     item: Item,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkCreateItem(collection, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't create item:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkCreateItem(collection, item, query))
   }
 
   /**
@@ -67,15 +59,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     items: Item,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkCreateItems(collection, items, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't create items:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkCreateItems(collection, items, query))
   }
 
   /**
@@ -253,15 +237,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     item: Item,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateItem(collection, id, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update item:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateItem(collection, id, item, query))
   }
 
   /**
@@ -288,15 +264,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     item: Item,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateItems(collection, ids, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update items:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateItems(collection, ids, item, query))
   }
 
   /**
@@ -320,15 +288,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     item: Item,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateSingleton(collection, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update singleton:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateSingleton(collection, item, query))
   }
 
   /**
@@ -350,15 +310,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     collection: Collection,
     id: ID
   ) {
-    try {
-      return await client.request(sdkDeleteItem(collection, id))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't delete item:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteItem(collection, id))
   }
 
   /**
@@ -381,15 +333,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     collection: Collection,
     idOrQuery: ID | TQuery
   ) {
-    try {
-      return await client.request(sdkDeleteItems(collection, idOrQuery))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't delete items:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteItems(collection, idOrQuery))
   }
 
   return {

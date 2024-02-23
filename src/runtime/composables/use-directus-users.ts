@@ -63,15 +63,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     userInfo: Partial<DirectusUser<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkCreateUser(userInfo, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't create user:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkCreateUser(userInfo, query))
   }
 
   /**
@@ -88,15 +80,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     userInfo: Partial<DirectusUser<TSchema>>[],
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkCreateUsers(userInfo, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't create users:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkCreateUsers(userInfo, query))
   }
 
   function setUser (value: Partial<DirectusUser<TSchema>> | undefined): Promise<void> {
@@ -237,22 +221,14 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     userInfo: Partial<DirectusUser<TSchema>>,
     _query: TQuery & { updateState?: boolean }
   ) {
-    try {
-      const { updateState, ...query } = _query
-      const userData = await client.request(sdkUpdateMe(userInfo, query))
+    const { updateState, ...query } = _query
 
+    return await client.request(sdkUpdateMe(userInfo, query)).then((userData) => {
       if (userData && updateState !== false) {
         setUser(userData as Partial<DirectusUser<TSchema>>)
       }
-
       return userData
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update authenticated user:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    })
   }
 
   /**
@@ -273,15 +249,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     userInfo: Partial<DirectusUser<TSchema>>,
     query: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateUser(id, userInfo, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update user:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateUser(id, userInfo, query))
   }
 
   /**
@@ -302,15 +270,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     userInfo: Partial<DirectusUser<TSchema>>,
     query: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateUsers(id, userInfo, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update users:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateUsers(id, userInfo, query))
   }
 
   /**
@@ -325,15 +285,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   async function deleteUser (
     id: DirectusUser<TSchema>['id']
   ) {
-    try {
-      return await client.request(sdkDeleteUser(id))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't delete user:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteUser(id))
   }
 
   /**
@@ -348,15 +300,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   async function deleteUsers (
     id: DirectusUser<TSchema>['id'][]
   ) {
-    try {
-      return await client.request(sdkDeleteUsers(id))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't delete users:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteUsers(id))
   }
 
   const user = useState<Partial<DirectusUser<TSchema>> | undefined>(userStateName, () => undefined)

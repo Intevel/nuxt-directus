@@ -38,15 +38,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     data: FormData,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUploadFiles(data, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't upload files:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUploadFiles(data, query))
   }
 
   /**
@@ -65,15 +57,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     data: Partial<DirectusFile<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkImportFile(url, data, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't import file:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkImportFile(url, data, query))
   }
 
   /**
@@ -183,15 +167,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     item: Partial<DirectusFile<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateFile(id, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update file:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateFile(id, item, query))
   }
 
   /**
@@ -212,15 +188,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     item: Partial<DirectusFile<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateFiles(id, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't update files:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateFiles(id, item, query))
   }
 
   /**
@@ -235,15 +203,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   async function deleteFile (
     id: DirectusFile<TSchema>['id']
   ) {
-    try {
-      return await client.request(sdkDeleteFile(id))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't delete file:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteFile(id))
   }
 
   /**
@@ -258,15 +218,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   async function deleteFiles (
     id: DirectusFile<TSchema>['id'][]
   ) {
-    try {
-      return await client.request(sdkDeleteFiles(id))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't delete files:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteFiles(id))
   }
 
   return {

@@ -38,15 +38,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     item: Partial<DirectusNotification<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkCreateNotification(item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't create notification:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkCreateNotification(item, query))
   }
 
   /**
@@ -63,15 +55,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     item: Partial<DirectusNotification<TSchema>>[],
     query?: DirectusNotificationsOptions<TQuery>
   ) {
-    try {
-      return await client.request(sdkCreateNotifications(item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't create notifications:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkCreateNotifications(item, query))
   }
 
   /**
@@ -181,15 +165,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     item: Partial<DirectusNotification<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateNotification(id, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't read notification:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateNotification(id, item, query))
   }
 
   /**
@@ -210,15 +186,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     item: Partial<DirectusNotification<TSchema>>,
     query?: TQuery
   ) {
-    try {
-      return await client.request(sdkUpdateNotifications(id, item, query))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't read notification:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkUpdateNotifications(id, item, query))
   }
 
   /**
@@ -233,15 +201,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
   async function deleteNotification (
     id: DirectusNotification<TSchema>['id']
   ) {
-    try {
-      return await client.request(sdkDeleteNotification(id))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't read notification:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteNotification(id))
   }
 
   /**
@@ -256,15 +216,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
   async function deleteNotifications (
     id: DirectusNotification<TSchema>['id'][]
   ) {
-    try {
-      return await client.request(sdkDeleteNotifications(id))
-    } catch (error: any) {
-      if (error && error.message) {
-        console.error("Couldn't read notification:", error.message)
-      } else {
-        console.error(error)
-      }
-    }
+    return await client.request(sdkDeleteNotifications(id))
   }
 
   return {
