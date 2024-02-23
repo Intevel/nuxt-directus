@@ -14,7 +14,7 @@ import type {
 import { recursiveUnref } from './internal-utils/recursive-unref'
 import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
 
-export function useDirectusRevisions<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusRevisions<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
   const { runWithContext } = useNuxtApp()
 

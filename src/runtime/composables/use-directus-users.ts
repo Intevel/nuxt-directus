@@ -32,7 +32,7 @@ import {
   useState
 } from '#imports'
 
-export function useDirectusUsers <TSchema extends object> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusUsers <TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
   const {
     authConfig: {
       userStateName

@@ -16,7 +16,7 @@ import type {
 } from '../types'
 import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
 
-export function useDirectusCollections<TSchema extends object> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusCollections<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
   const { runWithContext } = useNuxtApp()
 
