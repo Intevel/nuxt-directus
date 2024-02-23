@@ -56,6 +56,19 @@
             <input v-model="postNewData.slug" type="text" placeholder="Post slug">
             <br>
             <textarea v-model="postNewData.content" placeholder="Post content" />
+            <br>
+            <label for="newPostStatus">Status</label>
+            <select id="newPostStatus" v-model="postNewData.status">
+              <option value="draft">
+                Draft
+              </option>
+              <option value="published">
+                Published
+              </option>
+              <option value="archived">
+                Archived
+              </option>
+            </select>
             <button @click="createContent()">
               Create Post
             </button>
@@ -93,7 +106,7 @@ import type { Post, Schema } from '../types'
 const { logout } = useDirectusAuth()
 const { user } = useDirectusUsers()
 
-const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>({ staticToken: true })
+const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
 
 const global = await readSingleton('global')
 const { data: posts, refresh: refreshPosts, error: postsError } = await useAsyncData(() => readItems('posts', {
@@ -106,7 +119,9 @@ if (!posts.value && postsError.value) {
   console.error('Posts fetch error:', postsError.value)
 }
 
-const postNewData = ref<Partial<Post>>({})
+const postNewData = ref<Partial<Post>>({
+  status: 'draft'
+})
 
 async function createContent () {
   await createItem('posts', postNewData.value)

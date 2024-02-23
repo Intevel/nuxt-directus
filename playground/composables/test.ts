@@ -19,15 +19,15 @@ export function myComposable <T extends object = any> () {
       Output extends ReadItemOutput<T, Collection, TQuery>
     > (
     collection: MaybeRef<Collection>,
-    _params?: Omit<AsyncDataOptions<Output[], Output[], KeysOf<Output[]>, Output[]>, 'pick'> & { key?: string, query?: RecursiveMaybeRef<TQuery>}
+    params?: Omit<AsyncDataOptions<Output[], Output[], KeysOf<Output[]>, Output[]>, 'pick'> & { key?: string, query?: RecursiveMaybeRef<TQuery>}
   ) {
-    const { key, query, ...params } = _params ?? {}
+    const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readItems', collection, recursiveUnref(query)])
     })
 
     // @ts-expect-error
-    return await useAsyncData(_key.value, () => client.request(sdkReadItems(toValue(collection), reactive(query ?? {}))), params)
+    return await useAsyncData(_key.value, () => client.request(sdkReadItems(toValue(collection), reactive(query ?? {}))), _params)
   }
 
   return {
