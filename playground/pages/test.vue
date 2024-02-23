@@ -25,6 +25,9 @@
         {{ data }}
       </pre>
     </div>
+    <div v-for="e of data" :key="e.id">
+      {{ e.id }}, {{ e.title }}
+    </div>
     <div v-if="useFetchData && useFetchData.data">
       <strong>
         useFetch
