@@ -15,14 +15,12 @@ import type {
 } from '@directus/sdk'
 import type {
   DirectusRestConfig,
-  DirectusNotificationsOptions
+  ReadAsyncOptionsWithQuery
 } from '../types'
-import { recursiveUnref } from './internal-utils/recursive-unref'
-import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
+import { type MaybeRefOrGetter, computed, reactive, toValue, useAsyncData, useDirectusRest } from '#imports'
 
 export function useDirectusNotifications<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
-  const { runWithContext } = useNuxtApp()
 
   /**
    * Create a new notification.
@@ -53,56 +51,56 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
     item: Partial<DirectusNotification<TSchema>>[],
-    query?: DirectusNotificationsOptions<TQuery>
+    query?: TQuery
   ) {
     return await client.request(sdkCreateNotifications(item, query))
   }
 
   /**
-   * List an existing notification by primary key.
+   * List an existing notification by primary id.
    *
-   * @param key The primary key of the dashboard.
+   * @param id The primary id of the dashboard.
    * @param query The query parameters.
    *
    * @returns Returns the requested notification object.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function readNotification <
+    ID extends DirectusNotification<TSchema>['id'],
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
-    id: DirectusNotification<TSchema>['id'],
-    _query?: DirectusNotificationsOptions<TQuery>
+    id: ID,
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readNotification', id, recursiveUnref(query)])
-      }
+    return await client.request(sdkReadNotification(id, query))
+  }
+
+  /**
+   * List an existing notification by primary id.
+   *
+   * @param id The primary id of the dashboard.
+   * @param params query parameters, useAsyncData options and payload key.
+   *
+   * @returns Returns the requested notification object.
+   *
+   * @throws Will throw if id is empty.
+   */
+  async function readAsyncNotification <
+    ID extends DirectusNotification<TSchema>['id'],
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+    Output extends Awaited<ReturnType<typeof readNotification<ID, TQuery>>>
+  > (
+    id: MaybeRefOrGetter<ID>,
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncNotification', toValue(id), toValue(query)])
     })
-    const promise = runWithContext(() => client.request(sdkReadNotification(id, query)))
 
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      // @ts-ignore TODO: check why Awaited is creating problems
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read notification:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readNotification(toValue(id), reactive(query)), _params)
   }
 
   /**
@@ -115,48 +113,43 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
   async function readNotifications <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
-    _query?: DirectusNotificationsOptions<TQuery>
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readNotifications', recursiveUnref(query)])
-      }
+    return await client.request(sdkReadNotifications(query))
+  }
+
+  /**
+   * List all notifications that exist in Directus.
+   *
+   * @param params query parameters, useAsyncData options and payload key.
+   *
+   * @returns An array of up to limit notification objects. If no items are available, data will be an empty array.
+   */
+  async function readAsyncNotifications <
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+    Output extends Awaited<ReturnType<typeof readNotifications<TQuery>>>
+  > (
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncNotifications', toValue(query)])
     })
-    const promise = runWithContext(() => client.request(sdkReadNotifications(query)))
 
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read notifications:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readNotifications(reactive(query)), _params)
   }
 
   /**
    * Update an existing notification.
    *
-   * @param key The primary key of the notification.
+   * @param id The primary id of the notification.
    * @param item
    * @param query
    *
    * @returns Returns the notification object for the updated notification.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function updateNotification <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
@@ -171,32 +164,32 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
   /**
    * Update multiple existing notifications.
    *
-   * @param keys The primary keys of the notifications.
+   * @param ids The primary ids of the notifications.
    * @param item
    * @param query
    *
    * @returns Returns the notification objects for the updated notifications.
    *
-   * @throws Will throw if keys is empty.
+   * @throws Will throw if ids is empty.
    */
   async function updateNotifications <
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
-    id: DirectusNotification<TSchema>['id'][],
+    ids: DirectusNotification<TSchema>['id'][],
     item: Partial<DirectusNotification<TSchema>>,
     query?: TQuery
   ) {
-    return await client.request(sdkUpdateNotifications(id, item, query))
+    return await client.request(sdkUpdateNotifications(ids, item, query))
   }
 
   /**
    * Delete an existing notification.
    *
-   * @param key The primary key of the notifications.
+   * @param id The primary id of the notifications.
    *
    * @returns Nothing.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function deleteNotification (
     id: DirectusNotification<TSchema>['id']
@@ -207,16 +200,16 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
   /**
    * Delete multiple existing notifications.
    *
-   * @param keys The primary keys of the notifications.
+   * @param ids The primary ids of the notifications.
    *
    * @returns Nothing.
    *
-   * @throws Will throw if keys is empty.
+   * @throws Will throw if ids is empty.
    */
   async function deleteNotifications (
-    id: DirectusNotification<TSchema>['id'][]
+    ids: DirectusNotification<TSchema>['id'][]
   ) {
-    return await client.request(sdkDeleteNotifications(id))
+    return await client.request(sdkDeleteNotifications(ids))
   }
 
   return {
@@ -224,7 +217,9 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     createNotification,
     createNotifications,
     readNotification,
+    readAsyncNotification,
     readNotifications,
+    readAsyncNotifications,
     updateNotification,
     updateNotifications,
     deleteNotification,

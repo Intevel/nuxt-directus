@@ -10,7 +10,7 @@
           Tests
         </option>
       </select>
-      <button @click="refresh(); useFetchRefresh()">
+      <button @click="refresh(); refreshTest(); useFetchRefresh()">
         Refresh
       </button>
       <br>
@@ -19,14 +19,19 @@
     </div>
     <div v-if="data && data.length > 0">
       <strong>
-        Composable with useAsyncData + SDK
+        nuxt-directus
       </strong>
       <pre>
         {{ data }}
       </pre>
     </div>
-    <div v-for="e of data" :key="e.id">
-      {{ e.id }}, {{ e.title }}
+    <div v-if="dataTest && dataTest.length > 0">
+      <strong>
+        Composable with useAsyncData + SDK
+      </strong>
+      <pre>
+        {{ dataTest }}
+      </pre>
     </div>
     <div v-if="useFetchData && useFetchData.data">
       <strong>
@@ -51,13 +56,23 @@ import type { Schema, Post, Test } from '../types'
 
 // @ts-ignore
 const { staticToken } = useRuntimeConfig().public.directus
-const { readItems } = myComposable<Schema>()
+const { readAsyncItems } = useDirectusItems<Schema>()
+const { readAsyncItems: readTest } = myComposable<Schema>()
 
 const collection = ref<RegularCollections<Schema>>('posts')
 const fields = ref<QueryFields<Schema, Post | Test>>(['id'])
 const search = ref('')
 
-const { data, refresh } = await readItems(collection, {
+const { data, refresh } = await readAsyncItems(collection, {
+  query: {
+    fields,
+    search
+  },
+  immediate: false,
+  watch: [collection, fields, search]
+})
+
+const { data: dataTest, refresh: refreshTest } = await readTest(collection, {
   query: {
     fields,
     search

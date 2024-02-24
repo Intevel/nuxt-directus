@@ -11,14 +11,11 @@ import type {
   NestedPartial,
   Query
 } from '@directus/sdk'
-import type {
-  DirectusRestConfig
-} from '../types'
-import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
+import type { DirectusRestConfig, ReadAsyncOptions } from '../types'
+import { type MaybeRefOrGetter, computed, useAsyncData, useDirectusRest, toValue } from '#imports'
 
 export function useDirectusCollections<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
-  const { runWithContext } = useNuxtApp()
 
   /**
    * Create a new Collection. This will create a new table in the database as well.
@@ -41,83 +38,69 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
    * Retrieve a single collection by table name.
    *
    * @param collection The collection name.
-   * @param nuxtData chace the response into Nuxt's payload.
    *
    * @returns A collection object.
    *
    * @throws Will throw if collection is empty.
    */
   async function readCollection (
-    collection: string,
-    nuxtData?: string | boolean
+    collection: string
   ) {
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readCollection', collection])
-      }
+    return await client.request(sdkReadCollection(collection))
+  }
+
+  /**
+   * Retrieve a single collection by table name.
+   *
+   * @param collection The collection name.
+   * @param parasms useAsyncData options and payload key.
+   *
+   * @returns A collection object.
+   *
+   * @throws Will throw if collection is empty.
+   */
+  async function readAsyncCollection <
+    Output extends Awaited<ReturnType<typeof readCollection>>
+  > (
+    collection: MaybeRefOrGetter<string>,
+    params?: ReadAsyncOptions<Output>
+  ) {
+    const { key, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncCollection', toValue(collection)])
     })
-    const promise = runWithContext(() => client.request(sdkReadCollection(collection)))
 
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      // @ts-ignore TODO: check why Awaited is creating problems
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read collection:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readCollection(toValue(collection)), _params)
   }
 
   /**
    * List the available collections.
    *
-   * @param nuxtData chace the response into Nuxt's payload.
-   *
    * @returns An array of collection objects.
    */
-  async function readCollections (
-    nuxtData?: string | boolean
+  async function readCollections () {
+    return await client.request(sdkReadCollections())
+  }
+
+  /**
+   * Retrieve a single collection by table name.
+   * @param parasms useAsyncData options and payload key.
+   *
+   * @returns A collection object.
+   */
+  async function readAsyncCollections <
+    Output extends Awaited<ReturnType<typeof readCollections>>
+  > (
+    params?: ReadAsyncOptions<Output>
   ) {
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readCollections'])
-      }
+    const { key, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncCollections'])
     })
-    const promise = runWithContext(() => client.request(sdkReadCollections()))
 
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read collections:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readCollections(), _params)
   }
 
   /**
@@ -158,7 +141,9 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
     client,
     createCollection,
     readCollection,
+    readAsyncCollection,
     readCollections,
+    readAsyncCollections,
     updateCollection,
     deleteCollection
   }

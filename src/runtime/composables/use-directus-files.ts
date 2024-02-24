@@ -15,14 +15,12 @@ import type {
 } from '@directus/sdk'
 import type {
   DirectusRestConfig,
-  DirectusFilesOptions
+  ReadAsyncOptionsWithQuery
 } from '../types'
-import { recursiveUnref } from './internal-utils/recursive-unref'
-import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
+import { type MaybeRefOrGetter, computed, toValue, useAsyncData, useDirectusRest } from '#imports'
 
 export function useDirectusFiles<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
-  const { runWithContext } = useNuxtApp()
 
   /**
    * Upload/create a new file.
@@ -61,50 +59,50 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   }
 
   /**
-   * Retrieve a single file by primary key.
+   * Retrieve a single file by primary id.
    *
-   * @param key The primary key of the file.
+   * @param id The primary id of the file.
    * @param query The query parameters.
    *
-   * @returns Returns a file object if a valid primary key was provided.
+   * @returns Returns a file object if a valid primary id was provided.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function readFile <
+    ID extends DirectusFile<TSchema>['id'],
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
-    id: DirectusFile<TSchema>['id'],
-    _query?: DirectusFilesOptions<TQuery>
+    id: ID,
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readFile', id, recursiveUnref(query)])
-      }
+    return await client.request(sdkReadFile(id, query))
+  }
+
+  /**
+   * Retrieve a single file by primary id.
+   *
+   * @param id The primary id of the file.
+   * @param params query parameters, useAsyncData options and payload key.
+   *
+   * @returns Returns a file object if a valid primary id was provided.
+   *
+   * @throws Will throw if id is empty.
+   */
+  async function readAsyncFile <
+    ID extends DirectusFile<TSchema>['id'],
+    TQuery extends Query<TSchema, DirectusFile<TSchema>>,
+    Output extends Awaited<ReturnType<typeof readFile<ID, TQuery>>>
+  > (
+    id: MaybeRefOrGetter<ID>,
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncFile', toValue(id), toValue(query)])
     })
-    const promise = runWithContext(() => client.request(sdkReadFile(id, query)))
 
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      // @ts-ignore TODO: check why Awaited is creating problems
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read file:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readFile(toValue(id), toValue(query)), _params)
   }
 
   /**
@@ -117,48 +115,43 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   async function readFiles <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
-    _query?: DirectusFilesOptions<TQuery>
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readFiles', recursiveUnref(query)])
-      }
+    return await client.request(sdkReadFiles(query))
+  }
+
+  /**
+ * List all files that exist in Directus.
+ *
+ * @param params query parameters, useAsyncData options and payload key.
+ *
+ * @returns An array of up to limit file objects. If no items are available, data will be an empty array.
+ */
+  async function readAsyncFiles <
+    TQuery extends Query<TSchema, DirectusFile<TSchema>>,
+    Output extends Awaited<ReturnType<typeof readFiles<TQuery>>>
+  > (
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncFiles', toValue(query)])
     })
-    const promise = runWithContext(() => client.request(sdkReadFiles(query)))
 
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read files:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readFiles(toValue(query)), _params)
   }
 
   /**
    * Update an existing file, and/or replace it's file contents.
    *
-   * @param key The primary key of the file.
+   * @param id The primary id of the file.
    * @param item
    * @param query The query parameters.
    *
    * @returns Returns the file object for the updated file.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function updateFile <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
@@ -173,13 +166,13 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   /**
    * Update multiple files at the same time.
    *
-   * @param keys The primary key of the file.
+   * @param ids The primary ids of the files.
    * @param item
    * @param query The query parameters.
    *
    * @returns Returns the file objects for the updated files.
    *
-   * @throws Will throw if keys is empty
+   * @throws Will throw if ids is empty
    */
   async function updateFiles <
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
@@ -194,11 +187,11 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   /**
    * Delete an existing file.
    *
-   * @param key The primary key of the file.
+   * @param id The primary id of the file.
    *
    * @returns Nothing.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function deleteFile (
     id: DirectusFile<TSchema>['id']
@@ -209,11 +202,11 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   /**
  * Delete multiple files at once.
  *
- * @param keys The primary keys of the files
+ * @param ids The primary ids of the files.
  *
  * @returns Nothing.
  *
- * @throws Will throw if keys is empty.
+ * @throws Will throw if ids is empty.
  */
   async function deleteFiles (
     id: DirectusFile<TSchema>['id'][]
@@ -226,7 +219,9 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     uploadFiles,
     importFile,
     readFile,
+    readAsyncFile,
     readFiles,
+    readAsyncFiles,
     updateFile,
     updateFiles,
     deleteFile,

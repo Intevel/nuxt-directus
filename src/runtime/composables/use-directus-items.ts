@@ -13,21 +13,19 @@ import {
 } from '@directus/sdk'
 import type {
   CollectionType,
+  Query,
   RegularCollections,
   SingletonCollections,
-  Query,
   UnpackList
 } from '@directus/sdk'
 import type {
-  DirectusItemsOptions,
-  DirectusRestConfig
+  DirectusRestConfig,
+  ReadAsyncOptionsWithQuery
 } from '../types'
-import { recursiveUnref } from './internal-utils/recursive-unref'
-import { computed, ref, useDirectusRest, useNuxtApp, useNuxtData } from '#imports'
+import { type MaybeRefOrGetter, computed, reactive, toValue, useAsyncData, useDirectusRest } from '#imports'
 
 export function useDirectusItems<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
   const client = useDirectusRest<TSchema>(config)
-  const { runWithContext } = useNuxtApp()
 
   async function createItem <
     Collection extends keyof TSchema,
@@ -66,14 +64,14 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * Get an item that exist in a particular Directus collection.
    *
    * @param collection The collection of the item.
-   * @param id The primary key of the item.
+   * @param id The primary id of the item.
    * @param query The query parameters.
    *
-   * @returns Returns an item object if a valid primary key was provided.
+   * @returns Returns an item object if a valid primary id was provided.
    *
    * @throws Will throw if collection is a core collection.
    * @throws Will throw if collection is empty.
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function readItem <
     Collection extends RegularCollections<TSchema>,
@@ -81,37 +79,40 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   > (
     collection: Collection,
     id: string | number,
-    _query?: DirectusItemsOptions<TQuery>
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readItem', collection, id, recursiveUnref(query)])
-      }
+    return await client.request(sdkReadItem(collection, id, query))
+  }
+
+  /**
+   * Get an item that exist in a particular Directus collection.
+   *
+   * @param collection The collection of the item.
+   * @param id The primary key of the item.
+   * @param params query parameters, useAsyncData options and payload key.
+   *
+   * @returns Returns an item object if a valid primary id was provided.
+   *
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if collection is empty.
+   * @throws Will throw if id is empty.
+   */
+  async function readAsyncItem <
+    Collection extends RegularCollections<TSchema>,
+    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
+    Output extends Awaited<ReturnType<typeof readItem<Collection, TQuery>>>
+  > (
+    collection: MaybeRefOrGetter<Collection>,
+    id: MaybeRefOrGetter<string | number>,
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncItem', toValue(collection), toValue(id), toValue(query)])
     })
 
-    const promise = runWithContext(() => client.request(sdkReadItem(collection, id, query)))
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      // @ts-ignore TODO: check why Awaited is creating problems
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read item:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readItem(toValue(collection), toValue(id), reactive(query ?? {})), _params)
   }
 
   /**
@@ -130,37 +131,37 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
   > (
     collection: Collection,
-    _query?: DirectusItemsOptions<TQuery>
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readItems', collection, recursiveUnref(query)])
-      }
+    return await client.request(sdkReadItems(collection, query))
+  }
+
+  /**
+   * List all items that exist in a particular Directus collection.
+   *
+   * @param collection The collection of the items.
+   * @param params query parameters, useAsyncData options and payload key.
+   *
+   * @returns An array of up to limit item objects. If no items are available, data will be an empty array.
+   *
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if collection is empty.
+   */
+  async function readAsyncItems <
+      Collection extends RegularCollections<TSchema>,
+      TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
+      Output extends Awaited<ReturnType<typeof readItems<Collection, TQuery>>>
+    > (
+    collection: MaybeRefOrGetter<Collection>,
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncItems', toValue(collection), toValue(query)])
     })
 
-    const promise = runWithContext(() => client.request(sdkReadItems(collection, query)))
-
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read item:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readItems(toValue(collection), reactive(query ?? {})), _params)
   }
 
   /**
@@ -179,51 +180,50 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     TQuery extends Query<TSchema, TSchema[Collection]>
   > (
     collection: Collection,
-    _query?: DirectusItemsOptions<TQuery>
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readSingleton', collection, recursiveUnref(query)])
-      }
+    return await client.request(sdkReadSingleton(collection, query))
+  }
+
+  /**
+   * List the singleton item in Directus.
+   *
+   * @param collection The collection of the items.
+   * @param params query parameters, useAsyncData options and payload key.
+   *
+   * @returns An array of up to limit item objects. If no items are available, data will be an empty array.
+   *
+   * @throws Will throw if collection is a core collection.
+   * @throws Will throw if collection is empty.
+   */
+  async function readAsyncSingleton <
+      Collection extends SingletonCollections<TSchema>,
+      TQuery extends Query<TSchema, TSchema[Collection]>,
+      Output extends Awaited<ReturnType<typeof readSingleton<Collection, TQuery>>>
+    > (
+    collection: MaybeRefOrGetter<Collection>,
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readAsyncSingleton', toValue(collection), toValue(query)])
     })
 
-    const promise = runWithContext(() => client.request(sdkReadSingleton(collection, query)))
-
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      // @ts-ignore TODO: check why Awaited is creating problems
-      data.value = await promise.catch((e: any) => {
-        if (e && e.message) {
-          console.error("Couldn't read item:", e.message)
-          return null
-        } else {
-          console.error(e)
-          return null
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readSingleton(toValue(collection), reactive(query ?? {})), _params)
   }
 
   /**
    * Update an existing item.
    *
    * @param collection The collection of the item.
-   * @param key The primary key of the item.
+   * @param id The primary id of the item.
    * @param item The item data to update.
    * @param query Optional return data query.
    *
    * @returns Returns the item object of the item that was updated.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    * @throws Will throw if collection is empty.
    * @throws Will throw if collection is a core collection.
    */
@@ -244,13 +244,13 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * Update multiple items at the same time.
    *
    * @param collection The collection of the items.
-   * @param keysOrQuery The primary keys or a query.
+   * @param idsOrQuery The primary ids or a query.
    * @param item The item data to update.
    * @param query Optional return data query.
    *
    * @returns Returns the item objects for the updated items.
    *
-   * @throws Will throw if keysOrQuery is empty.
+   * @throws Will throw if idsOrQuery is empty.
    * @throws Will throw if collection is empty.
    * @throws Will throw if collection is a core collection.
    */
@@ -295,13 +295,13 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * Delete an existing item.
    *
    * @param collection The collection of the item.
-   * @param key The primary key of the item.
+   * @param id The primary id of the item.
    *
    * @returns Nothing.
    *
    * @throws Will throw if collection is empty.
    * @throws Will throw if collection is a core collection.
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function deleteItem <
     Collection extends keyof TSchema,
@@ -317,13 +317,13 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * Delete multiple existing items.
    *
    * @param collection The collection of the items.
-   * @param keysOrQuery The primary keys or a query.
+   * @param idsOrQuery The primary ids or a query.
    *
    * @returns Nothing.
    *
    * @throws Will throw if collection is empty.
    * @throws Will throw if collection is a core collection.
-   * @throws Will throw if keysOrQuery is empty.
+   * @throws Will throw if idsOrQuery is empty.
    */
   async function deleteItems <
     Collection extends keyof TSchema,
@@ -331,9 +331,9 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     ID extends string[] | number[]
   > (
     collection: Collection,
-    idOrQuery: ID | TQuery
+    idsOrQuery: ID | TQuery
   ) {
-    return await client.request(sdkDeleteItems(collection, idOrQuery))
+    return await client.request(sdkDeleteItems(collection, idsOrQuery))
   }
 
   return {
@@ -341,8 +341,11 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     createItem,
     createItems,
     readItem,
+    readAsyncItem,
     readItems,
+    readAsyncItems,
     readSingleton,
+    readAsyncSingleton,
     updateItem,
     updateItems,
     updateSingleton,

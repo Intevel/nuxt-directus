@@ -41,6 +41,7 @@ import {
   useRuntimeConfig
 } from '#imports'
 
+// @ts-ignore
 const { redirectTo } = useRuntimeConfig().public.directus.moduleConfig.autoRefresh
 const { user, tokens } = useDirectusUsers()
 </script>

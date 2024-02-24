@@ -18,16 +18,16 @@ import type {
 } from '@directus/sdk'
 import type {
   DirectusRestConfig,
-  DirectusUsersOptions
+  ReadAsyncOptionsWithQuery
 } from '../types'
-import { recursiveUnref } from './internal-utils/recursive-unref'
 import {
+  type MaybeRefOrGetter,
   computed,
-  ref,
+  reactive,
+  toValue,
+  useAsyncData,
   useDirectusRest,
   useDirectusTokens,
-  useNuxtApp,
-  useNuxtData,
   useRuntimeConfig,
   useState
 } from '#imports'
@@ -41,7 +41,6 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
       readMeQuery
     }
   } = useRuntimeConfig().public.directus
-  const { runWithContext } = useNuxtApp()
 
   const defaultConfig: Partial<DirectusRestConfig> = {
     staticToken: false
@@ -123,48 +122,50 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   }
 
   /**
-   * List an existing user by primary key.
+   * List an existing user by primary id.
    *
-   * @param key The primary key of the user.
+   * @param id The primary id of the user.
    * @param query The query parameters.
    *
    * @returns Returns the requested user object.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function readUser <
+    ID extends DirectusUser<TSchema>['id'],
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    id: DirectusUser<TSchema>['id'],
-    _query?: DirectusUsersOptions<TQuery>
+    id: ID,
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readUser', id, recursiveUnref(query)])
-      }
+    return await client.request(sdkReadUser(id, query))
+  }
+
+  /**
+   * List an existing user by primary id.
+   *
+   * @param id The primary id of the user.
+   * @param params query parameters, useAsyncData options and payload key.
+   *
+   * @returns Returns the requested user object.
+   *
+   * @throws Will throw if id is empty.
+   */
+  async function readAsyncUser <
+    ID extends DirectusUser<TSchema>['id'],
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+    Output extends Awaited<ReturnType<typeof readUser<ID, TQuery>>>
+  > (
+    id: MaybeRefOrGetter<ID>,
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readUser', toValue(id), toValue(query)])
     })
-    const promise = runWithContext(() => client.request(sdkReadUser(id, query)))
 
-    const { data } = nuxtData !== false
-      ? useNuxtData<Awaited<typeof promise>>(key.value)
-      : { data: ref<Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      // @ts-ignore TODO: check why Awaited is creating problems
-      data.value = await promise.catch((error: any) => {
-        if (error && error.message) {
-          console.error("Couldn't read user:", error.message)
-        } else {
-          console.error(error)
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readUser(toValue(id), reactive(query)), _params)
   }
 
   /**
@@ -177,34 +178,31 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   async function readUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    _query?: DirectusUsersOptions<TQuery>
+    query?: TQuery
   ) {
-    const { nuxtData, ...query } = _query ?? {}
-    const key = computed(() => {
-      if (typeof nuxtData === 'string') {
-        return nuxtData
-      } else {
-        return 'D_' + hash(['readUsers', recursiveUnref(query)])
-      }
+    return await client.request(sdkReadUsers(query))
+  }
+
+  /**
+   * List all users that exist in Directus.
+   *
+   * @param params query parameters, useAsyncData options and payload key.
+   *
+   * @returns Returns the requested user object.
+   */
+  async function readAsyncUsers <
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+    Output extends Awaited<ReturnType<typeof readUsers<TQuery>>>
+  > (
+    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
+  ) {
+    const { key, query, ..._params } = params ?? {}
+    const _key = computed(() => {
+      return key ?? 'D_' + hash(['readUsers', toValue(query)])
     })
-    const promise = runWithContext(() => client.request(sdkReadUsers(query)))
 
-    const { data } = nuxtData !== false
-      ? useNuxtData<void | Awaited<typeof promise>>(key.value)
-      : { data: ref<void | Awaited<typeof promise>>() }
-
-    if (data.value) {
-      return data.value
-    } else {
-      data.value = await promise.catch((error: any) => {
-        if (error && error.message) {
-          console.error("Couldn't read users:", error.message)
-        } else {
-          console.error(error)
-        }
-      })
-      return data.value
-    }
+    // @ts-expect-error
+    return await useAsyncData(_key.value, () => readUsers(reactive(query)), _params)
   }
 
   /**
@@ -234,13 +232,13 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   /**
    * Update an existing user.
    *
-   * @param key The primary key of the user.
+   * @param id The primary id of the user.
    * @param item The user data to update.
    * @param query Optional return data query.
    *
    * @returns Returns the user object for the updated user.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function updateUser <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
@@ -255,32 +253,32 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   /**
    * Update multiple existing users.
    *
-   * @param keys The primary key of the users.
+   * @param ids The primary ids of the users.
    * @param item The user data to update.
    * @param query Optional return data query.
    *
    * @returns Returns the user objects for the updated users.
    *
-   * @throws Will throw if keys is empty.
+   * @throws Will throw if ids is empty.
    */
   async function updateUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
-    id: DirectusUser<TSchema>['id'][],
+    ids: DirectusUser<TSchema>['id'][],
     userInfo: Partial<DirectusUser<TSchema>>,
     query: TQuery
   ) {
-    return await client.request(sdkUpdateUsers(id, userInfo, query))
+    return await client.request(sdkUpdateUsers(ids, userInfo, query))
   }
 
   /**
    * Delete an existing user.
    *
-   * @param key The primary key of the user.
+   * @param id The primary id of the user.
    *
    * @returns Nothing.
    *
-   * @throws Will throw if key is empty.
+   * @throws Will throw if id is empty.
    */
   async function deleteUser (
     id: DirectusUser<TSchema>['id']
@@ -291,16 +289,16 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   /**
    * Delete multiple existing users.
    *
-   * @param keys The primary key of the users.
+   * @param ids The primary ids of the users.
    *
    * @returns Nothing.
    *
-   * @throws Will throw if keys is empty.
+   * @throws Will throw if ids is empty.
    */
   async function deleteUsers (
-    id: DirectusUser<TSchema>['id'][]
+    ids: DirectusUser<TSchema>['id'][]
   ) {
-    return await client.request(sdkDeleteUsers(id))
+    return await client.request(sdkDeleteUsers(ids))
   }
 
   const user = useState<Partial<DirectusUser<TSchema>> | undefined>(userStateName, () => undefined)
@@ -313,7 +311,9 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     deleteUsers,
     readMe,
     readUser,
+    readAsyncUser,
     readUsers,
+    readAsyncUsers,
     setUser,
     tokens,
     updateMe,

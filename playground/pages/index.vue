@@ -106,13 +106,13 @@ import type { Post, Schema } from '../types'
 const { logout } = useDirectusAuth()
 const { user } = useDirectusUsers()
 
-const { createItem, readItems, readSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
+const { createItem, readAsyncItems, readAsyncSingleton, updateItem, deleteItem } = useDirectusItems<Schema>()
 
-const global = await readSingleton('global')
-const { data: posts, refresh: refreshPosts, error: postsError } = await useAsyncData(() => readItems('posts', {
-  fields: ['title', 'id', 'slug', 'content', 'status'],
-  nuxtData: false
-}), {
+const { data: global } = await readAsyncSingleton('global')
+const { data: posts, refresh: refreshPosts, error: postsError } = await readAsyncItems('posts', {
+  query: {
+    fields: ['title', 'id', 'slug', 'content', 'status']
+  },
   watch: [user]
 })
 if (!posts.value && postsError.value) {
