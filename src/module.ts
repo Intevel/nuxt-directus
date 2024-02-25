@@ -51,6 +51,10 @@ export default defineNuxtModule<ModuleOptions>({
         redirectTo: '/login',
         to: ['']
       },
+      nuxtImage: {
+        useAuthToken: false,
+        useStaticToken: true
+      },
       readMeQuery: {}
     }
   },
@@ -94,6 +98,10 @@ export default defineNuxtModule<ModuleOptions>({
           middlewareName: options.moduleConfig.autoRefresh.middlewareName,
           redirectTo: options.moduleConfig.autoRefresh.redirectTo,
           to: options.moduleConfig.autoRefresh.to
+        },
+        nuxtImage: options.moduleConfig.nuxtImage && {
+          useAuthToken: options.moduleConfig.nuxtImage.useAuthToken,
+          useStaticToken: options.moduleConfig.nuxtImage.useStaticToken
         },
         readMeQuery: options.moduleConfig.readMeQuery
       }

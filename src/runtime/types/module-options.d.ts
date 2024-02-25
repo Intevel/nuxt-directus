@@ -150,6 +150,24 @@ export interface ModuleOptionsPublic {
        */
       to?: string[];
     } | false;
+    /**
+    * A series of configs related to nuxt-directus custom provider for Nuxt Image.
+    * @type object
+    */
+    nuxtImage?: {
+      /**
+       * Lets you add the public static token to each image request via Nuxt Image.
+       * @default true
+       * @type bollean
+       */
+      useStaticToken?: boolean
+      /**
+       * Lets you add the auth access_token to each image request via Nuxt Image.
+       * @default false
+       * @type bollean
+       */
+      useAuthToken?: boolean
+    }
   }
 }
 
