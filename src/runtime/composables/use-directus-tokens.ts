@@ -40,30 +40,38 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
     return cookie
   }
 
-  return {
-    get: () => runWithContext(() => {
+  function get () {
+    return runWithContext(() => {
       if ((useStaticToken === true || typeof useStaticToken === 'string') || (!tokens.value?.access_token && useStaticToken !== false)) {
         return {
           access_token: typeof useStaticToken === 'string' ? useStaticToken : directusConfig.staticToken,
           refresh_token: null,
           expires_at: null,
           expires: null
-        } as AuthenticationData
-      } else {
+        }
+      } else if (tokens.value) {
         return {
-          access_token: tokens.value?.access_token ?? null,
-          refresh_token: useNuxtCookies ? refreshToken().value : tokens.value?.refresh_token,
-          expires_at: tokens.value?.expires_at ?? null,
-          expires: tokens.value?.expires ?? null
-        } as AuthenticationData
-      }
-    }),
-    set: (value: AuthenticationData | null) => runWithContext(() => {
+          access_token: tokens.value.access_token,
+          refresh_token: useNuxtCookies ? refreshToken().value! : tokens.value!.refresh_token,
+          expires_at: tokens.value.expires_at,
+          expires: tokens.value.expires
+        }
+      } else { return null }
+    })
+  }
+
+  function set (value: AuthenticationData | null) {
+    runWithContext(() => {
       tokens.value = value
       if (useNuxtCookies) {
         refreshToken(value?.expires || undefined).value = value?.refresh_token
       }
-    }),
+    })
+  }
+
+  return {
+    get,
+    set,
     tokens,
     refreshToken
   }
