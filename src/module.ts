@@ -9,7 +9,7 @@ import {
   defineNuxtModule,
   installModule
 } from '@nuxt/kit'
-import { joinURL, withTrailingSlash } from 'ufo'
+import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type {
@@ -49,9 +49,9 @@ export default defineNuxtModule<ModuleOptions>({
         global: true,
         middlewareName: 'directus-auth-middleware',
         redirectTo: '/login',
-        to: undefined
+        to: ['']
       },
-      readMeQuery: undefined
+      readMeQuery: {}
     }
   },
   async setup (options, nuxt) {

@@ -109,7 +109,7 @@ export interface ModuleOptionsPublic {
   moduleConfig: {
     /**
      * The defaults for the readMe query.
-     * @default undefined
+     * @default {}
      * @type Query<any, DirectusUser<any>> & { updateState?: boolean }
      */
     readMeQuery?: Query<any, DirectusUser<any>> & { updateState?: boolean };
@@ -145,7 +145,7 @@ export interface ModuleOptionsPublic {
       redirectTo?: string;
       /**
        * A blacklist of paths that needs authentication to be accessed.
-       * @default undefined
+       * @default ['']
        * @type string[]
        */
       to?: string[];
