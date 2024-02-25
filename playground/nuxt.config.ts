@@ -26,6 +26,19 @@ export default defineNuxtConfig({
       }
     }
   },
+  image: {
+    providers: {
+      nuxtDirectus: {
+        options: {
+          maxAge: 2592000,
+          modifiers: {
+            withoutEnlargement: 'true',
+            transforms: [['blur', 4], ['negate']]
+          }
+        }
+      }
+    }
+  },
   routeRules: {
     '/restricted/**': {
       ssr: false

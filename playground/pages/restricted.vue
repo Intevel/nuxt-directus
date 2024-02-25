@@ -62,7 +62,7 @@ import {
 } from '#imports'
 
 // @ts-ignore
-const { staticToken, moduleConfig: { autoRefresh: { redirectTo } } } = useRuntimeConfig().public.directus
+const { moduleConfig: { autoRefresh: { redirectTo } } } = useRuntimeConfig().public.directus
 const { user, tokens } = useDirectusUsers()
 
 // To manually construct the image URL
@@ -76,6 +76,8 @@ watch([user, tokens], () => {
   image.false = img(`${user.value?.avatar}`, { access_token: false }) // manually disabling token
   image.static = img(`${user.value?.avatar}`) // picking default form the current runtime config
   image.auth = img(`${user.value?.avatar}`, { access_token: tokens.value?.access_token ?? undefined }) // manually passing access_token
+}, {
+  immediate: true
 })
 </script>
 
