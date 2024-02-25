@@ -72,15 +72,15 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   }
 
   if (enableMiddleware) {
-    addRouteMiddleware(middlewareName, async (to, _from) => {
+    addRouteMiddleware(middlewareName, (to, _from) => {
       const restricted = (!toArray.length || !!toArray.find((p: string) => p === to.path))
 
       if (!user.value && to.path !== redirectTo && restricted) {
-        await navigateTo(redirectTo)
-      }
-
-      if (process.client && !nuxtApp.isHydrating && !user.value && to.path !== redirectTo && restricted) {
-        return abortNavigation()
+        if (process.client && !nuxtApp.isHydrating) {
+          return abortNavigation()
+        } else {
+          return navigateTo(redirectTo)
+        }
       }
     }, {
       global
