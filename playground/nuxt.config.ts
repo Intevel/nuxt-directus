@@ -19,6 +19,10 @@ export default defineNuxtConfig({
       },
       readMeQuery: {
         fields: ['id', 'email', 'first_name', 'last_name', 'avatar', 'status']
+      },
+      nuxtImage: {
+        useAuthToken: false,
+        useStaticToken: true
       }
     }
   },
