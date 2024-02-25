@@ -15,8 +15,7 @@ import type {
   Query
 } from '@directus/sdk'
 import type {
-  DirectusRestConfig,
-  DirectusUsersOptions
+  DirectusRestConfig
 } from '../types'
 import { useDirectusUsers } from './use-directus-users'
 import { useDirectusRest, useDirectusTokens, useRuntimeConfig } from '#imports'
@@ -65,7 +64,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
       updateStates?: boolean,
       updateTokens?: boolean,
       readMe?: {
-        params?: DirectusUsersOptions<TQuery>,
+        query?: TQuery,
         updateState?: boolean
       } | false
     } = {}
@@ -107,7 +106,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     refreshToken?: string
     updateStates?: boolean,
     updateTokens?: boolean,
-    readMe?: { params?: DirectusUsersOptions<TQuery>, updateState?: boolean } | false
+    readMe?: { query?: TQuery, updateState?: boolean } | false
   } = {}) {
     const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
     if (!token && useNuxtCookies) {
