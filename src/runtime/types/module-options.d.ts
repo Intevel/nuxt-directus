@@ -83,6 +83,12 @@ export interface ModuleOptionsPublic {
     * @type string | undefined
     */
     refreshTokenCookieName?: string | undefined;
+     /**
+    * Refresh Token Cookie Name
+    * @default 'directus_access_token'
+    * @type string | undefined
+    */
+     authTokenCookieName?: string | undefined;
     /**
     * The HttpOnly attribute for auth cookies.
     * @default false
@@ -97,7 +103,7 @@ export interface ModuleOptionsPublic {
     cookieSameSite?: boolean | 'lax' | 'strict' | 'none' | undefined;
     /**
     * The Secure attribute for auth cookies.
-    * @default false
+    * @default true
     * @type boolean | undefined
     */
     cookieSecure?: boolean | undefined;

@@ -34,10 +34,11 @@ export default defineNuxtModule<ModuleOptions>({
       authStateName: 'directus.auth',
       userStateName: 'directus.user',
       useNuxtCookies: true,
+      authTokenCookieName: 'directus_access_token',
       refreshTokenCookieName: 'directus_refresh_token',
       cookieHttpOnly: false,
       cookieSameSite: 'lax',
-      cookieSecure: false
+      cookieSecure: true
     },
     moduleConfig: {
       devtools: false,
@@ -87,6 +88,7 @@ export default defineNuxtModule<ModuleOptions>({
         userStateName: options.authConfig.userStateName,
         useNuxtCookies: options.authConfig.useNuxtCookies,
         refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
+        authTokenCookieName: options.authConfig.authTokenCookieName,
         cookieHttpOnly: options.authConfig.cookieHttpOnly,
         cookieSameSite: options.authConfig.cookieSameSite,
         cookieSecure: options.authConfig.cookieSecure

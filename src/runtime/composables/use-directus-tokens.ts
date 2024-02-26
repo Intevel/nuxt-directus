@@ -26,6 +26,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
     authStateName,
     useNuxtCookies,
     refreshTokenCookieName,
+    authTokenCookieName,
     cookieHttpOnly: httpOnly,
     cookieSameSite: sameSite,
     cookieSecure: secure
@@ -37,6 +38,11 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
 
   function refreshToken (maxAge?: number | undefined): CookieRef<string | null | undefined> {
     const cookie = useCookie<string | null>(refreshTokenCookieName!, { maxAge, httpOnly, sameSite, secure })
+    return cookie
+  }
+
+  function accessToken (maxAge?: number | undefined): CookieRef<string | null | undefined> {
+    const cookie = useCookie<string | null>(authTokenCookieName!, { maxAge, httpOnly, sameSite, secure })
     return cookie
   }
 
@@ -65,6 +71,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTok
       tokens.value = value
       if (useNuxtCookies) {
         refreshToken(value?.expires || undefined).value = value?.refresh_token
+        accessToken(value?.expires || undefined).value = value?.access_token
       }
     })
   }
