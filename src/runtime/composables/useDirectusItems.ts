@@ -87,7 +87,7 @@ export const useDirectusItems = () => {
         body: data.item
       }
     )
-    return item.data
+    return item?.data
   }
 
   return {
