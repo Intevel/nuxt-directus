@@ -63,7 +63,7 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     // Private runtimeConfig
-    const directus = nuxt.options.runtimeConfig.directus = defu(nuxt.options.runtimeConfig.directus, {
+    const directus = nuxt.options.runtimeConfig.directus = defu(nuxt.options.runtimeConfig.directus as any, {
       staticToken: options.staticTokenServer,
       moduleConfig: {
         devtools: options.moduleConfig.devtools,
@@ -166,10 +166,13 @@ export default defineNuxtModule<ModuleOptions>({
 })
 
 declare module '@nuxt/schema' {
-  interface PublicRuntimeConfig {
-    directus: ModuleRuntimeConfig;
-  }
-  interface PrivateRuntimeConfig {
-    directus: ModulePublicRuntimeConfig;
+  interface NuxtOptions {
+    directus?: ModuleOptions
+    runtimeConfig: {
+      directus: ModulePublicRuntimeConfig
+      public: {
+        directus: ModulePublicRuntimeConfig
+      }
+    }
   }
 }
