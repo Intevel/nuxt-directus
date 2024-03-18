@@ -101,8 +101,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
       return key ?? 'D_' + hash(['readAsyncFile', toValue(id), toValue(query)])
     })
 
-    // @ts-expect-error
-    return await useAsyncData(_key.value, () => readFile(toValue(id), toValue(query)), _params)
+    return await useAsyncData(_key.value, () => readFile(toValue(id), toValue(query) as TQuery | undefined), _params)
   }
 
   /**
@@ -138,8 +137,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
       return key ?? 'D_' + hash(['readAsyncFiles', toValue(query)])
     })
 
-    // @ts-expect-error
-    return await useAsyncData(_key.value, () => readFiles(toValue(query)), _params)
+    return await useAsyncData(_key.value, () => readFiles(toValue(query) as TQuery | undefined), _params)
   }
 
   /**

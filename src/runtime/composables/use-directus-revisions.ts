@@ -59,8 +59,7 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
       return key ?? 'D_' + hash(['readAsyncRevision', toValue(id), toValue(query)])
     })
 
-    // @ts-expect-error
-    return await useAsyncData(_key.value, () => readRevision(toValue(id), reactive(query)), _params)
+    return await useAsyncData(_key.value, () => readRevision(toValue(id), reactive(query ?? {})), _params)
   }
 
   /**
@@ -96,8 +95,7 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
       return key ?? 'D_' + hash(['readAsyncRevisions', toValue(query)])
     })
 
-    // @ts-expect-error
-    return await useAsyncData(_key.value, () => readRevisions(reactive(query)), _params)
+    return await useAsyncData(_key.value, () => readRevisions(reactive(query ?? {})), _params)
   }
 
   return {

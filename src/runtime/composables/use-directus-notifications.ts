@@ -99,8 +99,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
       return key ?? 'D_' + hash(['readAsyncNotification', toValue(id), toValue(query)])
     })
 
-    // @ts-expect-error
-    return await useAsyncData(_key.value, () => readNotification(toValue(id), reactive(query)), _params)
+    return await useAsyncData(_key.value, () => readNotification(toValue(id), reactive(query ?? {})), _params)
   }
 
   /**
@@ -136,8 +135,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
       return key ?? 'D_' + hash(['readAsyncNotifications', toValue(query)])
     })
 
-    // @ts-expect-error
-    return await useAsyncData(_key.value, () => readNotifications(reactive(query)), _params)
+    return await useAsyncData(_key.value, () => readNotifications(reactive(query ?? {})), _params)
   }
 
   /**

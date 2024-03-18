@@ -111,7 +111,6 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
       return key ?? 'D_' + hash(['readAsyncItem', toValue(collection), toValue(id), toValue(query)])
     })
 
-    // @ts-expect-error
     return await useAsyncData(_key.value, () => readItem(toValue(collection), toValue(id), reactive(query ?? {})), _params)
   }
 
@@ -160,7 +159,6 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
       return key ?? 'D_' + hash(['readAsyncItems', toValue(collection), toValue(query)])
     })
 
-    // @ts-expect-error
     return await useAsyncData(_key.value, () => readItems(toValue(collection), reactive(query ?? {})), _params)
   }
 
@@ -209,7 +207,6 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
       return key ?? 'D_' + hash(['readAsyncSingleton', toValue(collection), toValue(query)])
     })
 
-    // @ts-expect-error
     return await useAsyncData(_key.value, () => readSingleton(toValue(collection), reactive(query ?? {})), _params)
   }
 

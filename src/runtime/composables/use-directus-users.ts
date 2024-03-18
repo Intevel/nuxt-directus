@@ -164,8 +164,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
       return key ?? 'D_' + hash(['readUser', toValue(id), toValue(query)])
     })
 
-    // @ts-expect-error
-    return await useAsyncData(_key.value, () => readUser(toValue(id), reactive(query)), _params)
+    return await useAsyncData(_key.value, () => readUser(toValue(id), reactive(query ?? {})), _params)
   }
 
   /**
@@ -201,8 +200,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
       return key ?? 'D_' + hash(['readUsers', toValue(query)])
     })
 
-    // @ts-expect-error
-    return await useAsyncData(_key.value, () => readUsers(reactive(query)), _params)
+    return await useAsyncData(_key.value, () => readUsers(reactive(query ?? {})), _params)
   }
 
   /**

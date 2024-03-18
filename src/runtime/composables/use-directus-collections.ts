@@ -70,7 +70,6 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
       return key ?? 'D_' + hash(['readAsyncCollection', toValue(collection)])
     })
 
-    // @ts-expect-error
     return await useAsyncData(_key.value, () => readCollection(toValue(collection)), _params)
   }
 
@@ -99,7 +98,6 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
       return key ?? 'D_' + hash(['readAsyncCollections'])
     })
 
-    // @ts-expect-error
     return await useAsyncData(_key.value, () => readCollections(), _params)
   }
 
