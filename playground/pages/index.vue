@@ -78,7 +78,12 @@
           <h3>Update or Delete a Post</h3>
           <div>
             <div v-for="post in posts" :key="post.id">
-              <input :id="`${post.id}`" v-model="postId" type="radio" :value="post.id">
+              <input
+                :id="`${post.id}`"
+                v-model="postId"
+                type="radio"
+                :value="post.id"
+              >
               <label :for="`${post.id}`">{{ post.title }}</label>
             </div>
             <input v-model="postUpdateData.title" type="text" placeholder="Post title">

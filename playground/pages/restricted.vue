@@ -32,7 +32,12 @@
     <div v-if="user?.avatar">
       <h3>User avatar</h3>
       <div>
-        <NuxtImg :src="`${user.avatar}`" alt="User avatar" provider="nuxt-directus" :modifiers="{ access_token: false }" />
+        <NuxtImg
+          :src="`${user.avatar}`"
+          alt="User avatar"
+          provider="nuxt-directus"
+          :modifiers="{ access_token: false }"
+        />
       </div>
       <div v-if="image">
         <h4>Manually passing tokens to images</h4>

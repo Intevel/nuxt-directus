@@ -1,6 +1,6 @@
 {
   "extends": [
-    "@nuxtjs/eslint-config-typescript"
+    "@nuxt/eslint-config"
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": [
@@ -8,6 +8,14 @@
     ],
     "no-console": [
       "off"
-    ]
+    ],
+    "vue/max-attributes-per-line": ["warn", {
+      "singleline": {
+        "max": 3
+      },      
+      "multiline": {
+        "max": 1
+      }
+    }]
   }
 }
