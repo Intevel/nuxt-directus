@@ -16,12 +16,14 @@ import type {
   Query,
   RegularCollections,
   SingletonCollections,
-  UnpackList
+  UnpackList,
+  CreateItemOutput,
+  ReadItemOutput,
+  ReadSingletonOutput,
+  UpdateItemOutput,
+  UpdateSingletonOutput,
 } from '@directus/sdk'
-import type {
-  DirectusRestConfig,
-  ReadAsyncOptionsWithQuery
-} from '../types'
+import type { DirectusRestConfig, ReadAsyncOptionsWithQuery, SDKReturn } from '../types'
 import { type MaybeRefOrGetter, computed, reactive, toValue, useAsyncData, useDirectusRest } from '#imports'
 
 export function useDirectusItems<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
@@ -30,12 +32,12 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   async function createItem <
     Collection extends keyof TSchema,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
-    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+    TQuery extends Query<TSchema, TSchema[Collection]>
   > (
     collection: Collection,
     item: Item,
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateItemOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkCreateItem(collection, item, query))
   }
 
@@ -51,12 +53,12 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   async function createItems <
     Collection extends keyof TSchema,
     Item extends Partial<UnpackList<TSchema[Collection]>>[],
-    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+    TQuery extends Query<TSchema, TSchema[Collection]>
   > (
     collection: Collection,
     items: Item,
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateItemOutput<TSchema, Collection, TQuery>[]> {
     return await client.request(sdkCreateItems(collection, items, query))
   }
 
@@ -80,7 +82,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     collection: Collection,
     id: string | number,
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkReadItem(collection, id, query))
   }
 
@@ -131,7 +133,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   > (
     collection: Collection,
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>[]> {
     return await client.request(sdkReadItems(collection, query))
   }
 
@@ -179,7 +181,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   > (
     collection: Collection,
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadSingletonOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkReadSingleton(collection, query))
   }
 
@@ -233,7 +235,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     id: string | number,
     item: Item,
     query?: TQuery
-  ) {
+  ): SDKReturn<UpdateItemOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkUpdateItem(collection, id, item, query))
   }
 
@@ -253,14 +255,15 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    */
   async function updateItems <
     Collection extends keyof TSchema,
+    ID extends string[] | number[] | Query<TSchema, TSchema[Collection]>,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
-    TQuery extends Query<TSchema, TSchema[Collection]> | undefined
+    TQuery extends Query<TSchema, TSchema[Collection]>
   > (
     collection: Collection,
-    ids: string[] | number[],
+    ids: ID,
     item: Item,
     query?: TQuery
-  ) {
+  ): SDKReturn<UpdateItemOutput<TSchema, Collection, TQuery>[]> {
     return await client.request(sdkUpdateItems(collection, ids, item, query))
   }
 
@@ -284,7 +287,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     collection: Collection,
     item: Item,
     query?: TQuery
-  ) {
+  ): SDKReturn<UpdateSingletonOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkUpdateSingleton(collection, item, query))
   }
 
@@ -306,7 +309,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   > (
     collection: Collection,
     id: ID
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteItem(collection, id))
   }
 
@@ -329,7 +332,7 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   > (
     collection: Collection,
     idsOrQuery: ID | TQuery
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteItems(collection, idsOrQuery))
   }
 

@@ -5,12 +5,10 @@ import {
 } from '@directus/sdk'
 import type {
   DirectusRevision,
-  Query
+  Query,
+  ReadRevisionOutput,
 } from '@directus/sdk'
-import type {
-  DirectusRestConfig,
-  ReadAsyncOptionsWithQuery
-} from '../types'
+import type { DirectusRestConfig, ReadAsyncOptionsWithQuery, SDKReturn } from '../types'
 import { type MaybeRefOrGetter, computed, reactive, toValue, useAsyncData, useDirectusRest } from '#imports'
 
 export function useDirectusRevisions<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
@@ -32,7 +30,7 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
   > (
     id: ID,
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadRevisionOutput<TSchema, TQuery>> {
     return await client.request(sdkReadRevision(id, query))
   }
 
@@ -73,7 +71,7 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
     TQuery extends Query<TSchema, DirectusRevision<TSchema>>
   > (
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadRevisionOutput<TSchema, TQuery>[]> {
     return await client.request(sdkReadRevisions(query))
   }
 

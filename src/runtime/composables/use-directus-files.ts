@@ -14,9 +14,11 @@ import type {
   Query
 } from '@directus/sdk'
 import type {
-  DirectusRestConfig,
-  ReadAsyncOptionsWithQuery
-} from '../types'
+  CreateFileOutput,
+  ReadFileOutput,
+  UpdateFileOutput,
+} from '@directus/sdk'
+import type { DirectusRestConfig, ReadAsyncOptionsWithQuery, SDKReturn } from '../types'
 import { type MaybeRefOrGetter, computed, toValue, useAsyncData, useDirectusRest } from '#imports'
 
 export function useDirectusFiles<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
@@ -35,7 +37,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   > (
     data: FormData,
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateFileOutput<TSchema, TQuery>> {
     return await client.request(sdkUploadFiles(data, query))
   }
 
@@ -54,7 +56,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     url: string,
     data: Partial<DirectusFile<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateFileOutput<TSchema, TQuery>> {
     return await client.request(sdkImportFile(url, data, query))
   }
 
@@ -74,7 +76,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
   > (
     id: ID,
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadFileOutput<TSchema, TQuery>> {
     return await client.request(sdkReadFile(id, query))
   }
 
@@ -115,7 +117,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadFileOutput<TSchema, TQuery>[]> {
     return await client.request(sdkReadFiles(query))
   }
 
@@ -157,7 +159,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     id: DirectusFile<TSchema>['id'],
     item: Partial<DirectusFile<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<UpdateFileOutput<TSchema, TQuery>> {
     return await client.request(sdkUpdateFile(id, item, query))
   }
 
@@ -178,7 +180,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
     id: DirectusFile<TSchema>['id'][],
     item: Partial<DirectusFile<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<UpdateFileOutput<TSchema, TQuery>[]> {
     return await client.request(sdkUpdateFiles(id, item, query))
   }
 
@@ -193,7 +195,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
    */
   async function deleteFile (
     id: DirectusFile<TSchema>['id']
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteFile(id))
   }
 
@@ -208,7 +210,7 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
  */
   async function deleteFiles (
     id: DirectusFile<TSchema>['id'][]
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteFiles(id))
   }
 

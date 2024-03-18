@@ -14,11 +14,15 @@ import {
 } from '@directus/sdk'
 import type {
   DirectusUser,
-  Query
+  Query,
+  CreateUserOutput,
+  ReadUserOutput,
+  UpdateUserOutput
 } from '@directus/sdk'
 import type {
   DirectusRestConfig,
-  ReadAsyncOptionsWithQuery
+  ReadAsyncOptionsWithQuery,
+  SDKReturn
 } from '../types'
 import {
   type MaybeRefOrGetter,
@@ -61,7 +65,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   > (
     userInfo: Partial<DirectusUser<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateUserOutput<TSchema, TQuery>> {
     return await client.request(sdkCreateUser(userInfo, query))
   }
 
@@ -78,7 +82,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   > (
     userInfo: Partial<DirectusUser<TSchema>>[],
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateUserOutput<TSchema, TQuery>[]> {
     return await client.request(sdkCreateUsers(userInfo, query))
   }
 
@@ -100,7 +104,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     _query?: TQuery & { updateState?: boolean }
-  ) {
+  ): SDKReturn<ReadUserOutput<TSchema, TQuery>> {
     if (tokens.value?.access_token) {
       const { updateState, ...query } = defu(_query, readMeQuery)
       try {
@@ -137,7 +141,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   > (
     id: ID,
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadUserOutput<TSchema, TQuery>> {
     return await client.request(sdkReadUser(id, query))
   }
 
@@ -178,7 +182,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     TQuery extends Query<TSchema, DirectusUser<TSchema>>
   > (
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadUserOutput<TSchema, TQuery>[]> {
     return await client.request(sdkReadUsers(query))
   }
 
@@ -216,7 +220,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   > (
     userInfo: Partial<DirectusUser<TSchema>>,
     _query: TQuery & { updateState?: boolean }
-  ) {
+  ): SDKReturn<UpdateUserOutput<TSchema, TQuery>> {
     const { updateState, ...query } = _query
 
     return await client.request(sdkUpdateMe(userInfo, query)).then((userData) => {
@@ -244,7 +248,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     id: DirectusUser<TSchema>['id'],
     userInfo: Partial<DirectusUser<TSchema>>,
     query: TQuery
-  ) {
+  ): SDKReturn<UpdateUserOutput<TSchema, TQuery>> {
     return await client.request(sdkUpdateUser(id, userInfo, query))
   }
 
@@ -265,7 +269,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     ids: DirectusUser<TSchema>['id'][],
     userInfo: Partial<DirectusUser<TSchema>>,
     query: TQuery
-  ) {
+  ): SDKReturn<UpdateUserOutput<TSchema, TQuery>[]> {
     return await client.request(sdkUpdateUsers(ids, userInfo, query))
   }
 
@@ -280,7 +284,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    */
   async function deleteUser (
     id: DirectusUser<TSchema>['id']
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteUser(id))
   }
 
@@ -295,7 +299,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    */
   async function deleteUsers (
     ids: DirectusUser<TSchema>['id'][]
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteUsers(ids))
   }
 

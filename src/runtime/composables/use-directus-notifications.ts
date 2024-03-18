@@ -11,12 +11,12 @@ import {
 } from '@directus/sdk'
 import type {
   DirectusNotification,
-  Query
+  Query,
+  CreateNotificationOutput,
+  ReadNotificationOutput,
+  UpdateNotificationOutput
 } from '@directus/sdk'
-import type {
-  DirectusRestConfig,
-  ReadAsyncOptionsWithQuery
-} from '../types'
+import type { DirectusRestConfig, ReadAsyncOptionsWithQuery, SDKReturn } from '../types'
 import { type MaybeRefOrGetter, computed, reactive, toValue, useAsyncData, useDirectusRest } from '#imports'
 
 export function useDirectusNotifications<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
@@ -35,7 +35,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
   > (
     item: Partial<DirectusNotification<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateNotificationOutput<TSchema, TQuery>> {
     return await client.request(sdkCreateNotification(item, query))
   }
 
@@ -52,7 +52,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
   > (
     item: Partial<DirectusNotification<TSchema>>[],
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateNotificationOutput<TSchema, TQuery>[]> {
     return await client.request(sdkCreateNotifications(item, query))
   }
 
@@ -72,7 +72,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
   > (
     id: ID,
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadNotificationOutput<TSchema, TQuery>> {
     return await client.request(sdkReadNotification(id, query))
   }
 
@@ -113,7 +113,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
     query?: TQuery
-  ) {
+  ): SDKReturn<ReadNotificationOutput<TSchema, TQuery>[]> {
     return await client.request(sdkReadNotifications(query))
   }
 
@@ -155,7 +155,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     id: DirectusNotification<TSchema>['id'],
     item: Partial<DirectusNotification<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<UpdateNotificationOutput<TSchema, TQuery>> {
     return await client.request(sdkUpdateNotification(id, item, query))
   }
 
@@ -176,7 +176,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     ids: DirectusNotification<TSchema>['id'][],
     item: Partial<DirectusNotification<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<UpdateNotificationOutput<TSchema, TQuery>[]> {
     return await client.request(sdkUpdateNotifications(ids, item, query))
   }
 
@@ -191,7 +191,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    */
   async function deleteNotification (
     id: DirectusNotification<TSchema>['id']
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteNotification(id))
   }
 
@@ -206,7 +206,7 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    */
   async function deleteNotifications (
     ids: DirectusNotification<TSchema>['id'][]
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteNotifications(ids))
   }
 

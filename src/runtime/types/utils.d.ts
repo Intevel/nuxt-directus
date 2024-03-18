@@ -9,3 +9,5 @@ type ShallowMaybeRefOrGetter<T> = {
 
 export type ReadAsyncOptions<O> = Omit<AsyncDataOptions<O, O, KeysOf<O>, O>, 'pick'> & { key?: string }
 export type ReadAsyncOptionsWithQuery<O, Q> = ReadAsyncOptions<O> & { query?: ShallowMaybeRefOrGetter<Q> | MaybeRefOrGetter<Q> }
+
+export type SDKReturn<O> = Promise<Record<string, any> | RestCommand<O, TSchema>>

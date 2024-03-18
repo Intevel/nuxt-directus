@@ -9,9 +9,12 @@ import {
 import type {
   DirectusCollection,
   NestedPartial,
-  Query
+  Query,
+  CreateCollectionOutput,
+  ReadCollectionOutput,
+  UpdateCollectionOutput,
 } from '@directus/sdk'
-import type { DirectusRestConfig, ReadAsyncOptions } from '../types'
+import type { DirectusRestConfig, ReadAsyncOptions, SDKReturn } from '../types'
 import { type MaybeRefOrGetter, computed, useAsyncData, useDirectusRest, toValue } from '#imports'
 
 export function useDirectusCollections<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
@@ -30,7 +33,7 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
   > (
     item: NestedPartial<DirectusCollection<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<CreateCollectionOutput<TSchema, TQuery>> {
     return await client.request(sdkCreateCollection(item, query))
   }
 
@@ -44,8 +47,8 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
    * @throws Will throw if collection is empty.
    */
   async function readCollection (
-    collection: string
-  ) {
+    collection: DirectusCollection<TSchema>['collection']
+  ): SDKReturn<ReadCollectionOutput<TSchema>> {
     return await client.request(sdkReadCollection(collection))
   }
 
@@ -62,7 +65,7 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
   async function readAsyncCollection <
     Output extends Awaited<ReturnType<typeof readCollection>>
   > (
-    collection: MaybeRefOrGetter<string>,
+    collection: MaybeRefOrGetter<DirectusCollection<TSchema>['collection']>,
     params?: ReadAsyncOptions<Output>
   ) {
     const { key, ..._params } = params ?? {}
@@ -78,7 +81,7 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
    *
    * @returns An array of collection objects.
    */
-  async function readCollections () {
+  async function readCollections (): SDKReturn<ReadCollectionOutput<TSchema>[]> {
     return await client.request(sdkReadCollections())
   }
 
@@ -118,7 +121,7 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
     collection: string,
     item: NestedPartial<DirectusCollection<TSchema>>,
     query?: TQuery
-  ) {
+  ): SDKReturn<UpdateCollectionOutput<TSchema, TQuery>> {
     return await client.request(sdkUpdateCollection(collection, item, query))
   }
 
@@ -131,7 +134,7 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
    */
   async function deleteCollection (
     collection: string
-  ) {
+  ): Promise<void> {
     return await client.request(sdkDeleteCollection(collection))
   }
 
