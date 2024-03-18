@@ -14,8 +14,8 @@ import * as DirectusSDK from '@directus/sdk'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type {
   ModuleOptions,
-  ModuleOptionsPrivate,
-  ModuleOptionsPublic
+  ModuleRuntimeConfig,
+  ModulePublicRuntimeConfig
 } from './runtime/types/module-options'
 
 export default defineNuxtModule<ModuleOptions>({
@@ -63,10 +63,7 @@ export default defineNuxtModule<ModuleOptions>({
     const { resolve } = createResolver(import.meta.url)
 
     // Private runtimeConfig
-    const directus = nuxt.options.runtimeConfig.directus = defu<
-      ModuleOptionsPrivate,
-      Partial<ModuleOptionsPrivate>[]
-    >(nuxt.options.runtimeConfig.directus, {
+    const directus = nuxt.options.runtimeConfig.directus = defu(nuxt.options.runtimeConfig.directus, {
       staticToken: options.staticTokenServer,
       moduleConfig: {
         devtools: options.moduleConfig.devtools,
@@ -77,10 +74,7 @@ export default defineNuxtModule<ModuleOptions>({
     })
 
     // Public runtimeConfig
-    const directusPublic = nuxt.options.runtimeConfig.public.directus = defu<
-      ModuleOptionsPublic,
-      Partial<ModuleOptionsPublic>[]
-    >(nuxt.options.runtimeConfig.public.directus, {
+    const directusPublic = nuxt.options.runtimeConfig.public.directus = defu(nuxt.options.runtimeConfig.public.directus as any, {
       url: options.url,
       staticToken: options.staticToken,
       authConfig: {
@@ -172,13 +166,10 @@ export default defineNuxtModule<ModuleOptions>({
 })
 
 declare module '@nuxt/schema' {
-  interface NuxtOptions {
-    directus?: ModuleOptions;
-    runtimeConfig: {
-      directus: ModuleOptionsPrivate;
-      public: {
-        directus: ModuleOptionsPublic;
-      };
-    };
+  interface PublicRuntimeConfig {
+    directus: ModuleRuntimeConfig;
+  }
+  interface PrivateRuntimeConfig {
+    directus: ModulePublicRuntimeConfig;
   }
 }
