@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "paths": {
-      "#imports": ["./.nuxt/imports"]
+      "#imports": ["./.nuxt/imports"],
+      "#components": ["./.nuxt/components"],
+      "#app": ["./node_modules/nuxt/dist/app"],
+      "#build": ["./.nuxt"]
     }
   },
   "extends": "./.nuxt/tsconfig.json"
