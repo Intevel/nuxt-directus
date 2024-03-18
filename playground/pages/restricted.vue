@@ -66,8 +66,7 @@ import {
   useImage
 } from '#imports'
 
-// @ts-ignore
-const { moduleConfig: { autoRefresh: { redirectTo } } } = useRuntimeConfig().public.directus
+const { redirectTo } = useRuntimeConfig().public.directus.moduleConfig.autoRefresh
 const { user, tokens } = useDirectusUsers()
 
 // To manually construct the image URL

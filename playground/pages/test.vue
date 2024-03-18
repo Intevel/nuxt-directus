@@ -54,7 +54,6 @@ import { useRuntimeConfig } from '#imports'
 import { myComposable } from '../composables/test'
 import type { Schema, Post, Test } from '../types'
 
-// @ts-ignore
 const { staticToken } = useRuntimeConfig().public.directus
 const { readAsyncItems } = useDirectusItems<Schema>()
 const { readAsyncItems: readTest } = myComposable<Schema>()
