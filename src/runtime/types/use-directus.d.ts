@@ -3,7 +3,12 @@ import type {
   ClientOptions,
   RestConfig,
   GraphqlConfig,
-  WebSocketConfig
+  WebSocketConfig,
+  DirectusClient,
+  AuthenticationClient,
+  RestClient,
+  GraphqlClient,
+  WebSocketClient
 } from '@directus/sdk'
 import type { FetchOptions } from 'ofetch'
 
@@ -37,4 +42,10 @@ export interface DirectusGraphqlConfig extends DirectusClientConfig {
 
 export interface DirectusRealtimeConfig extends DirectusClientConfig {
   websocketConfig?: WebSocketConfig;
+}
+
+export namespace DirectusClients {
+  export type Rest<T> = DirectusClient<T> & AuthenticationClient<T> & RestClient<T>;
+  export type Graphql<T> = DirectusClient<T> & AuthenticationClient<T> & GraphqlClient<T>;
+  export type Realtime<T> = DirectusClient<T> & AuthenticationClient<T> & WebSocketClient<T>;
 }

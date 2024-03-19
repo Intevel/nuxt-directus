@@ -1,3 +1,5 @@
+import { type MaybeRefOrGetter, computed, toValue } from 'vue'
+import { useAsyncData } from '#app'
 import { hash } from 'ohash'
 import {
   uploadFiles as sdkUploadFiles,
@@ -18,11 +20,17 @@ import type {
   ReadFileOutput,
   UpdateFileOutput,
 } from '@directus/sdk'
-import type { DirectusRestConfig, ReadAsyncOptionsWithQuery, SDKReturn } from '../types'
-import { type MaybeRefOrGetter, computed, toValue, useAsyncData, useDirectusRest } from '#imports'
+import type {
+  DirectusRestConfig,
+  DirectusClients,
+  ReadAsyncOptionsWithQuery,
+  ReadAsyncDataReturn,
+  SDKReturn
+} from '../types'
+import { useDirectusRest } from '#imports'
 
 export function useDirectusFiles<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
-  const client = useDirectusRest<TSchema>(config)
+  const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
   /**
    * Upload/create a new file.
@@ -92,12 +100,11 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
    */
   async function readAsyncFile <
     ID extends DirectusFile<TSchema>['id'],
-    TQuery extends Query<TSchema, DirectusFile<TSchema>>,
-    Output extends Awaited<ReturnType<typeof readFile<ID, TQuery>>>
+    TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
     id: MaybeRefOrGetter<ID>,
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadFileOutput<TSchema, TQuery>>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadFileOutput<TSchema, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncFile', toValue(id), toValue(query)])
@@ -129,11 +136,10 @@ export function useDirectusFiles<TSchema extends object = any> (config?: Partial
  * @returns An array of up to limit file objects. If no items are available, data will be an empty array.
  */
   async function readAsyncFiles <
-    TQuery extends Query<TSchema, DirectusFile<TSchema>>,
-    Output extends Awaited<ReturnType<typeof readFiles<TQuery>>>
+    TQuery extends Query<TSchema, DirectusFile<TSchema>>
   > (
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadFileOutput<TSchema, TQuery>[]>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadFileOutput<TSchema, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncFiles', toValue(query)])

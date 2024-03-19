@@ -1,3 +1,5 @@
+import { type MaybeRefOrGetter, computed, reactive, toValue } from 'vue'
+import { useAsyncData } from '#app'
 import { hash } from 'ohash'
 import {
   createItem as sdkCreateItem,
@@ -23,11 +25,17 @@ import type {
   UpdateItemOutput,
   UpdateSingletonOutput,
 } from '@directus/sdk'
-import type { DirectusRestConfig, ReadAsyncOptionsWithQuery, SDKReturn } from '../types'
-import { type MaybeRefOrGetter, computed, reactive, toValue, useAsyncData, useDirectusRest } from '#imports'
+import type {
+  DirectusRestConfig,
+  DirectusClients,
+  ReadAsyncOptionsWithQuery,
+  ReadAsyncDataReturn,
+  SDKReturn
+} from '../types'
+import { useDirectusRest } from '#imports'
 
 export function useDirectusItems<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
-  const client = useDirectusRest<TSchema>(config)
+  const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
   async function createItem <
     Collection extends keyof TSchema,
@@ -102,12 +110,11 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   async function readAsyncItem <
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
-    Output extends Awaited<ReturnType<typeof readItem<Collection, TQuery>>>
   > (
     collection: MaybeRefOrGetter<Collection>,
     id: MaybeRefOrGetter<string | number>,
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>>>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncItem', toValue(collection), toValue(id), toValue(query)])
@@ -151,11 +158,10 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
   async function readAsyncItems <
       Collection extends RegularCollections<TSchema>,
       TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
-      Output extends Awaited<ReturnType<typeof readItems<Collection, TQuery>>>
     > (
     collection: MaybeRefOrGetter<Collection>,
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>[]>>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncItems', toValue(collection), toValue(query)])
@@ -198,12 +204,11 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    */
   async function readAsyncSingleton <
       Collection extends SingletonCollections<TSchema>,
-      TQuery extends Query<TSchema, TSchema[Collection]>,
-      Output extends Awaited<ReturnType<typeof readSingleton<Collection, TQuery>>>
+      TQuery extends Query<TSchema, TSchema[Collection]>
     > (
     collection: MaybeRefOrGetter<Collection>,
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadSingletonOutput<TSchema, Collection, TQuery>>>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadSingletonOutput<TSchema, Collection, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncSingleton', toValue(collection), toValue(query)])

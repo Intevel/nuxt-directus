@@ -11,7 +11,7 @@ import {
   useState,
   useNuxtApp,
   useRuntimeConfig
-} from '#imports'
+} from '#app'
 
 /**
  * This expands the default Directus storage implementation for authenticated data. It adds a `store` named export for direct access within the Nuxt app using `useState` under the hood.
@@ -20,7 +20,7 @@ import {
  * @returns Directus SDK native AuthenticationStorage functions
  * @returns `store` for direct access to the stored data
  */
-export const useDirectusTokens = (useStaticToken?: boolean | string):DirectusTokens => {
+export const useDirectusTokens = (useStaticToken?: boolean | string): DirectusTokens => {
   const directusConfig = useRuntimeConfig().public.directus
   const {
     authStateName,

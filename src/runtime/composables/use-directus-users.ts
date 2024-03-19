@@ -1,5 +1,12 @@
+import type { MaybeRefOrGetter, Ref } from 'vue'
+import { computed, reactive, toValue } from 'vue'
 import { defu } from 'defu'
 import { hash } from 'ohash'
+import {
+  useAsyncData,
+  useRuntimeConfig,
+  useState
+} from '#app'
 import {
   createUser as sdkCreateUser,
   createUsers as sdkCreateUsers,
@@ -20,20 +27,16 @@ import type {
   UpdateUserOutput
 } from '@directus/sdk'
 import type {
+  DirectusClients,
   DirectusRestConfig,
+  DirectusTokens,
+  ReadAsyncDataReturn,
   ReadAsyncOptionsWithQuery,
   SDKReturn
 } from '../types'
 import {
-  type MaybeRefOrGetter,
-  computed,
-  reactive,
-  toValue,
-  useAsyncData,
   useDirectusRest,
-  useDirectusTokens,
-  useRuntimeConfig,
-  useState
+  useDirectusTokens
 } from '#imports'
 
 export function useDirectusUsers <TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
@@ -49,8 +52,8 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   const defaultConfig: Partial<DirectusRestConfig> = {
     staticToken: false
   }
-  const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
-  const { tokens } = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken)
+  const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(defu(config, defaultConfig))
+  const { tokens }: DirectusTokens['tokens'] = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken)
 
   /**
    * Create a new user.
@@ -158,11 +161,10 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   async function readAsyncUser <
     ID extends DirectusUser<TSchema>['id'],
     TQuery extends Query<TSchema, DirectusUser<TSchema>>,
-    Output extends Awaited<ReturnType<typeof readUser<ID, TQuery>>>
   > (
     id: MaybeRefOrGetter<ID>,
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadUserOutput<TSchema, TQuery>>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadUserOutput<TSchema, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readUser', toValue(id), toValue(query)])
@@ -195,10 +197,9 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    */
   async function readAsyncUsers <
     TQuery extends Query<TSchema, DirectusUser<TSchema>>,
-    Output extends Awaited<ReturnType<typeof readUsers<TQuery>>>
   > (
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadUserOutput<TSchema, TQuery>>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadUserOutput<TSchema, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readUsers', toValue(query)])
@@ -303,7 +304,7 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     return await client.request(sdkDeleteUsers(ids))
   }
 
-  const user = useState<Partial<DirectusUser<TSchema>> | undefined>(userStateName, () => undefined)
+  const user: Ref<Partial<DirectusUser<TSchema>> | undefined> = useState(userStateName, () => undefined)
 
   return {
     client,

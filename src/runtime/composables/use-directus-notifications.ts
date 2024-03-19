@@ -1,3 +1,5 @@
+import { type MaybeRefOrGetter, computed, reactive, toValue } from 'vue'
+import { useAsyncData} from '#app'
 import { hash } from 'ohash'
 import {
   createNotification as sdkCreateNotification,
@@ -16,11 +18,17 @@ import type {
   ReadNotificationOutput,
   UpdateNotificationOutput
 } from '@directus/sdk'
-import type { DirectusRestConfig, ReadAsyncOptionsWithQuery, SDKReturn } from '../types'
-import { type MaybeRefOrGetter, computed, reactive, toValue, useAsyncData, useDirectusRest } from '#imports'
+import type {
+  DirectusRestConfig,
+  DirectusClients,
+  ReadAsyncOptionsWithQuery,
+  ReadAsyncDataReturn,
+  SDKReturn
+} from '../types'
+import { useDirectusRest } from '#imports'
 
 export function useDirectusNotifications<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
-  const client = useDirectusRest<TSchema>(config)
+  const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
   /**
    * Create a new notification.
@@ -88,12 +96,11 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    */
   async function readAsyncNotification <
     ID extends DirectusNotification<TSchema>['id'],
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
-    Output extends Awaited<ReturnType<typeof readNotification<ID, TQuery>>>
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
     id: MaybeRefOrGetter<ID>,
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadNotificationOutput<TSchema, TQuery>>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadNotificationOutput<TSchema, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncNotification', toValue(id), toValue(query)])
@@ -125,11 +132,10 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    * @returns An array of up to limit notification objects. If no items are available, data will be an empty array.
    */
   async function readAsyncNotifications <
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
-    Output extends Awaited<ReturnType<typeof readNotifications<TQuery>>>
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
   > (
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadNotificationOutput<TSchema, TQuery>[]>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadNotificationOutput<TSchema, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncNotifications', toValue(query)])

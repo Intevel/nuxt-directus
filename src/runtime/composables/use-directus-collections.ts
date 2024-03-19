@@ -1,3 +1,5 @@
+import { type MaybeRefOrGetter, computed, toValue } from 'vue'
+import { useAsyncData } from '#app'
 import { hash } from 'ohash'
 import {
   createCollection as sdkCreateCollection,
@@ -14,11 +16,17 @@ import type {
   ReadCollectionOutput,
   UpdateCollectionOutput,
 } from '@directus/sdk'
-import type { DirectusRestConfig, ReadAsyncOptions, SDKReturn } from '../types'
-import { type MaybeRefOrGetter, computed, useAsyncData, useDirectusRest, toValue } from '#imports'
+import type {
+  DirectusRestConfig,
+  DirectusClients,
+  ReadAsyncOptions,
+  ReadAsyncDataReturn,
+  SDKReturn
+} from '../types'
+import { useDirectusRest } from '#imports'
 
 export function useDirectusCollections<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
-  const client = useDirectusRest<TSchema>(config)
+  const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
   /**
    * Create a new Collection. This will create a new table in the database as well.
@@ -62,12 +70,10 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
    *
    * @throws Will throw if collection is empty.
    */
-  async function readAsyncCollection <
-    Output extends Awaited<ReturnType<typeof readCollection>>
-  > (
+  async function readAsyncCollection (
     collection: MaybeRefOrGetter<DirectusCollection<TSchema>['collection']>,
-    params?: ReadAsyncOptions<Output>
-  ) {
+    params?: ReadAsyncOptions<SDKReturn<ReadCollectionOutput<TSchema>>>
+  ): ReadAsyncDataReturn<SDKReturn<ReadCollectionOutput<TSchema>>> {
     const { key, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncCollection', toValue(collection)])
@@ -91,11 +97,9 @@ export function useDirectusCollections<TSchema extends object = any> (config?: P
    *
    * @returns A collection object.
    */
-  async function readAsyncCollections <
-    Output extends Awaited<ReturnType<typeof readCollections>>
-  > (
-    params?: ReadAsyncOptions<Output>
-  ) {
+  async function readAsyncCollections (
+    params?: ReadAsyncOptions<SDKReturn<ReadCollectionOutput<TSchema>[]>>
+  ): ReadAsyncDataReturn<SDKReturn<ReadCollectionOutput<TSchema>[]>> {
     const { key, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncCollections'])

@@ -1,3 +1,5 @@
+import { type MaybeRefOrGetter, computed, reactive, toValue } from 'vue'
+import { useAsyncData } from '#app'
 import { hash } from 'ohash'
 import {
   readRevision as sdkReadRevision,
@@ -8,11 +10,17 @@ import type {
   Query,
   ReadRevisionOutput,
 } from '@directus/sdk'
-import type { DirectusRestConfig, ReadAsyncOptionsWithQuery, SDKReturn } from '../types'
-import { type MaybeRefOrGetter, computed, reactive, toValue, useAsyncData, useDirectusRest } from '#imports'
+import type {
+  DirectusRestConfig,
+  DirectusClients,
+  ReadAsyncOptionsWithQuery,
+  ReadAsyncDataReturn,
+  SDKReturn
+} from '../types'
+import { useDirectusRest } from '#imports'
 
 export function useDirectusRevisions<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
-  const client = useDirectusRest<TSchema>(config)
+  const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
   /**
    * List an existing Revision by primary id.
@@ -46,12 +54,11 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
    */
   async function readAsyncRevision <
     ID extends DirectusRevision<TSchema>['id'],
-    TQuery extends Query<TSchema, DirectusRevision<TSchema>>,
-    Output extends Awaited<ReturnType<typeof readRevision<ID, TQuery>>>
+    TQuery extends Query<TSchema, DirectusRevision<TSchema>>
   > (
     id: MaybeRefOrGetter<ID>,
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadRevisionOutput<TSchema, TQuery>>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadRevisionOutput<TSchema, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncRevision', toValue(id), toValue(query)])
@@ -83,11 +90,10 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
    * @returns An array of up to limit Revision objects. If no items are available, data will be an empty array.
    */
   async function readAsyncRevisions <
-    TQuery extends Query<TSchema, DirectusRevision<TSchema>>,
-    Output extends Awaited<ReturnType<typeof readRevisions<TQuery>>>
+    TQuery extends Query<TSchema, DirectusRevision<TSchema>>
   > (
-    params?: ReadAsyncOptionsWithQuery<Output, TQuery>
-  ) {
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadRevisionOutput<TSchema, TQuery>[]>, TQuery>
+  ): ReadAsyncDataReturn<SDKReturn<ReadRevisionOutput<TSchema, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
       return key ?? 'D_' + hash(['readAsyncRevisions', toValue(query)])

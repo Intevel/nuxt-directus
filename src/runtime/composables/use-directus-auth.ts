@@ -1,3 +1,5 @@
+import type { Ref } from 'vue'
+import type { CookieRef } from '#app'
 import { defu } from 'defu'
 import {
   login as sdkLogin,
@@ -9,13 +11,17 @@ import {
   passwordReset as sdkPasswordReset
 } from '@directus/sdk'
 import type {
+  AuthenticationData,
   AuthenticationMode,
   DirectusUser,
   LoginOptions,
-  Query
+  Query,
+  ReadUserOutput
 } from '@directus/sdk'
 import type {
-  DirectusRestConfig
+  DirectusRestConfig,
+  DirectusClients,
+  SDKReturn
 } from '../types'
 import { useDirectusUsers } from './use-directus-users'
 import { useDirectusRest, useDirectusTokens, useRuntimeConfig } from '#imports'
@@ -26,18 +32,27 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
   const defaultConfig: Partial<DirectusRestConfig> = {
     staticToken: false
   }
-  const client = useDirectusRest<TSchema>(defu(config, defaultConfig))
+  const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(defu(config, defaultConfig))
 
   const {
     readMe: readMyself,
     setUser,
     user
-  } = useDirectusUsers(defu(config, defaultConfig))
+  } = useDirectusUsers<TSchema>(defu(config, defaultConfig)) as {
+    readMe: <TQuery extends Query<TSchema, DirectusUser<TSchema>>>
+      (_query?: TQuery & { updateState?: boolean }) => SDKReturn<ReadUserOutput<TSchema, TQuery>>,
+    setUser: (value: Partial<DirectusUser<TSchema>> | undefined) => Promise<void>,
+    user: Ref<Partial<DirectusUser<TSchema>> | undefined>
+  }
   const {
     refreshToken: refreshTokenCookie,
     set: setTokens,
     tokens
-  } = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken)
+  } = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken) as {
+    refreshToken: () => CookieRef<string | null | undefined>,
+    set: (tokens: AuthenticationData | null) => void,
+    tokens: Ref<AuthenticationData | null>
+  }
   const defaultMode: AuthenticationMode = useNuxtCookies ? 'json' : 'cookie'
 
   /**
@@ -68,7 +83,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
         updateState?: boolean
       } | false
     } = {}
-  ) {
+  ): Promise<AuthenticationData> {
     return await client.request(sdkLogin(identifier, password, defu(options, { mode: defaultMode }))).then(async (authResponse) => {
       if (authResponse && updateStates !== false) {
         if (updateTokens !== false) {
@@ -107,7 +122,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     updateStates?: boolean,
     updateTokens?: boolean,
     readMe?: { query?: TQuery, updateState?: boolean } | false
-  } = {}) {
+  } = {}): Promise<AuthenticationData> {
     const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
     if (!token && useNuxtCookies) {
       throw new Error('No refresh token found.')
@@ -136,7 +151,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
    */
   async function logout (
     refreshToken?: string
-  ) {
+  ): Promise<void> {
     return await client.request(sdkLogout(refreshToken ?? tokens.value?.refresh_token ?? undefined)).then(() => {
       user.value = undefined
       setTokens(null)
@@ -154,7 +169,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
   async function passwordRequest (
     email: string,
     resetUrl?: string
-  ) {
+  ): Promise<void> {
     return await client.request(sdkPasswordRequest(email, resetUrl))
   }
 
@@ -169,7 +184,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
   async function passwordReset (
     token: string,
     password: string
-  ) {
+  ): Promise<void> {
     return await client.request(sdkPasswordReset(token, password))
   }
 
@@ -186,7 +201,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     email: string,
     role: string,
     inviteUrl?: string
-  ) {
+  ): Promise<void> {
     return await client.request(sdkInviteUser(email, role, inviteUrl))
   }
 
@@ -201,7 +216,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
   async function acceptUserInvite (
     token: string,
     password: string
-  ) {
+  ): Promise<void> {
     return await client.request(sdkAcceptUserInvite(token, password))
   }
 
