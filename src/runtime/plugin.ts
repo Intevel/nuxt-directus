@@ -25,7 +25,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   await checkIfUserExists();
 
   nuxtApp.hook('page:start', async () => {
-    if (process.client) {
+    if (import.meta.client) {
       await checkAutoRefresh();
       await checkIfUserExists();
     }
