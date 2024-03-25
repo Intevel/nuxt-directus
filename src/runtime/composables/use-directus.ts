@@ -31,12 +31,12 @@ export const useDirectus = <T extends object = any>(options?: DirectusClientOpti
       globals: {
         fetch: $fetch.create({
           onRequestError: ({ request, options, error }) => {
-            if (process.dev) {
+            if (import.meta.dev) {
               console.error('Request error:', request, options, error)
             }
           },
           onResponseError: ({ request, options, response, error }) => {
-            if (process.dev) {
+            if (import.meta.dev) {
               console.error('Response error:', request, options, response, error)
             }
           }

@@ -36,7 +36,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
 
   const event = nuxtApp?.ssrContext?.event
 
-  if (process.server && event) {
+  if (import.meta.server && event) {
     if (useNuxtCookies) {
       const refreshToken = getCookie(event, refreshTokenCookieName)
 
@@ -67,7 +67,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         }
       }
     }
-  } else if (process.client && (!tokens.value?.access_token || !user.value)) {
+  } else if (import.meta.client && (!tokens.value?.access_token || !user.value)) {
     nuxtApp.hook('app:mounted', async () => { await refresh().catch(_e => null) })
   }
 
@@ -76,7 +76,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       const restricted = (!toArray.length || !!toArray.find((p: string) => p === to.path))
 
       if (!user.value && to.path !== redirectTo && restricted) {
-        if (process.client && !nuxtApp.isHydrating) {
+        if (import.meta.client && !nuxtApp.isHydrating) {
           return abortNavigation()
         } else {
           return navigateTo(redirectTo)
