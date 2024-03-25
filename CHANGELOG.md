@@ -2,6 +2,26 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.6.1
+
+
+### 🩹 Fixes
+
+  - CreateUser documentation (5b207b4)
+  - Add types to package.json exports (ce3b141)
+  - Opt in to `import.meta.*` properties (bb24196)
+
+### 🏡 Chore
+
+  - Update ci.yml (0144c6a)
+
+### ❤️  Contributors
+
+- Conner Bachmann <bac@christmann.info>
+- Daniel Roe ([@danielroe](http://github.com/danielroe))
+- Till Davin <till.davin@gmx.de>
+- Florian
+
 ## v5.6.0
 
 
