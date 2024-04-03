@@ -22,8 +22,7 @@ Integrate [Directus](https://directus.io/) to your [Nuxt](https://nuxt.com/) app
 ## Setup
 
 ```sh
-yarn add nuxt-directus # yarn
-npm i nuxt-directus # npm
+npx nuxi@latest module add directus
 ```
 
 ## Basic usage
