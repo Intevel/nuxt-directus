@@ -12,7 +12,8 @@ import type {
   DirectusClientOptions,
   DirectusGraphqlConfig,
   DirectusRestConfig,
-  DirectusClients
+  DirectusClients,
+  AuthenticationMode
 } from '../types'
 import { useDirectusTokens } from './use-directus-tokens'
 import { useRuntimeConfig } from '#imports'
@@ -59,7 +60,7 @@ export const useDirectus = <T extends object = any>(options?: DirectusClientOpti
  * @returns A Directus REST client.
  */
 export const useDirectusRest = <T extends object = any>(options?: DirectusRestConfig): DirectusClients.Rest<T> => {
-  const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
+  const { mode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const config = defu<
     DirectusRestConfig,
@@ -77,7 +78,7 @@ export const useDirectusRest = <T extends object = any>(options?: DirectusRestCo
   })
 
   return useDirectus<T>(config?.options)
-    .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
+    .with(authentication(mode, config.authConfig))
     .with(rest(config?.restConfig))
 }
 
@@ -87,7 +88,7 @@ export const useDirectusRest = <T extends object = any>(options?: DirectusRestCo
  * @returns A Directus GraphQL client.
  */
 export const useDirectusGraphql = <T extends object = any>(options?: DirectusGraphqlConfig): DirectusClients.Graphql<T> => {
-  const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
+  const { mode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const config = defu<
     DirectusGraphqlConfig,
@@ -105,7 +106,7 @@ export const useDirectusGraphql = <T extends object = any>(options?: DirectusGra
   })
 
   return useDirectus<T>(config?.options)
-    .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
+    .with(authentication(mode, config.authConfig))
     .with(graphql(config.graphqlConfig))
 }
 
@@ -115,7 +116,7 @@ export const useDirectusGraphql = <T extends object = any>(options?: DirectusGra
  * @returns A Directus Realtime client.
  */
 export const useDirectusRealtime = <T extends object = any>(options?: DirectusRealtimeConfig): DirectusClients.Realtime<T> => {
-  const { authConfig: { useNuxtCookies } } = useRuntimeConfig().public.directus
+  const { mode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const config = defu<
     DirectusRealtimeConfig,
@@ -130,6 +131,6 @@ export const useDirectusRealtime = <T extends object = any>(options?: DirectusRe
   })
 
   return useDirectus<T>(config?.options)
-    .with(authentication(useNuxtCookies ? 'json' : 'cookie', config.authConfig))
+    .with(authentication(mode, config.authConfig))
     .with(realtime(config?.websocketConfig))
 }

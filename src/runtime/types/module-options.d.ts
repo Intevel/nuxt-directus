@@ -1,6 +1,6 @@
 import type { DirectusUser, Query } from '@directus/sdk'
 
-export interface ModuleRuntimeConfig {
+export interface ModulePrivateRuntimeConfig {
   /**
    * Directus static token that is available only server side. Customizable at runtime via NUXT_DIRECTUS_STATIC_TOKEN environment variable.
    * @default ''
@@ -72,11 +72,11 @@ export interface ModulePublicRuntimeConfig {
      */
     userStateName?: string;
     /**
-    * Handle auth cookies using Nuxt instead of Directus.
-    * @default true
-    * @type boolean
+    * Defines the mode for the sdk authentication.
+    * @default json
+    * @type 'cookie' | 'json' | 'session'
     */
-    useNuxtCookies?: boolean;
+    mode?: 'cookie' | 'json' | 'session';
     /**
     * Refresh Token Cookie Name
     * @default 'directus_refresh_token'
@@ -84,11 +84,17 @@ export interface ModulePublicRuntimeConfig {
     */
     refreshTokenCookieName?: string | undefined;
     /**
-    * Refresh Token Cookie Name
+    * Access Token Cookie Name
     * @default 'directus_access_token'
     * @type string | undefined
     */
     authTokenCookieName?: string | undefined;
+    /**
+     * Session Token Cookie Name
+     * @default 'directus_session_token'
+     * @type string | undefined
+     */
+    sessionTokenCookieName?: string | undefined;
     /**
     * The HttpOnly attribute for auth cookies.
     * @default false
@@ -177,4 +183,4 @@ export interface ModulePublicRuntimeConfig {
   }
 }
 
-export type ModuleOptions = Omit<ModuleRuntimeConfig, 'staticToken'> & { staticTokenServer?: string } & ModulePublicRuntimeConfig;
+export type ModuleOptions = Omit<ModulePrivateRuntimeConfig, 'staticToken'> & { staticTokenServer?: string } & ModulePublicRuntimeConfig;

@@ -24,7 +24,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string): DirectusTo
   const directusConfig = useRuntimeConfig().public.directus
   const {
     authStateName,
-    useNuxtCookies,
+    mode,
     refreshTokenCookieName,
     authTokenCookieName,
     cookieHttpOnly: httpOnly,
@@ -58,7 +58,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string): DirectusTo
       } else if (tokens.value) {
         return {
           access_token: tokens.value.access_token,
-          refresh_token: useNuxtCookies ? refreshToken().value! : tokens.value!.refresh_token,
+          refresh_token: mode === 'json' ? refreshToken().value! : tokens.value!.refresh_token,
           expires_at: tokens.value.expires_at,
           expires: tokens.value.expires
         }
@@ -69,7 +69,7 @@ export const useDirectusTokens = (useStaticToken?: boolean | string): DirectusTo
   function set (value: AuthenticationData | null) {
     runWithContext(() => {
       tokens.value = value
-      if (useNuxtCookies) {
+      if (mode === 'json') {
         refreshToken(value?.expires || undefined).value = value?.refresh_token
         accessToken(value?.expires || undefined).value = value?.access_token
       }

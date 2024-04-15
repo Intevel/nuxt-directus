@@ -7,7 +7,6 @@ export default defineNuxtConfig({
   devtools: true,
   directus: {
     authConfig: {
-      useNuxtCookies: true,
       refreshTokenCookieName: 'nuxt-directus_refresh_token'
     },
     moduleConfig: {

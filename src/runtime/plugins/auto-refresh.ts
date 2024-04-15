@@ -1,5 +1,5 @@
 import { appendResponseHeader, getCookie, getHeader } from 'h3'
-import type { AuthenticationData } from '@directus/sdk'
+import type { AuthenticationData, AuthenticationMode } from '@directus/sdk'
 import { useDirectusAuth } from '../composables/use-directus-auth'
 import {
   abortNavigation,
@@ -13,7 +13,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const {
     url: baseURL,
     authConfig: {
-      useNuxtCookies,
+      mode,
       refreshTokenCookieName
     },
     moduleConfig: {
@@ -28,6 +28,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   } = useRuntimeConfig().public.directus
 
   const {
+    refreshTokenCookie,
     refresh,
     tokens,
     readMe,
@@ -37,7 +38,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   const event = nuxtApp?.ssrContext?.event
 
   if (import.meta.server && event) {
-    if (useNuxtCookies) {
+    if (mode === 'json' as AuthenticationMode) {
       const refreshToken = getCookie(event, refreshTokenCookieName)
 
       if (refreshToken) { await refresh({ refreshToken }).catch(_e => null) }
@@ -68,7 +69,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       }
     }
   } else if (import.meta.client && (!tokens.value?.access_token || !user.value)) {
-    nuxtApp.hook('app:mounted', async () => { await refresh().catch(_e => null) })
+    nuxtApp.hook('app:mounted', async () => {
+      if (mode === 'json' as AuthenticationMode && !refreshTokenCookie().value) {
+        console.log('No refresh token found.')
+        return
+      }
+      await refresh().catch(_e => null)
+    })
   }
 
   if (enableMiddleware) {

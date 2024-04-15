@@ -27,7 +27,7 @@ import { useDirectusUsers } from './use-directus-users'
 import { useDirectusRest, useDirectusTokens, useRuntimeConfig } from '#imports'
 
 export function useDirectusAuth<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
-  const { useNuxtCookies } = useRuntimeConfig().public.directus.authConfig
+  const { mode: defaultMode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const defaultConfig: Partial<DirectusRestConfig> = {
     staticToken: false
@@ -48,12 +48,7 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     refreshToken: refreshTokenCookie,
     set: setTokens,
     tokens
-  } = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken) as {
-    refreshToken: () => CookieRef<string | null | undefined>,
-    set: (tokens: AuthenticationData | null) => void,
-    tokens: Ref<AuthenticationData | null>
-  }
-  const defaultMode: AuthenticationMode = useNuxtCookies ? 'json' : 'cookie'
+  } = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken)
 
   /**
    * Retrieve a temporary access token and refresh token.
@@ -124,11 +119,11 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     readMe?: { query?: TQuery, updateState?: boolean } | false
   } = {}): Promise<AuthenticationData> {
     const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
-    if (!token && useNuxtCookies) {
+    if (!token && mode === 'json') {
       throw new Error('No refresh token found.')
     }
 
-    const authResponse = await client.request(sdkRefresh(mode ?? defaultMode, token ?? undefined))
+    const authResponse = await client.request(sdkRefresh(mode ?? defaultMode, token))
 
     if (updateStates !== false) {
       if (updateTokens !== false) {
@@ -149,10 +144,21 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
    *
    * @returns Empty body.
    */
-  async function logout (
+  async function logout ({
+    refreshToken,
+    mode
+  }: {
     refreshToken?: string
-  ): Promise<void> {
-    return await client.request(sdkLogout(refreshToken ?? tokens.value?.refresh_token ?? undefined)).then(() => {
+    mode?: AuthenticationMode
+  } = {
+    mode: defaultMode
+  }): Promise<void> {
+    const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
+    if (!token && mode === 'json') {
+      throw new Error('No refresh token found.')
+    }
+
+    return await client.request(sdkLogout(token, mode)).then(() => {
       user.value = undefined
       setTokens(null)
     })

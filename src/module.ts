@@ -14,7 +14,7 @@ import * as DirectusSDK from '@directus/sdk'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type {
   ModuleOptions,
-  ModuleRuntimeConfig,
+  ModulePrivateRuntimeConfig,
   ModulePublicRuntimeConfig
 } from './runtime/types/module-options'
 
@@ -33,9 +33,10 @@ export default defineNuxtModule<ModuleOptions>({
     authConfig: {
       authStateName: 'directus.auth',
       userStateName: 'directus.user',
-      useNuxtCookies: true,
-      authTokenCookieName: 'directus_access_token',
+      mode: 'json',
       refreshTokenCookieName: 'directus_refresh_token',
+      authTokenCookieName: 'directus_access_token',
+      sessionTokenCookieName: 'directus_session_token',
       cookieHttpOnly: false,
       cookieSameSite: 'lax',
       cookieSecure: true
@@ -80,9 +81,10 @@ export default defineNuxtModule<ModuleOptions>({
       authConfig: {
         authStateName: options.authConfig.authStateName,
         userStateName: options.authConfig.userStateName,
-        useNuxtCookies: options.authConfig.useNuxtCookies,
+        mode: options.authConfig.mode,
         refreshTokenCookieName: options.authConfig.refreshTokenCookieName,
         authTokenCookieName: options.authConfig.authTokenCookieName,
+        sessionTokenCookieName: options.authConfig.sessionTokenCookieName,
         cookieHttpOnly: options.authConfig.cookieHttpOnly,
         cookieSameSite: options.authConfig.cookieSameSite,
         cookieSecure: options.authConfig.cookieSecure
@@ -169,7 +171,7 @@ declare module '@nuxt/schema' {
   interface NuxtOptions {
     directus?: ModuleOptions
     runtimeConfig: {
-      directus: ModulePublicRuntimeConfig
+      directus: ModulePrivateRuntimeConfig
       public: {
         directus: ModulePublicRuntimeConfig
       }
