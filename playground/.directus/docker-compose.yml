@@ -3,7 +3,7 @@ name: 'nuxt-directus-dev'
 
 services:
   directus:
-    image: directus/directus:10.8.2
+    image: directus/directus:10.10.5
 
     volumes:
       - ./database:/directus/database
