@@ -71,7 +71,6 @@ export default defineNuxtPlugin(async (nuxtApp) => {
   } else if (import.meta.client && (!tokens.value?.access_token || !user.value)) {
     nuxtApp.hook('app:mounted', async () => {
       if (mode === 'json' as AuthenticationMode && !refreshTokenCookie().value) {
-        console.log('No refresh token found.')
         return
       }
       await refresh().catch(_e => null)
