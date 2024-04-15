@@ -44,7 +44,7 @@
     "lint:fix": "eslint . --fix"
   },
   "dependencies": {
-    "@directus/sdk": "^15.0.3",
+    "@directus/sdk": "^15.1.0",
     "@nuxt/devtools-kit": "^1.0.8",
     "@nuxt/image": "^1.4.0",
     "@nuxt/kit": "^3.9.3",
