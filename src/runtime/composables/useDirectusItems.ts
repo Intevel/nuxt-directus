@@ -67,7 +67,8 @@ export const useDirectusItems = () => {
   const createItems = async <T>(data: DirectusItemCreation): Promise<T[]> => {
     const items = await directus<{ data: T[] }>(`/items/${data.collection}`, {
       method: 'POST',
-      body: data.items
+      body: data.items,
+      params: data.params
     })
     return items.data
   }
@@ -84,7 +85,8 @@ export const useDirectusItems = () => {
       `/items/${data.collection}/${data.id}`,
       {
         method: 'PATCH',
-        body: data.item
+        body: data.item,
+        params: data.params
       }
     )
     return item?.data

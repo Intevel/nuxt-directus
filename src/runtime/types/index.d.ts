@@ -74,12 +74,14 @@ export interface DirectusItemMetaRequest extends DirectusItemRequest {
 export interface DirectusItemCreation {
   collection: string;
   items: Array<Object> | Object;
+  params?: DirectusQueryParams;
 }
 
 export interface DirectusItemUpdate {
   collection: string;
   id: string;
   item: Object;
+  params?: DirectusQueryParams;
 }
 export interface DirectusItemDeletion {
   collection: string;
