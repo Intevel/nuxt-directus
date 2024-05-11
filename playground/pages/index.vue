@@ -118,7 +118,8 @@ const { data: posts, refresh: refreshPosts, error: postsError } = await readAsyn
   query: {
     fields: ['title', 'id', 'slug', 'content', 'status']
   },
-  watch: [user]
+  watch: [user],
+  key: 'posts'
 })
 if (!posts.value && postsError.value) {
   console.error('Posts fetch error:', postsError.value)
