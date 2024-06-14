@@ -95,7 +95,7 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-directus',
     configKey: 'directus',
     compatibility: {
-      nuxt: '^3.0.0-rc.9 || ^2.16.0',
+      nuxt: '>=3.0.0-rc.9 || ^2.16.0',
       bridge: true
     }
   },
