@@ -1,5 +1,4 @@
 import type { Ref } from 'vue'
-import type { CookieRef } from '#app'
 import { defu } from 'defu'
 import {
   login as sdkLogin,

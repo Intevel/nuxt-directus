@@ -1,5 +1,5 @@
 import type { AsyncDataOptions } from '#app'
-import { MaybeRefOrGetter } from '#imports'
+import type { MaybeRefOrGetter } from '#imports'
 import type { M } from '@directus/sdk/dist/types-ZBNrmR-A'
 import type { KeysOf } from 'nuxt/dist/app/composables/asyncData'
 

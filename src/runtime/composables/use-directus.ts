@@ -1,5 +1,6 @@
 import { defu } from 'defu'
 import {
+  type AuthenticationMode,
   type DirectusClient,
   authentication,
   createDirectus,
@@ -13,7 +14,6 @@ import type {
   DirectusGraphqlConfig,
   DirectusRestConfig,
   DirectusClients,
-  AuthenticationMode
 } from '../types'
 import { useDirectusTokens } from './use-directus-tokens'
 import { useRuntimeConfig } from '#imports'

@@ -18,6 +18,8 @@ import type {
   ModulePublicRuntimeConfig
 } from './runtime/types/module-options'
 
+export type * from './runtime/types'
+
 export default defineNuxtModule<ModuleOptions>({
   meta: {
     name: 'nuxt-directus',
