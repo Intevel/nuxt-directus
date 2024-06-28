@@ -6,11 +6,11 @@ export interface ModulePrivateRuntimeConfig {
    * @default ''
    * @type string
    */
-  staticToken?: string;
+  staticToken?: string
   /**
-  * A series of configs that let you define how the module should be used by Nuxt.
-  * @type object
-  */
+   * A series of configs that let you define how the module should be used by Nuxt.
+   * @type object
+   */
   moduleConfig: {
     /**
      * Enable Directus Devtools
@@ -18,25 +18,25 @@ export interface ModulePrivateRuntimeConfig {
      * @type boolean
      * @see https://docs.directus.io/guides/developer-tools.html
      */
-    devtools?: boolean;
+    devtools?: boolean
     /**
      * Auto import native components from the Directus SDK.
      * @default false
      * @type boolean
      */
-    autoImport?: boolean;
+    autoImport?: boolean
     /**
      * Prefix for auto imported components from the Directus SDK.
      * @default ''
      * @type string
      */
-    autoImportPrefix?: string;
+    autoImportPrefix?: string
     /**
      * Suffix for auto imported components from the Directus SDK.
      * @default ''
      * @type string
      */
-    autoImportSuffix?: string;
+    autoImportSuffix?: string
   }
 }
 
@@ -46,85 +46,85 @@ export interface ModulePublicRuntimeConfig {
    * @default ''
    * @type string
    */
-  url: string;
+  url: string
   /**
    * Directus static token that is available both server and client side. Customizable at runtime via NUXT_PUBLIC_DIRECTUS_STATIC_TOKEN environment variable.
    * @default ''
    * @type string
    */
-  staticToken?: string;
+  staticToken?: string
   /**
-  * A series of configs that let you define Nuxt as the auth cookie handler.
-  * @default Directus handles auth cookies
-  * @type object
-  */
+   * A series of configs that let you define Nuxt as the auth cookie handler.
+   * @default Directus handles auth cookies
+   * @type object
+   */
   authConfig: {
     /**
      * The name for the Nuxt useState that handles authentication data such as access_token.
      * @default 'directus.auth'
      * @type string
      */
-    authStateName?: string;
+    authStateName?: string
     /**
      * The name for the Nuxt useState that handles user data once authenticated.
      * @default 'directus.user'
      * @type string
      */
-    userStateName?: string;
+    userStateName?: string
     /**
-    * Defines the mode for the sdk authentication.
-    * @default json
-    * @type 'cookie' | 'json' | 'session'
-    */
-    mode?: 'cookie' | 'json' | 'session';
+     * Defines the mode for the sdk authentication.
+     * @default json
+     * @type 'cookie' | 'json' | 'session'
+     */
+    mode?: 'cookie' | 'json' | 'session'
     /**
-    * Refresh Token Cookie Name
-    * @default 'directus_refresh_token'
-    * @type string | undefined
-    */
-    refreshTokenCookieName?: string | undefined;
+     * Refresh Token Cookie Name
+     * @default 'directus_refresh_token'
+     * @type string | undefined
+     */
+    refreshTokenCookieName?: string | undefined
     /**
-    * Access Token Cookie Name
-    * @default 'directus_access_token'
-    * @type string | undefined
-    */
-    authTokenCookieName?: string | undefined;
+     * Access Token Cookie Name
+     * @default 'directus_access_token'
+     * @type string | undefined
+     */
+    authTokenCookieName?: string | undefined
     /**
      * Session Token Cookie Name
      * @default 'directus_session_token'
      * @type string | undefined
      */
-    sessionTokenCookieName?: string | undefined;
+    sessionTokenCookieName?: string | undefined
     /**
-    * The HttpOnly attribute for auth cookies.
-    * @default false
-    * @type boolean | undefined
-    */
-    cookieHttpOnly?: boolean | undefined;
+     * The HttpOnly attribute for auth cookies.
+     * @default false
+     * @type boolean | undefined
+     */
+    cookieHttpOnly?: boolean | undefined
     /**
-    * The SameSite attribute for auth cookies.
-    * @default 'lax'
-    * @type true | false | 'lax' | 'strict' | 'none' | undefined
-    */
-    cookieSameSite?: boolean | 'lax' | 'strict' | 'none' | undefined;
+     * The SameSite attribute for auth cookies.
+     * @default 'lax'
+     * @type true | false | 'lax' | 'strict' | 'none' | undefined
+     */
+    cookieSameSite?: boolean | 'lax' | 'strict' | 'none' | undefined
     /**
-    * The Secure attribute for auth cookies.
-    * @default true
-    * @type boolean | undefined
-    */
-    cookieSecure?: boolean | undefined;
+     * The Secure attribute for auth cookies.
+     * @default true
+     * @type boolean | undefined
+     */
+    cookieSecure?: boolean | undefined
   }
   /**
-  * A series of configs that let you define how the module should be used by Nuxt.
-  * @type object
-  */
+   * A series of configs that let you define how the module should be used by Nuxt.
+   * @type object
+   */
   moduleConfig: {
     /**
      * The defaults for the readMe query.
      * @default {}
      * @type Query<any, DirectusUser<any>> & { updateState?: boolean }
      */
-    readMeQuery?: Query<any, DirectusUser<any>> & { updateState?: boolean };
+    readMeQuery?: Query<any, DirectusUser<any>> & { updateState?: boolean }
     /**
      * Configurations to automatically refresh the access token and user data.
      * @default object
@@ -136,36 +136,36 @@ export interface ModulePublicRuntimeConfig {
        * @default false
        * @type boolean
        */
-      enableMiddleware?: boolean;
+      enableMiddleware?: boolean
       /**
        * Sets the middleware as global, validating all routes.
        * @default true
        * @type boolean
        */
-      global?: boolean;
+      global?: boolean
       /**
        * The name of the middleware.
        * @default 'directus-auth-middleware'
        * @type string
        */
-      middlewareName?: string;
+      middlewareName?: string
       /**
        * The redirect path for unauthenticated users.
        * @default '/login'
        * @type string
        */
-      redirectTo?: string;
+      redirectTo?: string
       /**
        * A blacklist of paths that needs authentication to be accessed.
        * @default ['']
        * @type string[]
        */
-      to?: string[];
-    } | false;
+      to?: string[]
+    } | false
     /**
-    * A series of configs related to nuxt-directus custom provider for Nuxt Image.
-    * @type object
-    */
+     * A series of configs related to nuxt-directus custom provider for Nuxt Image.
+     * @type object
+     */
     nuxtImage?: {
       /**
        * Lets you add the public static token to each image request via Nuxt Image.
@@ -183,4 +183,4 @@ export interface ModulePublicRuntimeConfig {
   }
 }
 
-export type ModuleOptions = Omit<ModulePrivateRuntimeConfig, 'staticToken'> & { staticTokenServer?: string } & ModulePublicRuntimeConfig;
+export type ModuleOptions = Omit<ModulePrivateRuntimeConfig, 'staticToken'> & { staticTokenServer?: string } & ModulePublicRuntimeConfig

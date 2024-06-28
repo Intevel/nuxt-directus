@@ -1,5 +1,4 @@
 import { type MaybeRefOrGetter, computed, reactive, toValue } from 'vue'
-import { useAsyncData} from '#app'
 import { hash } from 'ohash'
 import {
   createNotification as sdkCreateNotification,
@@ -9,25 +8,26 @@ import {
   updateNotification as sdkUpdateNotification,
   updateNotifications as sdkUpdateNotifications,
   deleteNotification as sdkDeleteNotification,
-  deleteNotifications as sdkDeleteNotifications
+  deleteNotifications as sdkDeleteNotifications,
 } from '@directus/sdk'
 import type {
   DirectusNotification,
   Query,
   CreateNotificationOutput,
   ReadNotificationOutput,
-  UpdateNotificationOutput
+  UpdateNotificationOutput,
 } from '@directus/sdk'
 import type {
   DirectusRestConfig,
   DirectusClients,
   ReadAsyncOptionsWithQuery,
   ReadAsyncDataReturn,
-  SDKReturn
+  SDKReturn,
 } from '../types'
+import { useAsyncData } from '#app'
 import { useDirectusRest } from '#imports'
 
-export function useDirectusNotifications<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusNotifications<TSchema extends object = any>(config?: Partial<DirectusRestConfig>) {
   const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
   /**
@@ -38,11 +38,11 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @returns Returns the notification object for the created notification.
    */
-  async function createNotification <
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
-  > (
+  async function createNotification<
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+  >(
     item: Partial<DirectusNotification<TSchema>>,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<CreateNotificationOutput<TSchema, TQuery>> {
     return await client.request(sdkCreateNotification(item, query))
   }
@@ -55,13 +55,13 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @returns Returns the notification object for the created notification.
    */
-  async function createNotifications <
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
-  > (
-    item: Partial<DirectusNotification<TSchema>>[],
-    query?: TQuery
+  async function createNotifications<
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+  >(
+    items: Partial<DirectusNotification<TSchema>>[],
+    query?: TQuery,
   ): SDKReturn<CreateNotificationOutput<TSchema, TQuery>[]> {
-    return await client.request(sdkCreateNotifications(item, query))
+    return await client.request(sdkCreateNotifications(items, query))
   }
 
   /**
@@ -74,12 +74,12 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @throws Will throw if id is empty.
    */
-  async function readNotification <
+  async function readNotification<
     ID extends DirectusNotification<TSchema>['id'],
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
-  > (
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+  >(
     id: ID,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<ReadNotificationOutput<TSchema, TQuery>> {
     return await client.request(sdkReadNotification(id, query))
   }
@@ -94,12 +94,12 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @throws Will throw if id is empty.
    */
-  async function readAsyncNotification <
+  async function readAsyncNotification<
     ID extends DirectusNotification<TSchema>['id'],
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
-  > (
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+  >(
     id: MaybeRefOrGetter<ID>,
-    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadNotificationOutput<TSchema, TQuery>>, TQuery>
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadNotificationOutput<TSchema, TQuery>>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadNotificationOutput<TSchema, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -116,10 +116,10 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @returns An array of up to limit notification objects. If no items are available, data will be an empty array.
    */
-  async function readNotifications <
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
-  > (
-    query?: TQuery
+  async function readNotifications<
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+  >(
+    query?: TQuery,
   ): SDKReturn<ReadNotificationOutput<TSchema, TQuery>[]> {
     return await client.request(sdkReadNotifications(query))
   }
@@ -131,10 +131,10 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @returns An array of up to limit notification objects. If no items are available, data will be an empty array.
    */
-  async function readAsyncNotifications <
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
-  > (
-    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadNotificationOutput<TSchema, TQuery>[]>, TQuery>
+  async function readAsyncNotifications<
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+  >(
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadNotificationOutput<TSchema, TQuery>[]>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadNotificationOutput<TSchema, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -155,12 +155,12 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @throws Will throw if id is empty.
    */
-  async function updateNotification <
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
-  > (
+  async function updateNotification<
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+  >(
     id: DirectusNotification<TSchema>['id'],
     item: Partial<DirectusNotification<TSchema>>,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<UpdateNotificationOutput<TSchema, TQuery>> {
     return await client.request(sdkUpdateNotification(id, item, query))
   }
@@ -176,12 +176,12 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @throws Will throw if ids is empty.
    */
-  async function updateNotifications <
-    TQuery extends Query<TSchema, DirectusNotification<TSchema>>
-  > (
+  async function updateNotifications<
+    TQuery extends Query<TSchema, DirectusNotification<TSchema>>,
+  >(
     ids: DirectusNotification<TSchema>['id'][],
     item: Partial<DirectusNotification<TSchema>>,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<UpdateNotificationOutput<TSchema, TQuery>[]> {
     return await client.request(sdkUpdateNotifications(ids, item, query))
   }
@@ -195,8 +195,8 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @throws Will throw if id is empty.
    */
-  async function deleteNotification (
-    id: DirectusNotification<TSchema>['id']
+  async function deleteNotification(
+    id: DirectusNotification<TSchema>['id'],
   ): Promise<void> {
     return await client.request(sdkDeleteNotification(id))
   }
@@ -210,8 +210,8 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
    *
    * @throws Will throw if ids is empty.
    */
-  async function deleteNotifications (
-    ids: DirectusNotification<TSchema>['id'][]
+  async function deleteNotifications(
+    ids: DirectusNotification<TSchema>['id'][],
   ): Promise<void> {
     return await client.request(sdkDeleteNotifications(ids))
   }
@@ -227,6 +227,6 @@ export function useDirectusNotifications<TSchema extends object = any> (config?:
     updateNotification,
     updateNotifications,
     deleteNotification,
-    deleteNotifications
+    deleteNotifications,
   }
 }

@@ -93,7 +93,7 @@
             <button @click="updateContent()">
               Update Post
             </button>
-            <button @click="deleteItem('posts', postId).then(()=>refreshPosts())">
+            <button @click="deleteItem('posts', postId).then(() => refreshPosts())">
               Delete Post
             </button>
           </div>
@@ -105,8 +105,8 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { navigateTo, useDirectusAuth, useDirectusUsers, useDirectusItems } from '#imports'
 import type { Post, Schema } from '../types'
+import { navigateTo, useDirectusAuth, useDirectusUsers, useDirectusItems } from '#imports'
 
 const { logout } = useDirectusAuth()
 const { user } = useDirectusUsers()
@@ -116,20 +116,20 @@ const { createItem, readAsyncItems, readAsyncSingleton, updateItem, deleteItem }
 const { data: global } = await readAsyncSingleton('global')
 const { data: posts, refresh: refreshPosts, error: postsError } = await readAsyncItems('posts', {
   query: {
-    fields: ['title', 'id', 'slug', 'content', 'status']
+    fields: ['title', 'id', 'slug', 'content', 'status'],
   },
   watch: [user],
-  key: 'posts'
+  key: 'posts',
 })
 if (!posts.value && postsError.value) {
   console.error('Posts fetch error:', postsError.value)
 }
 
 const postNewData = ref<Partial<Post>>({
-  status: 'draft'
+  status: 'draft',
 })
 
-async function createContent () {
+async function createContent() {
   await createItem('posts', postNewData.value)
   refreshPosts()
 }
@@ -137,7 +137,7 @@ async function createContent () {
 const postId = ref<Post['id']>(posts.value?.[0].id || '')
 const postUpdateData = ref<Partial<Post>>({})
 
-async function updateContent () {
+async function updateContent() {
   await updateItem('posts', postId.value, postUpdateData.value)
   refreshPosts()
 }

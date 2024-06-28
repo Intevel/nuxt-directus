@@ -7,7 +7,7 @@ import {
   acceptUserInvite as sdkAcceptUserInvite,
   inviteUser as sdkInviteUser,
   passwordRequest as sdkPasswordRequest,
-  passwordReset as sdkPasswordReset
+  passwordReset as sdkPasswordReset,
 } from '@directus/sdk'
 import type {
   AuthenticationData,
@@ -15,38 +15,38 @@ import type {
   DirectusUser,
   LoginOptions,
   Query,
-  ReadUserOutput
+  ReadUserOutput,
 } from '@directus/sdk'
 import type {
   DirectusRestConfig,
   DirectusClients,
-  SDKReturn
+  SDKReturn,
 } from '../types'
 import { useDirectusUsers } from './use-directus-users'
 import { useDirectusRest, useDirectusTokens, useRuntimeConfig } from '#imports'
 
-export function useDirectusAuth<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusAuth<TSchema extends object = any>(config?: Partial<DirectusRestConfig>) {
   const { mode: defaultMode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const defaultConfig: Partial<DirectusRestConfig> = {
-    staticToken: false
+    staticToken: false,
   }
   const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(defu(config, defaultConfig))
 
   const {
     readMe: readMyself,
     setUser,
-    user
+    user,
   } = useDirectusUsers<TSchema>(defu(config, defaultConfig)) as {
     readMe: <TQuery extends Query<TSchema, DirectusUser<TSchema>>>
-      (_query?: TQuery & { updateState?: boolean }) => SDKReturn<ReadUserOutput<TSchema, TQuery>>,
-    setUser: (value: Partial<DirectusUser<TSchema>> | undefined) => Promise<void>,
+    (_query?: TQuery & { updateState?: boolean }) => SDKReturn<ReadUserOutput<TSchema, TQuery>>
+    setUser: (value: Partial<DirectusUser<TSchema>> | undefined) => Promise<void>
     user: Ref<Partial<DirectusUser<TSchema>> | undefined>
   }
   const {
     refreshToken: refreshTokenCookie,
     set: setTokens,
-    tokens
+    tokens,
   } = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken)
 
   /**
@@ -54,29 +54,33 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
    *
    * @param identifier Email address of the user you're retrieving the access token for.
    * @param password Password of the user.
-   * @param options Optional login settings
+   * @param additional Additional login overrides.
+   * @param additional.options Optional login settings.
+   * @param additional.updateStates Whether to update the user and tokens states. Defaults to true.
+   * @param additional.updateTokens Whether to update the tokens state. Defaults to true.
+   * @param additional.readMe Whether to update the user state. Defaults to true.
    *
    * @returns The access and refresh tokens for the session
    */
-  async function login <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
+  async function login<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
     identifier: string,
     password: string,
     {
       options,
       updateStates,
       updateTokens,
-      readMe
+      readMe,
     }: {
-      options?: LoginOptions,
-      updateStates?: boolean,
-      updateTokens?: boolean,
+      options?: LoginOptions
+      updateStates?: boolean
+      updateTokens?: boolean
       readMe?: {
-        query?: TQuery,
+        query?: TQuery
         updateState?: boolean
       } | false
-    } = {}
+    } = {},
   ): Promise<AuthenticationData> {
     return await client.request(sdkLogin(identifier, password, defu(options, { mode: defaultMode }))).then(async (authResponse) => {
       if (authResponse && updateStates !== false) {
@@ -94,27 +98,28 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
   /**
    * Retrieve a new access token using a refresh token.
    *
-   * @param mode Whether to retrieve the refresh token in the JSON response, or in a httpOnly secure cookie. One of json, cookie.
-   * @param refreshToken The refresh token to use. If you have the refresh token in a cookie through /auth/login, you don't have to submit it here.
-   * @param updateStates Whether to update the user and tokens states. Defaults to true.
-   * @param updateTokens Whether to update the tokens state. Defaults to true.
-   * @param readMe Whether to update the user state. Defaults to true.
+   * @param options Override settings.
+   * @param options.mode Whether to retrieve the refresh token in the JSON response, or in a httpOnly secure cookie. One of json, cookie.
+   * @param options.refreshToken The refreshToken to use. If you have the refresh token in a cookie through login, you don't have to submit it here.
+   * @param options.updateStates Whether to update the user and tokens states. Defaults to true.
+   * @param options.updateTokens Whether to update the tokens state. Defaults to true.
+   * @param options.readMe Whether to update the user state. Defaults to true.
    *
    * @returns The new access and refresh tokens for the session.
    */
-  async function refresh <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > ({
+  async function refresh<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >({
     mode,
     refreshToken,
     updateStates,
     updateTokens,
-    readMe
+    readMe,
   }: {
-    mode?: AuthenticationMode,
+    mode?: AuthenticationMode
     refreshToken?: string
-    updateStates?: boolean,
-    updateTokens?: boolean,
+    updateStates?: boolean
+    updateTokens?: boolean
     readMe?: { query?: TQuery, updateState?: boolean } | false
   } = {}): Promise<AuthenticationData> {
     const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
@@ -139,18 +144,20 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
   /**
    * Invalidate the refresh token thus destroying the user's session.
    *
-   * @param refreshToken The refresh token to invalidate. If you have the refresh token in a cookie through /auth/login, you don't have to submit it here.
+   * @param options Override settings.
+   * @param options.refreshToken The refresh token to invalidate. If you have the refresh token in a cookie through login, you don't have to submit it here.
+   * @param options.mode Whether Directus should look for the refresh token to invalidate.
    *
    * @returns Empty body.
    */
-  async function logout ({
+  async function logout({
     refreshToken,
-    mode
+    mode,
   }: {
     refreshToken?: string
     mode?: AuthenticationMode
   } = {
-    mode: defaultMode
+    mode: defaultMode,
   }): Promise<void> {
     const token = refreshToken ?? tokens.value?.refresh_token ?? refreshTokenCookie().value ?? undefined
     if (!token && mode === 'json') {
@@ -171,9 +178,9 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
    *
    * @returns Empty body.
    */
-  async function passwordRequest (
+  async function passwordRequest(
     email: string,
-    resetUrl?: string
+    resetUrl?: string,
   ): Promise<void> {
     return await client.request(sdkPasswordRequest(email, resetUrl))
   }
@@ -186,9 +193,9 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
    *
    * @returns Empty body.
    */
-  async function passwordReset (
+  async function passwordReset(
     token: string,
-    password: string
+    password: string,
   ): Promise<void> {
     return await client.request(sdkPasswordReset(token, password))
   }
@@ -202,10 +209,10 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
    *
    * @returns Nothing.
    */
-  async function inviteUser (
+  async function inviteUser(
     email: string,
     role: string,
-    inviteUrl?: string
+    inviteUrl?: string,
   ): Promise<void> {
     return await client.request(sdkInviteUser(email, role, inviteUrl))
   }
@@ -218,9 +225,9 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
    *
    * @returns Nothing.
    */
-  async function acceptUserInvite (
+  async function acceptUserInvite(
     token: string,
-    password: string
+    password: string,
   ): Promise<void> {
     return await client.request(sdkAcceptUserInvite(token, password))
   }
@@ -239,6 +246,6 @@ export function useDirectusAuth<TSchema extends object = any> (config?: Partial<
     setUser,
     setTokens,
     tokens,
-    user
+    user,
   }
 }

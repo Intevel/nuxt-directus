@@ -1,4 +1,4 @@
-import { fileURLToPath } from 'url'
+import { fileURLToPath } from 'node:url'
 import { defu } from 'defu'
 import {
   addImports,
@@ -7,7 +7,7 @@ import {
   addServerImportsDir,
   createResolver,
   defineNuxtModule,
-  installModule
+  installModule,
 } from '@nuxt/kit'
 import { joinURL } from 'ufo'
 import * as DirectusSDK from '@directus/sdk'
@@ -15,7 +15,7 @@ import { addCustomTab } from '@nuxt/devtools-kit'
 import type {
   ModuleOptions,
   ModulePrivateRuntimeConfig,
-  ModulePublicRuntimeConfig
+  ModulePublicRuntimeConfig,
 } from './runtime/types/module-options'
 
 export type * from './runtime/types'
@@ -25,8 +25,8 @@ export default defineNuxtModule<ModuleOptions>({
     name: 'nuxt-directus',
     configKey: 'directus',
     compatibility: {
-      nuxt: '^3.8.0'
-    }
+      nuxt: '^3.8.0',
+    },
   },
   defaults: {
     url: '',
@@ -41,7 +41,7 @@ export default defineNuxtModule<ModuleOptions>({
       sessionTokenCookieName: 'directus_session_token',
       cookieHttpOnly: false,
       cookieSameSite: 'lax',
-      cookieSecure: true
+      cookieSecure: true,
     },
     moduleConfig: {
       devtools: false,
@@ -53,16 +53,16 @@ export default defineNuxtModule<ModuleOptions>({
         global: true,
         middlewareName: 'directus-auth-middleware',
         redirectTo: '/login',
-        to: ['']
+        to: [''],
       },
       nuxtImage: {
         useAuthToken: false,
-        useStaticToken: true
+        useStaticToken: true,
       },
-      readMeQuery: {}
-    }
+      readMeQuery: {},
+    },
   },
-  async setup (options, nuxt) {
+  async setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
 
     // Private runtimeConfig
@@ -72,8 +72,8 @@ export default defineNuxtModule<ModuleOptions>({
         devtools: options.moduleConfig.devtools,
         autoImport: options.moduleConfig.autoImport,
         autoImportPrefix: options.moduleConfig.autoImportPrefix,
-        autoImportSuffix: options.moduleConfig.autoImportSuffix
-      }
+        autoImportSuffix: options.moduleConfig.autoImportSuffix,
+      },
     })
 
     // Public runtimeConfig
@@ -89,7 +89,7 @@ export default defineNuxtModule<ModuleOptions>({
         sessionTokenCookieName: options.authConfig.sessionTokenCookieName,
         cookieHttpOnly: options.authConfig.cookieHttpOnly,
         cookieSameSite: options.authConfig.cookieSameSite,
-        cookieSecure: options.authConfig.cookieSecure
+        cookieSecure: options.authConfig.cookieSecure,
       },
       moduleConfig: {
         autoRefresh: options.moduleConfig.autoRefresh && {
@@ -97,14 +97,14 @@ export default defineNuxtModule<ModuleOptions>({
           global: options.moduleConfig.autoRefresh.global,
           middlewareName: options.moduleConfig.autoRefresh.middlewareName,
           redirectTo: options.moduleConfig.autoRefresh.redirectTo,
-          to: options.moduleConfig.autoRefresh.to
+          to: options.moduleConfig.autoRefresh.to,
         },
         nuxtImage: options.moduleConfig.nuxtImage && {
           useAuthToken: options.moduleConfig.nuxtImage.useAuthToken,
-          useStaticToken: options.moduleConfig.nuxtImage.useStaticToken
+          useStaticToken: options.moduleConfig.nuxtImage.useStaticToken,
         },
-        readMeQuery: options.moduleConfig.readMeQuery
-      }
+        readMeQuery: options.moduleConfig.readMeQuery,
+      },
     })
 
     // Auto import native components
@@ -116,11 +116,11 @@ export default defineNuxtModule<ModuleOptions>({
         addImports({
           name,
           as:
-            prefix +
-            (prefix ? name.charAt(0).toUpperCase() + name.slice(1) : name) +
-            suffix,
-          from: '@directus/sdk'
-        })
+            prefix
+            + (prefix ? name.charAt(0).toUpperCase() + name.slice(1) : name)
+            + suffix,
+          from: '@directus/sdk',
+        }),
       )
     }
 
@@ -134,15 +134,15 @@ export default defineNuxtModule<ModuleOptions>({
       providers: {
         nuxtDirectus: {
           name: 'nuxt-directus',
-          provider: resolve(runtimeDir, 'image-providers', 'nuxt-directus')
-        }
+          provider: resolve(runtimeDir, 'image-providers', 'nuxt-directus'),
+        },
       },
-      provider: 'nuxt-directus'
+      provider: 'nuxt-directus',
     })
 
     if (directusPublic.moduleConfig.autoRefresh !== false) {
       addPlugin({
-        src: resolve(runtimeDir, 'plugins', 'auto-refresh')
+        src: resolve(runtimeDir, 'plugins', 'auto-refresh'),
       }, { append: true })
     }
 
@@ -153,7 +153,7 @@ export default defineNuxtModule<ModuleOptions>({
     if (directus.moduleConfig.devtools) {
       const adminUrl = joinURL(
         directusPublic.url,
-        '/admin/'
+        '/admin/',
       )
 
       addCustomTab({
@@ -162,11 +162,11 @@ export default defineNuxtModule<ModuleOptions>({
         icon: 'simple-icons:directus',
         view: {
           type: 'iframe',
-          src: adminUrl
-        }
+          src: adminUrl,
+        },
       })
     }
-  }
+  },
 })
 
 declare module '@nuxt/schema' {

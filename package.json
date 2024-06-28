@@ -48,7 +48,8 @@
     "@directus/sdk": "^15.1.0",
     "@nuxt/devtools-kit": "^1.3.7",
     "@nuxt/image": "^1.7.0",
-    "@nuxt/kit": "^3.12.2"
+    "@nuxt/kit": "^3.12.2",
+    "ws": "^8.17.1"
   },
   "devDependencies": {
     "@nuxt/devtools": "^1.3.7",
@@ -56,13 +57,14 @@
     "@nuxt/module-builder": "^0.8.0",
     "@nuxt/schema": "^3.12.2",
     "@types/node": "^20.14.9",
+    "@types/ws": "^8.5.10",
     "changelogen": "^0.5.5",
     "eslint": "^9.5.0",
     "nuxt": "^3.12.2",
-    "typescript": "latest",
-    "vue-tsc": "^2.0.22",
     "ohash": "^1.1.3",
-    "ufo": "^1.5.3"
+    "typescript": "latest",
+    "ufo": "^1.5.3",
+    "vue-tsc": "^2.0.22"
   },
   "keywords": [
     "nuxt",

@@ -1,10 +1,10 @@
 import { joinURL } from 'ufo'
-import { createOperationsGenerator } from '#image'
 import type { ProviderGetImage } from '@nuxt/image'
+import { createOperationsGenerator } from '#image'
 import { useRuntimeConfig, useDirectusTokens } from '#imports'
 
 export const operationsGenerator = createOperationsGenerator({
-  joinWith: '&'
+  joinWith: '&',
 })
 
 export const getImage: ProviderGetImage = (src, { baseURL, modifiers = {} }) => {
@@ -14,15 +14,17 @@ export const getImage: ProviderGetImage = (src, { baseURL, modifiers = {} }) => 
     moduleConfig: {
       nuxtImage: {
         useAuthToken,
-        useStaticToken
-      }
-    }
+        useStaticToken,
+      },
+    },
   } = useRuntimeConfig().public.directus
   const { get } = useDirectusTokens()
   const { access_token: accessToken } = get() as { access_token: string | undefined }
 
   // Apply default values from Runtime Config
-  if (!baseURL) { baseURL = url }
+  if (!baseURL) {
+    baseURL = url
+  }
 
   // Apply token to modifiers
   if (!modifiers.access_token && (useStaticToken || useAuthToken)) {
@@ -43,6 +45,6 @@ export const getImage: ProviderGetImage = (src, { baseURL, modifiers = {} }) => 
   }
   const operations = operationsGenerator(modifiers)
   return {
-    url: joinURL(baseURL, '/assets', src + (operations ? ('?' + operations) : ''))
+    url: joinURL(baseURL, '/assets', src + (operations ? ('?' + operations) : '')),
   }
 }

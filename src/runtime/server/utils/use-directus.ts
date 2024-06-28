@@ -3,19 +3,19 @@ import {
   createDirectus,
   realtime,
   rest,
-  staticToken
+  staticToken,
 } from '@directus/sdk'
 import type {
   DirectusClient,
   RestClient,
   StaticTokenClient,
-  WebSocketClient
+  WebSocketClient,
 } from '@directus/sdk'
 import { WebSocket } from 'ws'
 import type {
   DirectusClientOptions,
   DirectusRestConfig,
-  DirectusRealtimeConfig
+  DirectusRealtimeConfig,
 } from '../../types'
 import { useRuntimeConfig } from '#imports'
 
@@ -32,9 +32,9 @@ export const useDirectus = <T extends object = any>(options?: Partial<DirectusCl
     clientOptions: {
       globals: {
         fetch: $fetch.create(options?.fetchOptions ?? {}),
-        WebSocket
-      }
-    }
+        WebSocket,
+      },
+    },
   }
 
   const config = defu(options, defaultOptions)
@@ -57,8 +57,8 @@ export const useDirectusRest = <T extends object = any>(options?: Partial<Omit<D
   const defaultOptions: Partial<Omit<DirectusRestConfig, 'authConfig'>> = {
     staticToken: true,
     restConfig: {
-      credentials: 'include' // TODO: need to confirm how to handle the incoming request's credentials inside `server/api`
-    }
+      credentials: 'include', // TODO: need to confirm how to handle the incoming request's credentials inside `server/api`
+    },
   }
 
   const config = defu(options, defaultOptions)
@@ -85,7 +85,7 @@ export const useDirectusRealtime = <T extends object = any>(options?: Partial<Di
   const { staticToken: privateToken } = useRuntimeConfig().directus
 
   const defaultOptions: Partial<Omit<DirectusRealtimeConfig, 'authConfig'>> = {
-    staticToken: true
+    staticToken: true,
   }
 
   const config = defu(options, defaultOptions)

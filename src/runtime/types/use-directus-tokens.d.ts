@@ -1,6 +1,6 @@
-import type { 
+import type {
   AuthenticationData,
-  AuthenticationStorage
+  AuthenticationStorage,
 } from '@directus/sdk'
 
 export interface RefreshToken {

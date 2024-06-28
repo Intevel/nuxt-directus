@@ -6,7 +6,7 @@ import {
   addRouteMiddleware,
   defineNuxtPlugin,
   navigateTo,
-  useRuntimeConfig
+  useRuntimeConfig,
 } from '#imports'
 
 export default defineNuxtPlugin(async (nuxtApp) => {
@@ -14,7 +14,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     url: baseURL,
     authConfig: {
       mode,
-      refreshTokenCookieName
+      refreshTokenCookieName,
     },
     moduleConfig: {
       autoRefresh: {
@@ -22,9 +22,9 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         global,
         middlewareName,
         redirectTo,
-        to: toArray
-      }
-    }
+        to: toArray,
+      },
+    },
   } = useRuntimeConfig().public.directus
 
   const {
@@ -32,7 +32,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     refresh,
     tokens,
     readMe,
-    user
+    user,
   } = useDirectusAuth({ staticToken: false })
 
   const event = nuxtApp?.ssrContext?.event
@@ -41,20 +41,23 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     if (mode === 'json' as AuthenticationMode) {
       const refreshToken = getCookie(event, refreshTokenCookieName)
 
-      if (refreshToken) { await refresh({ refreshToken }).catch(_e => null) }
-    } else {
+      if (refreshToken) {
+        await refresh({ refreshToken }).catch(_e => null)
+      }
+    }
+    else {
       const cookie = getHeader(event, 'cookie')
 
       if (cookie) {
         const res = await $fetch.raw<{ data: AuthenticationData }>('/auth/refresh', {
           body: {
-            mode: 'cookie'
+            mode: 'cookie',
           },
           baseURL,
           method: 'POST',
           headers: {
-            cookie
-          }
+            cookie,
+          },
         }).catch(_e => null)
 
         if (res && res._data && res.headers) {
@@ -68,7 +71,8 @@ export default defineNuxtPlugin(async (nuxtApp) => {
         }
       }
     }
-  } else if (import.meta.client && (!tokens.value?.access_token || !user.value)) {
+  }
+  else if (import.meta.client && (!tokens.value?.access_token || !user.value)) {
     nuxtApp.hook('app:mounted', async () => {
       if (mode === 'json' as AuthenticationMode && !refreshTokenCookie().value) {
         return
@@ -84,12 +88,13 @@ export default defineNuxtPlugin(async (nuxtApp) => {
       if (!user.value && to.path !== redirectTo && restricted) {
         if (import.meta.client && !nuxtApp.isHydrating) {
           return abortNavigation()
-        } else {
+        }
+        else {
           return navigateTo(redirectTo)
         }
       }
     }, {
-      global
+      global,
     })
   }
 })

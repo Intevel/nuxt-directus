@@ -1,29 +1,29 @@
 export default defineNuxtConfig({
   ssr: true,
   alias: {
-    'nuxt-directus': '../src/module'
+    'nuxt-directus': '../src/module',
   },
   modules: ['nuxt-directus'],
-  devtools: true,
+  devtools: { enabled: true },
   directus: {
     authConfig: {
-      refreshTokenCookieName: 'nuxt-directus_refresh_token'
+      refreshTokenCookieName: 'nuxt-directus_refresh_token',
     },
     moduleConfig: {
       devtools: true,
       autoRefresh: {
         enableMiddleware: false,
         redirectTo: '/login',
-        to: ['/restricted']
+        to: ['/restricted'],
       },
       readMeQuery: {
-        fields: ['id', 'email', 'first_name', 'last_name', 'avatar', 'status']
+        fields: ['id', 'email', 'first_name', 'last_name', 'avatar', 'status'],
       },
       nuxtImage: {
         useAuthToken: false,
-        useStaticToken: true
-      }
-    }
+        useStaticToken: true,
+      },
+    },
   },
   image: {
     providers: {
@@ -32,15 +32,15 @@ export default defineNuxtConfig({
           maxAge: 2592000,
           modifiers: {
             withoutEnlargement: 'true',
-            transforms: [['blur', 4], ['negate']]
-          }
-        }
-      }
-    }
+            transforms: [['blur', 4], ['negate']],
+          },
+        },
+      },
+    },
   },
   routeRules: {
     '/restricted/**': {
-      ssr: false
-    }
-  }
+      ssr: false,
+    },
+  },
 })

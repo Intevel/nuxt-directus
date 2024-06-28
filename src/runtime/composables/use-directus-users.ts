@@ -3,11 +3,6 @@ import { computed, reactive, toValue } from 'vue'
 import { defu } from 'defu'
 import { hash } from 'ohash'
 import {
-  useAsyncData,
-  useRuntimeConfig,
-  useState
-} from '#app'
-import {
   createUser as sdkCreateUser,
   createUsers as sdkCreateUsers,
   readMe as sdkReadMe,
@@ -17,14 +12,14 @@ import {
   updateUser as sdkUpdateUser,
   updateUsers as sdkUpdateUsers,
   deleteUser as sdkDeleteUser,
-  deleteUsers as sdkDeleteUsers
+  deleteUsers as sdkDeleteUsers,
 } from '@directus/sdk'
 import type {
   DirectusUser,
   Query,
   CreateUserOutput,
   ReadUserOutput,
-  UpdateUserOutput
+  UpdateUserOutput,
 } from '@directus/sdk'
 import type {
   DirectusClients,
@@ -32,25 +27,30 @@ import type {
   DirectusTokens,
   ReadAsyncDataReturn,
   ReadAsyncOptionsWithQuery,
-  SDKReturn
+  SDKReturn,
 } from '../types'
 import {
+  useAsyncData,
+  useRuntimeConfig,
+  useState,
+} from '#app'
+import {
   useDirectusRest,
-  useDirectusTokens
+  useDirectusTokens,
 } from '#imports'
 
-export function useDirectusUsers <TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusUsers<TSchema extends object = any>(config?: Partial<DirectusRestConfig>) {
   const {
     authConfig: {
-      userStateName
+      userStateName,
     },
     moduleConfig: {
-      readMeQuery
-    }
+      readMeQuery,
+    },
   } = useRuntimeConfig().public.directus
 
   const defaultConfig: Partial<DirectusRestConfig> = {
-    staticToken: false
+    staticToken: false,
   }
   const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(defu(config, defaultConfig))
   const { tokens }: DirectusTokens['tokens'] = useDirectusTokens(config?.staticToken ?? defaultConfig.staticToken)
@@ -63,11 +63,11 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @returns Returns the user object for the created user.
    */
-  async function createUser <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
+  async function createUser<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
     userInfo: Partial<DirectusUser<TSchema>>,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<CreateUserOutput<TSchema, TQuery>> {
     return await client.request(sdkCreateUser(userInfo, query))
   }
@@ -80,16 +80,16 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @returns Returns the user objects for the created users.
    */
-  async function createUsers <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
+  async function createUsers<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
     userInfo: Partial<DirectusUser<TSchema>>[],
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<CreateUserOutput<TSchema, TQuery>[]> {
     return await client.request(sdkCreateUsers(userInfo, query))
   }
 
-  function setUser (value: Partial<DirectusUser<TSchema>> | undefined): Promise<void> {
+  function setUser(value: Partial<DirectusUser<TSchema>> | undefined): Promise<void> {
     return new Promise((resolve) => {
       user.value = value
       resolve()
@@ -103,25 +103,27 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @returns Returns the user object for the currently authenticated user.
    */
-  async function readMe <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
-    _query?: TQuery & { updateState?: boolean }
+  async function readMe<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
+    query?: TQuery & { updateState?: boolean },
   ): SDKReturn<ReadUserOutput<TSchema, TQuery>> {
     if (tokens.value?.access_token) {
-      const { updateState, ...query } = defu(_query, readMeQuery)
+      const { updateState, ..._query } = defu(query, readMeQuery)
       try {
-        const userData = await client.request(sdkReadMe(query))
+        const userData = await client.request(sdkReadMe(_query))
 
         if (userData && updateState !== false) {
           await setUser(userData as Partial<DirectusUser<TSchema>>)
         }
 
         return userData
-      } catch (error: any) {
+      }
+      catch (error: any) {
         if (error && error.message) {
-          console.error("Couldn't fetch authenticated user:", error.message)
-        } else {
+          console.error('Couldn\'t fetch authenticated user:', error.message)
+        }
+        else {
           console.error(error)
         }
       }
@@ -138,12 +140,12 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @throws Will throw if id is empty.
    */
-  async function readUser <
+  async function readUser<
     ID extends DirectusUser<TSchema>['id'],
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
     id: ID,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<ReadUserOutput<TSchema, TQuery>> {
     return await client.request(sdkReadUser(id, query))
   }
@@ -158,12 +160,12 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @throws Will throw if id is empty.
    */
-  async function readAsyncUser <
+  async function readAsyncUser<
     ID extends DirectusUser<TSchema>['id'],
     TQuery extends Query<TSchema, DirectusUser<TSchema>>,
-  > (
+  >(
     id: MaybeRefOrGetter<ID>,
-    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadUserOutput<TSchema, TQuery>>, TQuery>
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadUserOutput<TSchema, TQuery>>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadUserOutput<TSchema, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -180,10 +182,10 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @returns An array of up to limit user objects. If no items are available, data will be an empty array.
    */
-  async function readUsers <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
-    query?: TQuery
+  async function readUsers<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
+    query?: TQuery,
   ): SDKReturn<ReadUserOutput<TSchema, TQuery>[]> {
     return await client.request(sdkReadUsers(query))
   }
@@ -195,10 +197,10 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @returns Returns the requested user object.
    */
-  async function readAsyncUsers <
+  async function readAsyncUsers<
     TQuery extends Query<TSchema, DirectusUser<TSchema>>,
-  > (
-    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadUserOutput<TSchema, TQuery>>, TQuery>
+  >(
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadUserOutput<TSchema, TQuery>>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadUserOutput<TSchema, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -211,20 +213,20 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
   /**
    * Update the authenticated user.
    *
-   * @param item The user data to update.
+   * @param userInfo The user data to update.
    * @param query Optional return data query.
    *
    * @returns Returns the updated user object for the authenticated user.
    */
-  async function updateMe <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
+  async function updateMe<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
     userInfo: Partial<DirectusUser<TSchema>>,
-    _query: TQuery & { updateState?: boolean }
+    query: TQuery & { updateState?: boolean },
   ): SDKReturn<UpdateUserOutput<TSchema, TQuery>> {
-    const { updateState, ...query } = _query
+    const { updateState, ..._query } = query
 
-    return await client.request(sdkUpdateMe(userInfo, query)).then((userData) => {
+    return await client.request(sdkUpdateMe(userInfo, _query)).then((userData) => {
       if (userData && updateState !== false) {
         setUser(userData as Partial<DirectusUser<TSchema>>)
       }
@@ -236,19 +238,19 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    * Update an existing user.
    *
    * @param id The primary id of the user.
-   * @param item The user data to update.
+   * @param userInfo The user data to update.
    * @param query Optional return data query.
    *
    * @returns Returns the user object for the updated user.
    *
    * @throws Will throw if id is empty.
    */
-  async function updateUser <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
+  async function updateUser<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
     id: DirectusUser<TSchema>['id'],
     userInfo: Partial<DirectusUser<TSchema>>,
-    query: TQuery
+    query: TQuery,
   ): SDKReturn<UpdateUserOutput<TSchema, TQuery>> {
     return await client.request(sdkUpdateUser(id, userInfo, query))
   }
@@ -257,19 +259,19 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    * Update multiple existing users.
    *
    * @param ids The primary ids of the users.
-   * @param item The user data to update.
+   * @param userInfo The user data to update.
    * @param query Optional return data query.
    *
    * @returns Returns the user objects for the updated users.
    *
    * @throws Will throw if ids is empty.
    */
-  async function updateUsers <
-    TQuery extends Query<TSchema, DirectusUser<TSchema>>
-  > (
+  async function updateUsers<
+    TQuery extends Query<TSchema, DirectusUser<TSchema>>,
+  >(
     ids: DirectusUser<TSchema>['id'][],
     userInfo: Partial<DirectusUser<TSchema>>,
-    query: TQuery
+    query: TQuery,
   ): SDKReturn<UpdateUserOutput<TSchema, TQuery>[]> {
     return await client.request(sdkUpdateUsers(ids, userInfo, query))
   }
@@ -283,8 +285,8 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @throws Will throw if id is empty.
    */
-  async function deleteUser (
-    id: DirectusUser<TSchema>['id']
+  async function deleteUser(
+    id: DirectusUser<TSchema>['id'],
   ): Promise<void> {
     return await client.request(sdkDeleteUser(id))
   }
@@ -298,8 +300,8 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
    *
    * @throws Will throw if ids is empty.
    */
-  async function deleteUsers (
-    ids: DirectusUser<TSchema>['id'][]
+  async function deleteUsers(
+    ids: DirectusUser<TSchema>['id'][],
   ): Promise<void> {
     return await client.request(sdkDeleteUsers(ids))
   }
@@ -322,6 +324,6 @@ export function useDirectusUsers <TSchema extends object = any> (config?: Partia
     updateMe,
     updateUser,
     updateUsers,
-    user
+    user,
   }
 }

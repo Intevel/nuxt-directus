@@ -63,7 +63,7 @@ import {
   reactive,
   useDirectusUsers,
   useRuntimeConfig,
-  useImage
+  useImage,
 } from '#imports'
 
 const { redirectTo } = useRuntimeConfig().public.directus.moduleConfig.autoRefresh
@@ -74,14 +74,14 @@ const img = useImage()
 const image = reactive({
   false: '',
   static: '',
-  auth: ''
+  auth: '',
 })
 watch([user, tokens], () => {
   image.false = img(`${user.value?.avatar}`, { access_token: false }) // manually disabling token
   image.static = img(`${user.value?.avatar}`) // picking default form the current runtime config
   image.auth = img(`${user.value?.avatar}`, { access_token: tokens.value?.access_token ?? undefined }) // manually passing access_token
 }, {
-  immediate: true
+  immediate: true,
 })
 </script>
 

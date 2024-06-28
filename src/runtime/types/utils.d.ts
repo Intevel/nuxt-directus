@@ -1,7 +1,6 @@
+import type { KeysOf } from 'nuxt/dist/app/composables/asyncData'
 import type { AsyncDataOptions } from '#app'
 import type { MaybeRefOrGetter } from '#imports'
-import type { M } from '@directus/sdk/dist/types-ZBNrmR-A'
-import type { KeysOf } from 'nuxt/dist/app/composables/asyncData'
 
 type ShallowMaybeRefOrGetter<T> = {
   [P in keyof T]: MaybeRefOrGetter<T[P]>

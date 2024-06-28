@@ -1,9 +1,8 @@
 import { type MaybeRefOrGetter, computed, reactive, toValue } from 'vue'
-import { useAsyncData } from '#app'
 import { hash } from 'ohash'
 import {
   readRevision as sdkReadRevision,
-  readRevisions as sdkReadRevisions
+  readRevisions as sdkReadRevisions,
 } from '@directus/sdk'
 import type {
   DirectusRevision,
@@ -15,11 +14,12 @@ import type {
   DirectusClients,
   ReadAsyncOptionsWithQuery,
   ReadAsyncDataReturn,
-  SDKReturn
+  SDKReturn,
 } from '../types'
+import { useAsyncData } from '#app'
 import { useDirectusRest } from '#imports'
 
-export function useDirectusRevisions<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusRevisions<TSchema extends object = any>(config?: Partial<DirectusRestConfig>) {
   const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
   /**
@@ -34,10 +34,10 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
    */
   async function readRevision<
     ID extends DirectusRevision<TSchema>['id'],
-    TQuery extends Query<TSchema, DirectusRevision<TSchema>>
-  > (
+    TQuery extends Query<TSchema, DirectusRevision<TSchema>>,
+  >(
     id: ID,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<ReadRevisionOutput<TSchema, TQuery>> {
     return await client.request(sdkReadRevision(id, query))
   }
@@ -52,12 +52,12 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
    *
    * @throws Will throw if id is empty.
    */
-  async function readAsyncRevision <
+  async function readAsyncRevision<
     ID extends DirectusRevision<TSchema>['id'],
-    TQuery extends Query<TSchema, DirectusRevision<TSchema>>
-  > (
+    TQuery extends Query<TSchema, DirectusRevision<TSchema>>,
+  >(
     id: MaybeRefOrGetter<ID>,
-    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadRevisionOutput<TSchema, TQuery>>, TQuery>
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadRevisionOutput<TSchema, TQuery>>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadRevisionOutput<TSchema, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -75,9 +75,9 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
    * @returns An array of up to limit Revision objects. If no items are available, data will be an empty array.
    */
   async function readRevisions<
-    TQuery extends Query<TSchema, DirectusRevision<TSchema>>
-  > (
-    query?: TQuery
+    TQuery extends Query<TSchema, DirectusRevision<TSchema>>,
+  >(
+    query?: TQuery,
   ): SDKReturn<ReadRevisionOutput<TSchema, TQuery>[]> {
     return await client.request(sdkReadRevisions(query))
   }
@@ -89,10 +89,10 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
    *
    * @returns An array of up to limit Revision objects. If no items are available, data will be an empty array.
    */
-  async function readAsyncRevisions <
-    TQuery extends Query<TSchema, DirectusRevision<TSchema>>
-  > (
-    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadRevisionOutput<TSchema, TQuery>[]>, TQuery>
+  async function readAsyncRevisions<
+    TQuery extends Query<TSchema, DirectusRevision<TSchema>>,
+  >(
+    params?: ReadAsyncOptionsWithQuery<SDKReturn<ReadRevisionOutput<TSchema, TQuery>[]>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadRevisionOutput<TSchema, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -107,6 +107,6 @@ export function useDirectusRevisions<TSchema extends object = any> (config?: Par
     readRevision,
     readAsyncRevision,
     readRevisions,
-    readAsyncRevisions
+    readAsyncRevisions,
   }
 }

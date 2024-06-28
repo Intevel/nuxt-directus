@@ -6,7 +6,7 @@ import {
   createDirectus,
   realtime,
   graphql,
-  rest
+  rest,
 } from '@directus/sdk'
 import type {
   DirectusRealtimeConfig,
@@ -40,10 +40,10 @@ export const useDirectus = <T extends object = any>(options?: DirectusClientOpti
             if (import.meta.dev) {
               console.error('Response error:', request, options, response, error)
             }
-          }
-        })
-      }
-    }
+          },
+        }),
+      },
+    },
   })
 
   if (!config.baseURL) {
@@ -70,11 +70,11 @@ export const useDirectusRest = <T extends object = any>(options?: DirectusRestCo
       autoRefresh: true,
       msRefreshBeforeExpires: 1000 * 60 * 5,
       credentials: 'include',
-      storage: useDirectusTokens(options?.staticToken)
+      storage: useDirectusTokens(options?.staticToken),
     },
     restConfig: {
-      credentials: 'include'
-    }
+      credentials: 'include',
+    },
   })
 
   return useDirectus<T>(config?.options)
@@ -98,11 +98,11 @@ export const useDirectusGraphql = <T extends object = any>(options?: DirectusGra
       autoRefresh: true,
       msRefreshBeforeExpires: 1000 * 60 * 5,
       credentials: 'include',
-      storage: useDirectusTokens(options?.staticToken)
+      storage: useDirectusTokens(options?.staticToken),
     },
     graphqlConfig: {
-      credentials: 'include'
-    }
+      credentials: 'include',
+    },
   })
 
   return useDirectus<T>(config?.options)
@@ -126,8 +126,8 @@ export const useDirectusRealtime = <T extends object = any>(options?: DirectusRe
       autoRefresh: true,
       msRefreshBeforeExpires: 1000 * 60 * 5,
       credentials: 'include',
-      storage: useDirectusTokens(options?.staticToken)
-    }
+      storage: useDirectusTokens(options?.staticToken),
+    },
   })
 
   return useDirectus<T>(config?.options)

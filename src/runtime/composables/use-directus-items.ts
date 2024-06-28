@@ -1,5 +1,4 @@
 import { type MaybeRefOrGetter, computed, reactive, toValue } from 'vue'
-import { useAsyncData } from '#app'
 import { hash } from 'ohash'
 import {
   createItem as sdkCreateItem,
@@ -11,7 +10,7 @@ import {
   updateItems as sdkUpdateItems,
   updateSingleton as sdkUpdateSingleton,
   deleteItem as sdkDeleteItem,
-  deleteItems as sdkDeleteItems
+  deleteItems as sdkDeleteItems,
 } from '@directus/sdk'
 import type {
   CollectionType,
@@ -30,42 +29,43 @@ import type {
   DirectusClients,
   ReadAsyncOptionsWithQuery,
   ReadAsyncDataReturn,
-  SDKReturn
+  SDKReturn,
 } from '../types'
+import { useAsyncData } from '#app'
 import { useDirectusRest } from '#imports'
 
-export function useDirectusItems<TSchema extends object = any> (config?: Partial<DirectusRestConfig>) {
+export function useDirectusItems<TSchema extends object = any>(config?: Partial<DirectusRestConfig>) {
   const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
-  async function createItem <
+  async function createItem<
     Collection extends keyof TSchema,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
-    TQuery extends Query<TSchema, TSchema[Collection]>
-  > (
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+  >(
     collection: Collection,
     item: Item,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<CreateItemOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkCreateItem(collection, item, query))
   }
 
   /**
- * Create new items in the given collection.
- *
- * @param collection The collection of the item.
- * @param items The items to create.
- * @param query Optional return data query.
- *
- * @returns Returns the item objects of the item that were created.
- */
-  async function createItems <
+   * Create new items in the given collection.
+   *
+   * @param collection The collection of the item.
+   * @param items The items to create.
+   * @param query Optional return data query.
+   *
+   * @returns Returns the item objects of the item that were created.
+   */
+  async function createItems<
     Collection extends keyof TSchema,
     Item extends Partial<UnpackList<TSchema[Collection]>>[],
-    TQuery extends Query<TSchema, TSchema[Collection]>
-  > (
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+  >(
     collection: Collection,
     items: Item,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<CreateItemOutput<TSchema, Collection, TQuery>[]> {
     return await client.request(sdkCreateItems(collection, items, query))
   }
@@ -83,13 +83,13 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is empty.
    * @throws Will throw if id is empty.
    */
-  async function readItem <
+  async function readItem<
     Collection extends RegularCollections<TSchema>,
-    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
-  > (
+    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
+  >(
     collection: Collection,
     id: string | number,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkReadItem(collection, id, query))
   }
@@ -107,13 +107,13 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is empty.
    * @throws Will throw if id is empty.
    */
-  async function readAsyncItem <
+  async function readAsyncItem<
     Collection extends RegularCollections<TSchema>,
     TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
-  > (
+  >(
     collection: MaybeRefOrGetter<Collection>,
     id: MaybeRefOrGetter<string | number>,
-    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>>>, TQuery>
+    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>>>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -134,12 +134,12 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is a core collection.
    * @throws Will throw if collection is empty.
    */
-  async function readItems <
+  async function readItems<
     Collection extends RegularCollections<TSchema>,
-    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>
-  > (
+    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
+  >(
     collection: Collection,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>[]> {
     return await client.request(sdkReadItems(collection, query))
   }
@@ -155,12 +155,12 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is a core collection.
    * @throws Will throw if collection is empty.
    */
-  async function readAsyncItems <
-      Collection extends RegularCollections<TSchema>,
-      TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
-    > (
+  async function readAsyncItems<
+    Collection extends RegularCollections<TSchema>,
+    TQuery extends Query<TSchema, CollectionType<TSchema, Collection>>,
+  >(
     collection: MaybeRefOrGetter<Collection>,
-    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>[]>>, TQuery>
+    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>[]>>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadItemOutput<TSchema, Collection, TQuery>[]>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -181,12 +181,12 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is a core collection.
    * @throws Will throw if collection is empty.
    */
-  async function readSingleton <
+  async function readSingleton<
     Collection extends SingletonCollections<TSchema>,
-    TQuery extends Query<TSchema, TSchema[Collection]>
-  > (
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+  >(
     collection: Collection,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<ReadSingletonOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkReadSingleton(collection, query))
   }
@@ -202,12 +202,12 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is a core collection.
    * @throws Will throw if collection is empty.
    */
-  async function readAsyncSingleton <
-      Collection extends SingletonCollections<TSchema>,
-      TQuery extends Query<TSchema, TSchema[Collection]>
-    > (
+  async function readAsyncSingleton<
+    Collection extends SingletonCollections<TSchema>,
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+  >(
     collection: MaybeRefOrGetter<Collection>,
-    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadSingletonOutput<TSchema, Collection, TQuery>>>, TQuery>
+    params?: ReadAsyncOptionsWithQuery<ReadAsyncDataReturn<SDKReturn<ReadSingletonOutput<TSchema, Collection, TQuery>>>, TQuery>,
   ): ReadAsyncDataReturn<SDKReturn<ReadSingletonOutput<TSchema, Collection, TQuery>>> {
     const { key, query, ..._params } = params ?? {}
     const _key = computed(() => {
@@ -231,15 +231,15 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is empty.
    * @throws Will throw if collection is a core collection.
    */
-  async function updateItem <
+  async function updateItem<
     Collection extends keyof TSchema,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
-    TQuery extends Query<TSchema, TSchema[Collection]>
-  > (
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+  >(
     collection: Collection,
     id: string | number,
     item: Item,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<UpdateItemOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkUpdateItem(collection, id, item, query))
   }
@@ -258,18 +258,18 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is empty.
    * @throws Will throw if collection is a core collection.
    */
-  async function updateItems <
+  async function updateItems<
     Collection extends keyof TSchema,
     ID extends string[] | number[] | Query<TSchema, TSchema[Collection]>,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
-    TQuery extends Query<TSchema, TSchema[Collection]>
-  > (
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+  >(
     collection: Collection,
-    ids: ID,
+    idsOrQuery: ID,
     item: Item,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<UpdateItemOutput<TSchema, Collection, TQuery>[]> {
-    return await client.request(sdkUpdateItems(collection, ids, item, query))
+    return await client.request(sdkUpdateItems(collection, idsOrQuery, item, query))
   }
 
   /**
@@ -284,14 +284,14 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is a core collection.
    * @throws Will throw if collection is empty.
    */
-  async function updateSingleton <
+  async function updateSingleton<
     Collection extends SingletonCollections<TSchema>,
     Item extends Partial<UnpackList<TSchema[Collection]>>,
-    TQuery extends Query<TSchema, TSchema[Collection]>
-  > (
+    TQuery extends Query<TSchema, TSchema[Collection]>,
+  >(
     collection: Collection,
     item: Item,
-    query?: TQuery
+    query?: TQuery,
   ): SDKReturn<UpdateSingletonOutput<TSchema, Collection, TQuery>> {
     return await client.request(sdkUpdateSingleton(collection, item, query))
   }
@@ -308,12 +308,12 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is a core collection.
    * @throws Will throw if id is empty.
    */
-  async function deleteItem <
+  async function deleteItem<
     Collection extends keyof TSchema,
-    ID extends string | number
-  > (
+    ID extends string | number,
+  >(
     collection: Collection,
-    id: ID
+    id: ID,
   ): Promise<void> {
     return await client.request(sdkDeleteItem(collection, id))
   }
@@ -330,13 +330,13 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
    * @throws Will throw if collection is a core collection.
    * @throws Will throw if idsOrQuery is empty.
    */
-  async function deleteItems <
+  async function deleteItems<
     Collection extends keyof TSchema,
     TQuery extends Query<TSchema, TSchema[Collection]>,
-    ID extends string[] | number[]
-  > (
+    ID extends string[] | number[],
+  >(
     collection: Collection,
-    idsOrQuery: ID | TQuery
+    idsOrQuery: ID | TQuery,
   ): Promise<void> {
     return await client.request(sdkDeleteItems(collection, idsOrQuery))
   }
@@ -355,6 +355,6 @@ export function useDirectusItems<TSchema extends object = any> (config?: Partial
     updateItems,
     updateSingleton,
     deleteItem,
-    deleteItems
+    deleteItems,
   }
 }
