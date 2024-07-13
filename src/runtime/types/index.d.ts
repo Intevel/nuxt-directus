@@ -243,10 +243,11 @@ export interface DirectusItem<T> {
 export interface DirectusInviteCreation {
   email: string;
   role: string;
-  invite_url?: string
+  invite_url?: string;
+  subject?: string;
 };
 
 export interface DirectusAcceptInvite {
   token: string;
-  password: string
+  password: string;
 };
