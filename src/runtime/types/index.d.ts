@@ -38,6 +38,7 @@ export interface DirectusAuthResponse {
 export interface DirectusPasswordForgotCredentials {
   email: string;
   reset_url?: string;
+  subject?: string;
 }
 
 export interface DirectusPasswordResetCredentials {
