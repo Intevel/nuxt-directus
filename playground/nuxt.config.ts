@@ -1,10 +1,8 @@
 export default defineNuxtConfig({
   ssr: true,
-
   alias: {
     'nuxt-directus': '../src/module',
   },
-
   modules: ['../src/module'],
 
   directus: {
@@ -43,12 +41,10 @@ export default defineNuxtConfig({
   },
 
   devtools: { enabled: true },
-
   routeRules: {
     '/restricted/**': {
       ssr: false,
     },
   },
-
   compatibilityDate: '2024-07-14',
 })
