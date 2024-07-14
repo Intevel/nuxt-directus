@@ -5,28 +5,17 @@ export default defineNuxtConfig({
     '@nuxt/content',
     '@nuxt/image',
     '@nuxt/ui',
-    '@nuxtjs/fontaine',
-    '@nuxtjs/google-fonts',
+    '@nuxt/fonts',
     '@vueuse/nuxt',
     'nuxt-og-image',
   ],
   ui: {
     icons: ['heroicons', 'simple-icons'],
   },
-  // Fonts
-  fontMetrics: {
-    fonts: ['DM Sans'],
-  },
-  googleFonts: {
-    display: 'swap',
-    download: true,
-    families: {
-      'DM+Sans': [300, 400, 500, 600, 700],
-    },
-  },
   routeRules: {
     '/api/search.json': { prerender: true },
     '/docs': { redirect: '/docs/getting-started', prerender: false },
   },
   devtools: { enabled: true },
+  compatibilityDate: '2024-07-14',
 })
