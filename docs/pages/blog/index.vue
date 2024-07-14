@@ -15,13 +15,13 @@ useSeoMeta({
   title: page.value.title,
   ogTitle: page.value.title,
   description: page.value.description,
-  ogDescription: page.value.description
+  ogDescription: page.value.description,
 })
 
 defineOgImage({
   component: 'Saas',
   title: page.value.title,
-  description: page.value.description
+  description: page.value.description,
 })
 </script>
 
@@ -44,7 +44,7 @@ defineOgImage({
           :orientation="index === 0 ? 'horizontal' : 'vertical'"
           :class="[index === 0 && 'col-span-full']"
           :ui="{
-            description: 'line-clamp-2'
+            description: 'line-clamp-2',
           }"
         />
       </UBlogList>

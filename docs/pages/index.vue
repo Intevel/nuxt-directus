@@ -9,13 +9,13 @@ useSeoMeta({
   title: page.value.title,
   ogTitle: page.value.title,
   description: page.value.description,
-  ogDescription: page.value.description
+  ogDescription: page.value.description,
 })
 
 defineOgImage({
   component: 'Saas',
   title: page.value.title,
-  description: page.value.description
+  description: page.value.description,
 })
 </script>
 
@@ -25,8 +25,18 @@ defineOgImage({
       <div class="absolute inset-0 landing-grid z-[-1] [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" />
 
       <template #headline>
-        <UBadge v-if="page.hero.headline" variant="subtle" size="lg" class="relative rounded-full font-semibold">
-          <NuxtLink :to="page.hero.headline.to" target="_blank" class="focus:outline-none" tabindex="-1">
+        <UBadge
+          v-if="page.hero.headline"
+          variant="subtle"
+          size="lg"
+          class="relative rounded-full font-semibold"
+        >
+          <NuxtLink
+            :to="page.hero.headline.to"
+            target="_blank"
+            class="focus:outline-none"
+            tabindex="-1"
+          >
             <span class="absolute inset-0" aria-hidden="true" />
           </NuxtLink>
 

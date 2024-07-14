@@ -5,13 +5,13 @@ const navigation = inject<Ref<NavItem[]>>('navigation', ref([]))
 
 const links = [{
   label: 'Docs',
-  to: '/docs'
+  to: '/docs',
 }, {
   label: 'Changelog',
-  to: '/changelog'
+  to: '/changelog',
 }, {
   label: 'Blog',
-  to: '/blog'
+  to: '/blog',
 }]
 </script>
 
@@ -23,7 +23,14 @@ const links = [{
 
     <template #right>
       <UButton label="GitHub" color="gray" to="https://github.com/intevel/nuxt-directus" />
-      <UButton label="Playground" icon="i-heroicons-arrow-right-20-solid" trailing color="black" to="https://playground.nuxt-directus.site" class="hidden lg:flex" />
+      <UButton
+        label="Playground"
+        icon="i-heroicons-arrow-right-20-solid"
+        trailing
+        color="black"
+        to="https://playground.nuxt-directus.site"
+        class="hidden lg:flex"
+      />
     </template>
 
     <template #panel>

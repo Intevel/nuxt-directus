@@ -11,22 +11,22 @@ export default defineNuxtConfig({
     'nuxt-og-image',
   ],
   ui: {
-    icons: ['heroicons', 'simple-icons']
+    icons: ['heroicons', 'simple-icons'],
   },
   // Fonts
   fontMetrics: {
-    fonts: ['DM Sans']
+    fonts: ['DM Sans'],
   },
   googleFonts: {
     display: 'swap',
     download: true,
     families: {
-      'DM+Sans': [300, 400, 500, 600, 700]
-    }
+      'DM+Sans': [300, 400, 500, 600, 700],
+    },
   },
   routeRules: {
     '/api/search.json': { prerender: true },
-    '/docs': { redirect: '/docs/getting-started', prerender: false }
+    '/docs': { redirect: '/docs/getting-started', prerender: false },
   },
-  devtools: { enabled: true }
+  devtools: { enabled: true },
 })

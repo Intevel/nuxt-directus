@@ -18,13 +18,13 @@ useSeoMeta({
   title: page.value.title,
   ogTitle: page.value.title,
   description: page.value.description,
-  ogDescription: page.value.description
+  ogDescription: page.value.description,
 })
 
 defineOgImage({
   component: 'Saas',
   title: page.value.title,
-  description: page.value.description
+  description: page.value.description,
 })
 
 const headline = computed(() => findPageHeadline(page.value!))
@@ -32,7 +32,12 @@ const headline = computed(() => findPageHeadline(page.value!))
 
 <template>
   <UPage v-if="page">
-    <UPageHeader :title="page.title" :description="page.description" :links="page.links" :headline="headline" />
+    <UPageHeader
+      :title="page.title"
+      :description="page.description"
+      :links="page.links"
+      :headline="headline"
+    />
 
     <UPageBody prose>
       <ContentRenderer v-if="page.body" :value="page" />

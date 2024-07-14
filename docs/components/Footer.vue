@@ -2,36 +2,36 @@
 const links = [{
   label: 'Resources',
   children: [{
-    label: 'Help center'
+    label: 'Help center',
   }, {
-    label: 'Docs'
+    label: 'Docs',
   }, {
-    label: 'Roadmap'
+    label: 'Roadmap',
   }, {
-    label: 'Changelog'
-  }]
+    label: 'Changelog',
+  }],
 }, {
   label: 'Features',
   children: [{
-    label: 'Affiliates'
+    label: 'Affiliates',
   }, {
-    label: 'Portal'
+    label: 'Portal',
   }, {
-    label: 'Jobs'
+    label: 'Jobs',
   }, {
-    label: 'Sponsors'
-  }]
+    label: 'Sponsors',
+  }],
 }, {
   label: 'Company',
   children: [{
-    label: 'About'
+    label: 'About',
   }, {
-    label: 'Pricing'
+    label: 'Pricing',
   }, {
-    label: 'Careers'
+    label: 'Careers',
   }, {
-    label: 'Blog'
-  }]
+    label: 'Blog',
+  }],
 }]
 
 const toast = useToast()
@@ -39,13 +39,13 @@ const toast = useToast()
 const email = ref('')
 const loading = ref(false)
 
-function onSubmit () {
+function onSubmit() {
   loading.value = true
 
   setTimeout(() => {
     toast.add({
       title: 'Subscribed!',
-      description: 'You\'ve been subscribed to our newsletter.'
+      description: 'You\'ve been subscribed to our newsletter.',
     })
 
     loading.value = false
@@ -81,7 +81,14 @@ function onSubmit () {
     <template #right>
       <UColorModeButton size="sm" />
 
-      <UButton to="https://github.com/nuxt-ui-pro/saas" target="_blank" icon="i-simple-icons-github" aria-label="GitHub" color="gray" variant="ghost" />
+      <UButton
+        to="https://github.com/nuxt-ui-pro/saas"
+        target="_blank"
+        icon="i-simple-icons-github"
+        aria-label="GitHub"
+        color="gray"
+        variant="ghost"
+      />
     </template>
   </UFooter>
 </template>

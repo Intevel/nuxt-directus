@@ -14,13 +14,13 @@ useSeoMeta({
   title: page.value.title,
   ogTitle: page.value.title,
   description: page.value.description,
-  ogDescription: page.value.description
+  ogDescription: page.value.description,
 })
 
 defineOgImage({
   component: 'Saas',
   title: page.value.title,
-  description: page.value.description
+  description: page.value.description,
 })
 </script>
 
