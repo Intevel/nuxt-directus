@@ -28,7 +28,7 @@ import type {
 import { useAsyncData } from '#app'
 import { useDirectusRest } from '#imports'
 
-export function useDirectusFiles<TSchema extends object = any>(config?: Partial<DirectusRestConfig>) {
+export function useDirectusFiles<TSchema>(config?: Partial<DirectusRestConfig>) {
   const client: DirectusClients.Rest<TSchema> = useDirectusRest<TSchema>(config)
 
   /**

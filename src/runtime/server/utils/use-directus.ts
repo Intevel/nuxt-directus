@@ -24,7 +24,7 @@ import { useRuntimeConfig } from '#imports'
  *
  * @returns createDirectus.
  */
-export const useDirectus = <T extends object = any>(options?: Partial<DirectusClientOptions>): DirectusClient<T> => {
+export const useDirectus = <T = any>(options?: Partial<DirectusClientOptions>): DirectusClient<T> => {
   const { url } = useRuntimeConfig().public.directus
 
   const defaultOptions: DirectusClientOptions = {
@@ -51,7 +51,7 @@ export const useDirectus = <T extends object = any>(options?: Partial<DirectusCl
  *
  * @returns A Directus REST client.
  */
-export const useDirectusRest = <T extends object = any>(options?: Partial<Omit<DirectusRestConfig, 'authConfig'>>): DirectusClient<T> & RestClient<T> & StaticTokenClient<T> => {
+export const useDirectusRest = <T = any>(options?: Partial<Omit<DirectusRestConfig, 'authConfig'>>): DirectusClient<T> & RestClient<T> & StaticTokenClient<T> => {
   const { staticToken: privateToken } = useRuntimeConfig().directus
 
   const defaultOptions: Partial<Omit<DirectusRestConfig, 'authConfig'>> = {
@@ -81,7 +81,7 @@ export const useDirectusRest = <T extends object = any>(options?: Partial<Omit<D
  *
  * @returns A Directus Realtime client.
  */
-export const useDirectusRealtime = <T extends object = any>(options?: Partial<DirectusRealtimeConfig>): DirectusClient<T> & WebSocketClient<T> & StaticTokenClient<T> => {
+export const useDirectusRealtime = <T = any>(options?: Partial<DirectusRealtimeConfig>): DirectusClient<T> & WebSocketClient<T> & StaticTokenClient<T> => {
   const { staticToken: privateToken } = useRuntimeConfig().directus
 
   const defaultOptions: Partial<Omit<DirectusRealtimeConfig, 'authConfig'>> = {

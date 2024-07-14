@@ -23,7 +23,7 @@ import { useRuntimeConfig } from '#imports'
  *
  * @returns createDirectus.
  */
-export const useDirectus = <T extends object = any>(options?: DirectusClientOptions): DirectusClient<T> => {
+export const useDirectus = <T = any>(options?: DirectusClientOptions): DirectusClient<T> => {
   const { url } = useRuntimeConfig().public.directus
 
   const config = defu(options, {
@@ -59,7 +59,7 @@ export const useDirectus = <T extends object = any>(options?: DirectusClientOpti
  *
  * @returns A Directus REST client.
  */
-export const useDirectusRest = <T extends object = any>(options?: DirectusRestConfig): DirectusClients.Rest<T> => {
+export const useDirectusRest = <T = any>(options?: DirectusRestConfig): DirectusClients.Rest<T> => {
   const { mode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const config = defu<
@@ -87,7 +87,7 @@ export const useDirectusRest = <T extends object = any>(options?: DirectusRestCo
  *
  * @returns A Directus GraphQL client.
  */
-export const useDirectusGraphql = <T extends object = any>(options?: DirectusGraphqlConfig): DirectusClients.Graphql<T> => {
+export const useDirectusGraphql = <T = any>(options?: DirectusGraphqlConfig): DirectusClients.Graphql<T> => {
   const { mode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const config = defu<
@@ -115,7 +115,7 @@ export const useDirectusGraphql = <T extends object = any>(options?: DirectusGra
  *
  * @returns A Directus Realtime client.
  */
-export const useDirectusRealtime = <T extends object = any>(options?: DirectusRealtimeConfig): DirectusClients.Realtime<T> => {
+export const useDirectusRealtime = <T = any>(options?: DirectusRealtimeConfig): DirectusClients.Realtime<T> => {
   const { mode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const config = defu<

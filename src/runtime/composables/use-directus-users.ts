@@ -39,7 +39,7 @@ import {
   useDirectusTokens,
 } from '#imports'
 
-export function useDirectusUsers<TSchema extends object = any>(config?: Partial<DirectusRestConfig>) {
+export function useDirectusUsers<TSchema>(config?: Partial<DirectusRestConfig>) {
   const {
     authConfig: {
       userStateName,

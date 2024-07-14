@@ -25,7 +25,7 @@ import type {
 import { useDirectusUsers } from './use-directus-users'
 import { useDirectusRest, useDirectusTokens, useRuntimeConfig } from '#imports'
 
-export function useDirectusAuth<TSchema extends object = any>(config?: Partial<DirectusRestConfig>) {
+export function useDirectusAuth<TSchema>(config?: Partial<DirectusRestConfig>) {
   const { mode: defaultMode } = useRuntimeConfig().public.directus.authConfig as { mode: AuthenticationMode }
 
   const defaultConfig: Partial<DirectusRestConfig> = {
