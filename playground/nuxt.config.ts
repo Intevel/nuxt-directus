@@ -3,8 +3,8 @@ export default defineNuxtConfig({
   alias: {
     'nuxt-directus': '../src/module',
   },
-  modules: ['nuxt-directus'],
-  devtools: { enabled: true },
+  modules: ['../src/module'],
+
   directus: {
     authConfig: {
       refreshTokenCookieName: 'nuxt-directus_refresh_token',
@@ -25,6 +25,7 @@ export default defineNuxtConfig({
       },
     },
   },
+
   image: {
     providers: {
       nuxtDirectus: {
@@ -38,6 +39,8 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  devtools: { enabled: true },
   routeRules: {
     '/restricted/**': {
       ssr: false,
