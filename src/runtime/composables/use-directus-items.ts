@@ -1,5 +1,6 @@
 import { joinURL } from 'ufo'
 
+import type { DirectusQueryParams } from '../types'
 import { useDirectusFetch, useNuxtApp } from '#imports'
 
 export function useDirectusItems() {
@@ -12,28 +13,40 @@ export function useDirectusItems() {
     return joinURL('items', ...input)
   }
 
-  function $readItem(collection: string, id: string) {
-    return $directusFetch(collectionURL(collection, id))
+  function $readItem(collection: string, id: string, params?: DirectusQueryParams) {
+    return $directusFetch(collectionURL(collection, id), {
+      params,
+    })
   }
 
-  function readItem(collection: string, id: string) {
-    return useDirectusFetch(collectionURL(collection, id))
+  function readItem(collection: string, id: string, params?: DirectusQueryParams) {
+    return useDirectusFetch(collectionURL(collection, id), {
+      params,
+    })
   }
 
-  function $readItems(collection: string) {
-    return $directusFetch(collectionURL(collection))
+  function $readItems(collection: string, params?: DirectusQueryParams) {
+    return $directusFetch(collectionURL(collection), {
+      params,
+    })
   }
 
-  function readItems(collection: string) {
-    return useDirectusFetch(collectionURL(collection))
+  function readItems(collection: string, params?: DirectusQueryParams) {
+    return useDirectusFetch(collectionURL(collection), {
+      params,
+    })
   }
 
-  function $readSingleton(collection: string) {
-    return $directusFetch(collectionURL(collection))
+  function $readSingleton(collection: string, params?: DirectusQueryParams) {
+    return $directusFetch(collectionURL(collection), {
+      params,
+    })
   }
 
-  function readSingleton(collection: string) {
-    return useDirectusFetch(collectionURL(collection))
+  function readSingleton(collection: string, params?: DirectusQueryParams) {
+    return useDirectusFetch(collectionURL(collection), {
+      params,
+    })
   }
 
   return {

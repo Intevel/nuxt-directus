@@ -11,5 +11,7 @@ import { useDirectusItems } from '#imports'
 
 const { readItems } = useDirectusItems()
 
-const { data } = await readItems('pages')
+const { data } = await readItems('pages', {
+  fields: ['id', 'title'],
+})
 </script>

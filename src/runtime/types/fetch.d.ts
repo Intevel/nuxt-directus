@@ -36,3 +36,15 @@ export interface HttpResponseError {
 }
 
 // TODO: add HttpResponseOk
+
+export interface DirectusQueryParams {
+  fields?: Array<string>
+  sort?: string | Array<string>
+  filter?: Record<string, unknown>
+  limit?: number
+  offset?: number
+  page?: number
+  alias?: string | Array<string>
+  deep?: Record<string, unknown>
+  search?: string
+}
