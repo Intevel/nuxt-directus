@@ -1,3 +1,4 @@
+import type { FetchOptions } from 'ofetch'
 import type {
   AuthenticationConfig,
   ClientOptions,
@@ -9,8 +10,7 @@ import type {
   RestClient,
   GraphqlClient,
   WebSocketClient,
-} from '@directus/sdk'
-import type { FetchOptions } from 'ofetch'
+} from '#nuxt-directus/sdk'
 
 export interface DirectusClientOptions {
   /**

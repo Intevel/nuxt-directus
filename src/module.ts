@@ -1,16 +1,17 @@
 import { fileURLToPath } from 'node:url'
 import { defu } from 'defu'
 import {
-  addImports,
+  // addImports,
   addImportsDir,
   addPlugin,
   addServerImportsDir,
   createResolver,
   defineNuxtModule,
   installModule,
+  hasNuxtModule,
 } from '@nuxt/kit'
+// import { ensureDependencyInstalled } from 'nypm'
 import { joinURL } from 'ufo'
-import * as DirectusSDK from '@directus/sdk'
 import { addCustomTab } from '@nuxt/devtools-kit'
 import type {
   ModuleOptions,
@@ -45,9 +46,11 @@ export default defineNuxtModule<ModuleOptions>({
     },
     moduleConfig: {
       devtools: false,
-      autoImport: false,
-      autoImportPrefix: 'sdk',
-      autoImportSuffix: '',
+      sdk: {
+        autoImport: false,
+        prefix: '',
+        suffix: '',
+      },
       autoRefresh: {
         enableMiddleware: false,
         global: true,
@@ -59,20 +62,22 @@ export default defineNuxtModule<ModuleOptions>({
         useAuthToken: false,
         useStaticToken: true,
       },
-      readMeQuery: {},
     },
   },
   async setup(options, nuxt) {
     const { resolve } = createResolver(import.meta.url)
+
+    const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
+    nuxt.options.build.transpile.push(runtimeDir)
+
+    nuxt.options.alias['#nuxt-directus'] = runtimeDir
 
     // Private runtimeConfig
     const directus = nuxt.options.runtimeConfig.directus = defu(nuxt.options.runtimeConfig.directus as any, {
       staticToken: options.staticTokenServer,
       moduleConfig: {
         devtools: options.moduleConfig.devtools,
-        autoImport: options.moduleConfig.autoImport,
-        autoImportPrefix: options.moduleConfig.autoImportPrefix,
-        autoImportSuffix: options.moduleConfig.autoImportSuffix,
+        sdk: options.moduleConfig.sdk,
       },
     })
 
@@ -103,48 +108,59 @@ export default defineNuxtModule<ModuleOptions>({
           useAuthToken: options.moduleConfig.nuxtImage.useAuthToken,
           useStaticToken: options.moduleConfig.nuxtImage.useStaticToken,
         },
-        readMeQuery: options.moduleConfig.readMeQuery,
       },
     })
 
-    // Auto import native components
-    if (directus.moduleConfig.autoImport) {
-      const prefix = directus.moduleConfig.autoImportPrefix
-      const suffix = directus.moduleConfig.autoImportSuffix
+    // TODO: ensureDependencyInstalled forces it to install if not present
+    // Check if a Directus SDK is installed and auto import it
+    // const directusSDK = await ensureDependencyInstalled('@directus/sdk')
+    // nuxt.options.alias['#nuxt-directus/sdk'] = directusSDK
+    //   ? '@directus/sdk'
+    //   : 'unenv/runtime/mock/empty'
+    // // Auto import native components
+    // if (directusSDK && directus.moduleConfig.sdk.autoImport) {
+    //   const sdkComposables = await import('#nuxt-directus/sdk')
+    //   const prefix = directus.moduleConfig.sdk.prefix
+    //   const suffix = directus.moduleConfig.sdk.suffix
+    //   Object.keys(sdkComposables).forEach(name =>
+    //     addImports({
+    //       name,
+    //       as:
+    //         prefix
+    //         + (prefix ? name.charAt(0).toUpperCase() + name.slice(1) : name)
+    //         + suffix,
+    //       from: '@directus/sdk',
+    //     }),
+    //   )
+    // }
 
-      Object.keys(DirectusSDK).forEach(name =>
-        addImports({
-          name,
-          as:
-            prefix
-            + (prefix ? name.charAt(0).toUpperCase() + name.slice(1) : name)
-            + suffix,
-          from: '@directus/sdk',
-        }),
+    // Check if @nuxt/image is installed and add nuxt-directus provider
+    if (hasNuxtModule('@nuxt/image', nuxt)) {
+      // TODO: edit options instead of reinstalling the module
+      await installModule(
+        '@nuxt/image',
+        {
+          providers: {
+            nuxtDirectus: {
+              name: 'nuxt-directus',
+              provider: resolve(runtimeDir, 'image-providers', 'nuxt-directus'),
+            },
+          },
+          provider: 'nuxt-directus',
+        },
+        nuxt,
       )
     }
 
-    const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
-    nuxt.options.build.transpile.push(runtimeDir)
-
-    nuxt.options.alias['#nuxt-directus'] = runtimeDir
-
-    // Install @nuxt/image and use directus provider
-    await installModule('@nuxt/image', {
-      providers: {
-        nuxtDirectus: {
-          name: 'nuxt-directus',
-          provider: resolve(runtimeDir, 'image-providers', 'nuxt-directus'),
-        },
-      },
-      provider: 'nuxt-directus',
+    addPlugin({
+      src: resolve(runtimeDir, 'plugins', 'directus-fetch'),
     })
 
-    if (directusPublic.moduleConfig.autoRefresh !== false) {
-      addPlugin({
-        src: resolve(runtimeDir, 'plugins', 'auto-refresh'),
-      }, { append: true })
-    }
+    // if (directusPublic.moduleConfig.autoRefresh !== false) {
+    //   addPlugin({
+    //     src: resolve(runtimeDir, 'plugins', 'auto-refresh'),
+    //   }, { append: true })
+    // }
 
     addImportsDir(resolve(runtimeDir, 'composables'))
     addServerImportsDir(resolve(runtimeDir, 'server', 'utils'))
