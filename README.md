@@ -1,4 +1,4 @@
-[![nuxt-directus](https://raw.githubusercontent.com/Intevel/nuxt-directus/main/docs/public/cover.png)](https://nuxt-directus.site/)
+[![nuxt-directus](https://raw.githubusercontent.com/Intevel/nuxt-directus/main/docs/public/cover.png)](https://nuxt-directus.de/)
 
 # Nuxt Directus
 
@@ -10,7 +10,7 @@
 Integrate [Directus](https://directus.io/) to your [Nuxt](https://nuxt.com/) application.
 
 - [✨ &nbsp;Release Notes](https://github.com/directus-community/nuxt-directus/releases)
-- [📖 &nbsp;Read the documentation](https://nuxt-directus.site/)
+- [📖 &nbsp;Read the documentation](https://nuxt-directus.de/)
 
 ## Features
 
