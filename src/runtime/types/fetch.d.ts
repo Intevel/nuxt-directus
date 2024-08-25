@@ -1,4 +1,6 @@
+import type { FetchOptions, ResponseType } from 'ofetch'
 import type { UseFetchOptions } from 'nuxt/app'
+import type { MaybeRefOrGetter } from '#imports'
 
 export type PickFrom<T, K extends Array<string>> = T extends Array<any>
   ? T
@@ -23,7 +25,7 @@ export type UseDirectusFetchOptions<
   DataT = ResT,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = undefined,
-> = UseFetchOptions<ResT, DataT, PickKeys, DefaultT>
+> = Omit<UseFetchOptions<ResT, DataT, PickKeys, DefaultT>, '$fetch'>
 
 export interface HttpResponseError {
   errors: {
@@ -38,13 +40,24 @@ export interface HttpResponseError {
 // TODO: add HttpResponseOk
 
 export interface DirectusQueryParams {
-  fields?: Array<string>
-  sort?: string | Array<string>
-  filter?: Record<string, unknown>
-  limit?: number
-  offset?: number
-  page?: number
-  alias?: string | Array<string>
-  deep?: Record<string, unknown>
-  search?: string
+  fields?: MaybeRefOrGetter<Array<string>>
+  sort?: MaybeRefOrGetter<string | Array<string>>
+  filter?: MaybeRefOrGetter<Record<string, unknown>>
+  limit?: MaybeRefOrGetter<number>
+  offset?: MaybeRefOrGetter<number>
+  page?: MaybeRefOrGetter<number>
+  alias?: MaybeRefOrGetter<string | Array<string>>
+  deep?: MaybeRefOrGetter<Record<string, unknown>>
+  search?: MaybeRefOrGetter<string>
 }
+
+export type DirectusFetchParams<
+  R = ResponseType,
+> = DirectusQueryParams & Omit<FetchOptions<R>, 'method' | 'params' | 'query'>
+
+export type UseDirectusFetchParams<
+  ResT,
+  DataT = ResT,
+  PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
+  DefaultT = undefined,
+> = DirectusQueryParams & Omit<UseDirectusFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query'>
