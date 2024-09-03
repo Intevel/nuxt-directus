@@ -5,7 +5,7 @@ import type {
   KeysOf,
   PickFrom,
   HttpResponseError,
-  UseDirectusFetchOptions,
+  DirectusUseFetchOptions,
 } from '../types'
 import {
   type MaybeRefOrGetter,
@@ -20,7 +20,7 @@ export function useDirectusFetch<
   DefaultT = undefined,
 >(
   endpoint: MaybeRefOrGetter<string>,
-  options: UseDirectusFetchOptions<ResT, DataT, PickKeys, DefaultT> = {},
+  options: DirectusUseFetchOptions<ResT, DataT, PickKeys, DefaultT> = {},
 ): AsyncData<DefaultT | PickFrom<DataT, PickKeys>, FetchError<HttpResponseError> | null> {
   const { $directusFetch } = useNuxtApp()
 

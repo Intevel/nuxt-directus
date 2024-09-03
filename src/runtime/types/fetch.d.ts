@@ -24,7 +24,7 @@ type MaybeRefOrGetterParams<T> = T extends object
   ? { [P in keyof T]: MaybeRefOrGetter<T[P]> }
   : T
 
-export type UseDirectusFetchOptions<
+export type DirectusUseFetchOptions<
   ResT,
   DataT = ResT,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
@@ -56,13 +56,12 @@ export interface DirectusQueryParams {
 }
 
 export type DirectusFetchParams<
-  T = any,
   R = ResponseType<'json'>,
-> = DirectusQueryParams & Omit<FetchOptions<T, R>, 'method' | 'params' | 'query'>
+> = DirectusQueryParams & Omit<FetchOptions<R>, 'method' | 'params' | 'query'>
 
-export type UseDirectusFetchParams<
+export type DirectusUseFetchParams<
   ResT,
   DataT = ResT,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = undefined,
-> = MaybeRefOrGetterParams<DirectusQueryParams> & Omit<UseDirectusFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query'>
+> = MaybeRefOrGetterParams<DirectusQueryParams> & Omit<DirectusUseFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query'>

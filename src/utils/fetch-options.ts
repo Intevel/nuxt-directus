@@ -2,13 +2,24 @@ import { joinURL } from 'ufo'
 
 import type {
   DirectusFetchParams,
-  UseDirectusFetchParams,
-  UseDirectusFetchOptions,
+  DirectusUseFetchOptions,
+  DirectusUseFetchParams,
 } from '../runtime/types'
 
 type DirectusAPI = 'items' | 'collections'
 
-export function directusPath(endpoint: DirectusAPI, collection: string, id?: string) {
+export function directusPath(endpoint: 'collections', collection?: string, id?: string): string
+export function directusPath(endpoint: Exclude<DirectusAPI, 'collections'>, collection: string, id?: string): string
+export function directusPath(endpoint: DirectusAPI, collection?: string, id?: string): string {
+  if (endpoint === 'collections') {
+    if (collection === undefined) {
+      return 'collections'
+    }
+    return joinURL('collections', collection)
+  }
+  if (collection === undefined) {
+    throw new Error('Collection must be defined for endpoints other than "collections"')
+  }
   const input = [collection]
   if (id !== undefined) {
     input.push(id)
@@ -53,8 +64,8 @@ export function destructureUseFetchParams<
   ResT,
   DataT = ResT,
 >(
-  options?: UseDirectusFetchParams<ResT, DataT>,
-): UseDirectusFetchOptions<ResT, DataT> {
+  options?: DirectusUseFetchParams<ResT, DataT>,
+): DirectusUseFetchOptions<ResT, DataT> {
   const {
     fields,
     sort,
