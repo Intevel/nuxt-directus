@@ -3,6 +3,7 @@ import { joinURL } from 'ufo'
 import type {
   DirectusFetchParams,
   UseDirectusFetchParams,
+  UseDirectusFetchOptions,
 } from '../runtime/types'
 
 export function collectionURL(collection: string, id?: string) {
@@ -51,7 +52,7 @@ export function destructureUseFetchParams<
   DataT = ResT,
 >(
   options?: UseDirectusFetchParams<ResT, DataT>,
-) {
+): UseDirectusFetchOptions<ResT, DataT> {
   const {
     fields,
     sort,
