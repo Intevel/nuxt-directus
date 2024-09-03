@@ -258,7 +258,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
     const _keys = toValue(keys)
-    let body: DirectusFetchParams<T>['body']
+    let body: DirectusFetchParams['body']
 
     if (Array.isArray(_keys)) {
       body = {

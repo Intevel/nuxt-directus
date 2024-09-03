@@ -1,3 +1,4 @@
+import type { ResponseType } from 'ofetch'
 import { joinURL } from 'ufo'
 
 import type {
@@ -28,7 +29,7 @@ export function directusPath(endpoint: DirectusAPI, collection?: string, id?: st
 }
 
 export function destructureFetchParams<
-  R,
+  R extends ResponseType = 'json',
 >(
   options?: DirectusFetchParams<R>,
 ) {

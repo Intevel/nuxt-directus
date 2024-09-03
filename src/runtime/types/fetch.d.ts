@@ -56,7 +56,7 @@ export interface DirectusQueryParams {
 }
 
 export type DirectusFetchParams<
-  R = ResponseType<'json'>,
+  R extends ResponseType = 'json',
 > = DirectusQueryParams & Omit<FetchOptions<R>, 'method' | 'params' | 'query'>
 
 export type DirectusUseFetchParams<
