@@ -20,6 +20,10 @@ export type KeysOf<T> = Array<
     : never
 >
 
+type MaybeRefOrGetterParams<T> = T extends object
+  ? { [P in keyof T]: MaybeRefOrGetter<T[P]> }
+  : T
+
 export type UseDirectusFetchOptions<
   ResT,
   DataT = ResT,
@@ -40,24 +44,25 @@ export interface HttpResponseError {
 // TODO: add HttpResponseOk
 
 export interface DirectusQueryParams {
-  fields?: MaybeRefOrGetter<Array<string>>
-  sort?: MaybeRefOrGetter<string | Array<string>>
-  filter?: MaybeRefOrGetter<Record<string, unknown>>
-  limit?: MaybeRefOrGetter<number>
-  offset?: MaybeRefOrGetter<number>
-  page?: MaybeRefOrGetter<number>
-  alias?: MaybeRefOrGetter<string | Array<string>>
-  deep?: MaybeRefOrGetter<Record<string, unknown>>
-  search?: MaybeRefOrGetter<string>
+  fields?: Array<string>
+  sort?: string | Array<string>
+  filter?: Record<string, unknown>
+  limit?: number
+  offset?: number
+  page?: number
+  alias?: string | Array<string>
+  deep?: Record<string, unknown>
+  search?: string
 }
 
 export type DirectusFetchParams<
-  R = ResponseType,
-> = DirectusQueryParams & Omit<FetchOptions<R>, 'method' | 'params' | 'query'>
+  T = any,
+  R = ResponseType<'json'>,
+> = DirectusQueryParams & Omit<FetchOptions<T, R>, 'method' | 'params' | 'query'>
 
 export type UseDirectusFetchParams<
   ResT,
   DataT = ResT,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = undefined,
-> = DirectusQueryParams & Omit<UseDirectusFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query'>
+> = MaybeRefOrGetterParams<DirectusQueryParams> & Omit<UseDirectusFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query'>
