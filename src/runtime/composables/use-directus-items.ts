@@ -25,9 +25,12 @@ export function useDirectusItems() {
   function $readItem(
     collection: string,
     id: string,
-    params?: DirectusFetchParams,
+    options?: DirectusFetchParams,
   ) {
+    const { params, ...fetchOptions } = destructureFetchParams(options)
+
     return $directusFetch(collectionURL(collection, id), {
+      ...fetchOptions,
       params,
       method: 'GET',
     })
