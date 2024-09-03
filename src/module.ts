@@ -7,8 +7,8 @@ import {
   addServerImportsDir,
   createResolver,
   defineNuxtModule,
-  installModule,
-  hasNuxtModule,
+  // installModule,
+  // hasNuxtModule,
 } from '@nuxt/kit'
 // import { ensureDependencyInstalled } from 'nypm'
 import { joinURL } from 'ufo'
@@ -135,22 +135,22 @@ export default defineNuxtModule<ModuleOptions>({
     // }
 
     // Check if @nuxt/image is installed and add nuxt-directus provider
-    if (hasNuxtModule('@nuxt/image', nuxt)) {
-      // TODO: edit options instead of reinstalling the module
-      await installModule(
-        '@nuxt/image',
-        {
-          providers: {
-            nuxtDirectus: {
-              name: 'nuxt-directus',
-              provider: resolve(runtimeDir, 'image-providers', 'nuxt-directus'),
-            },
-          },
-          provider: 'nuxt-directus',
-        },
-        nuxt,
-      )
-    }
+    // if (hasNuxtModule('@nuxt/image', nuxt)) {
+    //   // TODO: edit options instead of reinstalling the module
+    //   await installModule(
+    //     '@nuxt/image',
+    //     {
+    //       providers: {
+    //         nuxtDirectus: {
+    //           name: 'nuxt-directus',
+    //           provider: resolve(runtimeDir, 'image-providers', 'nuxt-directus'),
+    //         },
+    //       },
+    //       provider: 'nuxt-directus',
+    //     },
+    //     nuxt,
+    //   )
+    // }
 
     addPlugin({
       src: resolve(runtimeDir, 'plugins', 'directus-fetch'),
