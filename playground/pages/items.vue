@@ -41,6 +41,7 @@ const search = ref('')
 const limit = ref(1)
 
 const { data } = await readItems<Page[]>('pages', {
+  fields: ['id', 'title', 'permalink'],
   search,
   limit,
   watch: [limit, search],
