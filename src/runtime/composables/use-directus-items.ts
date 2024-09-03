@@ -8,7 +8,7 @@ import type {
   UseDirectusFetchParams,
 } from '../types'
 import {
-  collectionURL,
+  directusPath,
   destructureFetchParams,
   destructureUseFetchParams,
 } from '../../utils/fetch-options'
@@ -33,7 +33,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
 
-    return $directusFetch<T>(collectionURL(collection), {
+    return $directusFetch<T>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body: toValue(data),
@@ -51,7 +51,7 @@ export function useDirectusItems() {
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { params, immediate, watch, ...fetchOptions } = destructureUseFetchParams(options)
 
-    return useDirectusFetch<ResT, DataT>(collectionURL(collection), {
+    return useDirectusFetch<ResT, DataT>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body: data,
@@ -70,7 +70,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
 
-    return $directusFetch<T>(collectionURL(collection), {
+    return $directusFetch<T>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body: toValue(data),
@@ -88,7 +88,7 @@ export function useDirectusItems() {
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { params, immediate, watch, ...fetchOptions } = destructureUseFetchParams(options)
 
-    return useDirectusFetch<ResT, DataT>(collectionURL(collection), {
+    return useDirectusFetch<ResT, DataT>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body: data,
@@ -107,7 +107,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
 
-    return $directusFetch<T>(collectionURL(collection, id), {
+    return $directusFetch<T>(directusPath('items', collection, id), {
       ...fetchOptions,
       params,
       method: 'GET',
@@ -124,7 +124,7 @@ export function useDirectusItems() {
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { params, ...fetchOptions } = destructureUseFetchParams(options)
 
-    return useDirectusFetch<ResT, DataT>(collectionURL(collection, id), {
+    return useDirectusFetch<ResT, DataT>(directusPath('items', collection, id), {
       ...fetchOptions,
       params,
       method: 'GET',
@@ -139,7 +139,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
 
-    return $directusFetch<T>(collectionURL(collection), {
+    return $directusFetch<T>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       method: 'GET',
@@ -155,7 +155,7 @@ export function useDirectusItems() {
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { params, ...fetchOptions } = destructureUseFetchParams(options)
 
-    return useDirectusFetch<ResT, DataT>(collectionURL(collection), {
+    return useDirectusFetch<ResT, DataT>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       method: 'GET',
@@ -170,7 +170,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
 
-    return $directusFetch<T>(collectionURL(collection), {
+    return $directusFetch<T>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       method: 'GET',
@@ -186,7 +186,7 @@ export function useDirectusItems() {
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { params, ...fetchOptions } = destructureUseFetchParams(options)
 
-    return useDirectusFetch<ResT, DataT>(collectionURL(collection), {
+    return useDirectusFetch<ResT, DataT>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       method: 'GET',
@@ -203,7 +203,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
 
-    return $directusFetch<T>(collectionURL(collection, id), {
+    return $directusFetch<T>(directusPath('items', collection, id), {
       ...fetchOptions,
       params,
       body: toValue(data),
@@ -222,7 +222,7 @@ export function useDirectusItems() {
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { params, immediate, watch, ...fetchOptions } = destructureUseFetchParams(options)
 
-    return useDirectusFetch<ResT, DataT>(collectionURL(collection, id), {
+    return useDirectusFetch<ResT, DataT>(directusPath('items', collection, id), {
       ...fetchOptions,
       params,
       body: data,
@@ -273,7 +273,7 @@ export function useDirectusItems() {
       }
     }
 
-    return $directusFetch<T>(collectionURL(collection), {
+    return $directusFetch<T>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body,
@@ -325,7 +325,7 @@ export function useDirectusItems() {
       }
     }
 
-    return useDirectusFetch<ResT, DataT>(collectionURL(collection), {
+    return useDirectusFetch<ResT, DataT>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body,
@@ -344,7 +344,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
 
-    return $directusFetch<T>(collectionURL(collection), {
+    return $directusFetch<T>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body: data,
@@ -362,7 +362,7 @@ export function useDirectusItems() {
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { params, immediate, watch, ...fetchOptions } = destructureUseFetchParams(options)
 
-    return useDirectusFetch<ResT, DataT>(collectionURL(collection), {
+    return useDirectusFetch<ResT, DataT>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body: data,
@@ -379,7 +379,7 @@ export function useDirectusItems() {
   ) {
     const { params, ...fetchOptions } = destructureFetchParams(options)
 
-    return $directusFetch(collectionURL(collection, id), {
+    return $directusFetch(directusPath('items', collection, id), {
       ...fetchOptions,
       params,
       method: 'DELETE',
@@ -393,7 +393,7 @@ export function useDirectusItems() {
   ): AsyncData<unknown, FetchError<HttpResponseError> | null> {
     const { params, immediate, watch, ...fetchOptions } = destructureUseFetchParams(options)
 
-    return useDirectusFetch<unknown>(collectionURL(collection, id), {
+    return useDirectusFetch<unknown>(directusPath('items', collection, id), {
       ...fetchOptions,
       params,
       method: 'DELETE',
@@ -432,7 +432,7 @@ export function useDirectusItems() {
       }
     }
 
-    return $directusFetch(collectionURL(collection), {
+    return $directusFetch(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body,
@@ -470,7 +470,7 @@ export function useDirectusItems() {
       }
     }
 
-    return useDirectusFetch<unknown>(collectionURL(collection), {
+    return useDirectusFetch<unknown>(directusPath('items', collection), {
       ...fetchOptions,
       params,
       body,

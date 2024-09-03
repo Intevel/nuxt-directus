@@ -6,12 +6,14 @@ import type {
   UseDirectusFetchOptions,
 } from '../runtime/types'
 
-export function collectionURL(collection: string, id?: string) {
+type DirectusAPI = 'items' | 'collections'
+
+export function directusPath(endpoint: DirectusAPI, collection: string, id?: string) {
   const input = [collection]
   if (id !== undefined) {
     input.push(id)
   }
-  return joinURL('items', ...input)
+  return joinURL(endpoint, ...input)
 }
 
 export function destructureFetchParams<
