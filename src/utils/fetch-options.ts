@@ -1,4 +1,4 @@
-import type { ResponseType } from 'ofetch'
+import type { FetchOptions, ResponseType } from 'ofetch'
 import { joinURL } from 'ufo'
 
 import type {
@@ -32,7 +32,7 @@ export function destructureFetchParams<
   R extends ResponseType = 'json',
 >(
   options?: DirectusFetchParams<R>,
-) {
+): FetchOptions<R> {
   const {
     fields,
     sort,
