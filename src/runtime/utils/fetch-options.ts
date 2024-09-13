@@ -28,15 +28,17 @@ export interface DirectusQueryParams {
 }
 
 export type DirectusFetchParams<
-  R extends ResponseType = 'json',
-> = DirectusQueryParams & Omit<FetchOptions<R>, 'method' | 'params' | 'query'>
+  R extends ResponseType = ResponseType,
+> = DirectusQueryParams
+& Omit<FetchOptions<R>, 'method' | 'params' | 'query' | 'body'>
 
 export type DirectusUseFetchParams<
   ResT,
   DataT = ResT,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
   DefaultT = undefined,
-> = MaybeRefOrGetterParams<DirectusQueryParams> & Omit<DirectusUseFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query'>
+> = MaybeRefOrGetterParams<DirectusQueryParams>
+& Omit<DirectusUseFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query' | 'body'>
 
 export function directusPath(endpoint: 'collections' | 'notifications', collection?: string, id?: string | number): string
 export function directusPath(endpoint: Exclude<DirectusEndpoints, 'collections'>, collection: string, id?: string | number): string
@@ -62,44 +64,23 @@ export function directusPath(endpoint: DirectusEndpoints, collection?: string, i
 }
 
 export function destructureFetchParams<
-  R extends ResponseType = 'json',
+  R extends ResponseType = ResponseType,
 >(
   options?: DirectusFetchParams<R>,
-): FetchOptions<R> {
-  const {
-    fields,
-    sort,
-    filter,
-    limit,
-    offset,
-    page,
-    alias,
-    deep,
-    search,
-    ...fetchOptions
-  } = options || {}
-
-  const params = {
-    fields,
-    sort,
-    filter,
-    limit,
-    offset,
-    page,
-    alias,
-    deep,
-    search,
-  }
-
-  return { params, ...fetchOptions }
-}
-
-export function destructureUseFetchParams<
+): FetchOptions<R>
+export function destructureFetchParams<
   ResT,
   DataT = ResT,
 >(
   options?: DirectusUseFetchParams<ResT, DataT>,
-): DirectusUseFetchOptions<ResT, DataT> {
+): DirectusUseFetchOptions<ResT, DataT>
+export function destructureFetchParams<
+  ResT,
+  DataT = ResT,
+  R extends ResponseType = ResponseType,
+>(
+  options?: DirectusFetchParams<R> | DirectusUseFetchParams<ResT, DataT>,
+): FetchOptions<R> | DirectusUseFetchOptions<ResT, DataT> {
   const {
     fields,
     sort,

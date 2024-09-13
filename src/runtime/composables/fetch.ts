@@ -1,5 +1,5 @@
 import type { AsyncData, UseFetchOptions } from 'nuxt/app'
-import type { FetchError } from 'ofetch'
+import type { FetchError, FetchOptions, ResponseType } from 'ofetch'
 
 import type { HttpResponseError } from '#directus/types'
 import {
@@ -25,6 +25,8 @@ export type KeysOf<T> = Array<
       : never
     : never
 >
+
+export type DirectusFetchOptions<R extends ResponseType = ResponseType> = FetchOptions<R>
 
 export type DirectusUseFetchOptions<
   ResT,
