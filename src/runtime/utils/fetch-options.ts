@@ -13,8 +13,6 @@ type MaybeRefOrGetterParams<T> = T extends object
   ? { [P in keyof T]: MaybeRefOrGetter<T[P]> }
   : T
 
-export type DirectusEndpoints = 'items' | 'collections' | 'notifications'
-
 export interface DirectusQueryParams {
   fields?: Array<string>
   sort?: string | Array<string>

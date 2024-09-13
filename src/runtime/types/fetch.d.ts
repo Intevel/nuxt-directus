@@ -1,5 +1,7 @@
 export * from '#directus/utils/fetch-options'
 
+export type DirectusEndpoints = 'activity' | 'collections' | 'items' | 'notifications' | 'revisions'
+
 export interface HttpResponseError {
   errors: {
     message: string
