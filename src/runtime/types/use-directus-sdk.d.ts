@@ -10,7 +10,7 @@ import type {
   RestClient,
   GraphqlClient,
   WebSocketClient,
-} from '#nuxt-directus/sdk'
+} from '#directus/sdk'
 
 export interface DirectusClientOptions {
   /**

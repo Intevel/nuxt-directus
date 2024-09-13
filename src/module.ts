@@ -70,7 +70,7 @@ export default defineNuxtModule<ModuleOptions>({
     const runtimeDir = fileURLToPath(new URL('./runtime', import.meta.url))
     nuxt.options.build.transpile.push(runtimeDir)
 
-    nuxt.options.alias['#nuxt-directus'] = runtimeDir
+    nuxt.options.alias['#directus'] = runtimeDir
 
     // Private runtimeConfig
     const directus = nuxt.options.runtimeConfig.directus = defu(nuxt.options.runtimeConfig.directus as any, {
@@ -114,12 +114,12 @@ export default defineNuxtModule<ModuleOptions>({
     // TODO: ensureDependencyInstalled forces it to install if not present
     // Check if a Directus SDK is installed and auto import it
     // const directusSDK = await ensureDependencyInstalled('@directus/sdk')
-    // nuxt.options.alias['#nuxt-directus/sdk'] = directusSDK
+    // nuxt.options.alias['#directus/sdk'] = directusSDK
     //   ? '@directus/sdk'
     //   : 'unenv/runtime/mock/empty'
     // // Auto import native components
     // if (directusSDK && directus.moduleConfig.sdk.autoImport) {
-    //   const sdkComposables = await import('#nuxt-directus/sdk')
+    //   const sdkComposables = await import('#directus/sdk')
     //   const prefix = directus.moduleConfig.sdk.prefix
     //   const suffix = directus.moduleConfig.sdk.suffix
     //   Object.keys(sdkComposables).forEach(name =>
