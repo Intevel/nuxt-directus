@@ -1,10 +1,11 @@
-import type { FetchError, FetchOptions, ResponseType } from 'ofetch'
+import type { FetchError, ResponseType } from 'ofetch'
 
 import type {
   KeysOf,
   PickFrom,
   HttpResponseError,
-  DirectusUseFetchOptions,
+  DirectusFetchParams,
+  UseDirectusFetchParams,
 } from '#directus/types'
 import {
   directusPath,
@@ -26,17 +27,6 @@ export type CollectionObject = {
   [key: string]: unknown
 }
 
-export type DirectusFetchOptionsCollections<
-  R extends ResponseType = ResponseType,
-> = Omit<FetchOptions<R>, 'method' | 'params' | 'query' | 'body'>
-
-export type DirectusUseFetchOptionsCollections<
-  ResT,
-  DataT = ResT,
-  PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
-  DefaultT = undefined,
-> = Omit<DirectusUseFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query' | 'body'>
-
 export function useDirectusCollections() {
   const { $directusFetch } = useNuxtApp()
 
@@ -44,8 +34,8 @@ export function useDirectusCollections() {
     T extends CollectionObject,
     R extends ResponseType = ResponseType,
   >(
-    collection: MaybeRef<CollectionObject>,
-    options?: DirectusFetchOptionsCollections<R>,
+    collection: MaybeRef<T>,
+    options?: DirectusFetchParams<R>,
   ) {
     return $directusFetch<T, R>(directusPath('collections'), {
       ...options,
@@ -59,20 +49,19 @@ export function useDirectusCollections() {
   function createCollection<
     ResT extends CollectionObject,
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    collection: MaybeRef<CollectionObject>,
-    options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
-
-    return useDirectusFetch<ResT, DataT>(directusPath('collections'), {
-      ...fetchOptions,
+    collection: MaybeRef<ResT>,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(directusPath('collections'), {
+      ...options,
       query: undefined,
       params: undefined,
-      body: toValue(collection),
+      body: collection,
       method: 'POST',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
+      immediate: options?.immediate === undefined ? false : options.immediate,
+      watch: options?.watch === undefined ? false : options.watch,
     })
   }
 
@@ -81,7 +70,7 @@ export function useDirectusCollections() {
     R extends ResponseType = ResponseType,
   >(
     collection: string,
-    options?: DirectusFetchOptionsCollections<R>,
+    options?: DirectusFetchParams<R>,
   ) {
     return $directusFetch<T, R>(directusPath('collections', collection), {
       ...options,
@@ -94,11 +83,12 @@ export function useDirectusCollections() {
   function readCollection<
     ResT,
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    collection: string,
-    options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    return useDirectusFetch<ResT, DataT>(directusPath('collections', collection), {
+    collection: MaybeRef<string>,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(() => directusPath('collections', toValue(collection)), {
       ...options,
       query: undefined,
       params: undefined,
@@ -110,7 +100,7 @@ export function useDirectusCollections() {
     T,
     R extends ResponseType = ResponseType,
   >(
-    options?: DirectusFetchOptionsCollections<R>,
+    options?: DirectusFetchParams<R>,
   ) {
     return $directusFetch<T, R>(directusPath('collections'), {
       ...options,
@@ -121,12 +111,13 @@ export function useDirectusCollections() {
   }
 
   function readCollections<
-    ResT,
+    ResT extends CollectionObject,
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    return useDirectusFetch<ResT, DataT>(directusPath('collections'), {
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(directusPath('collections'), {
       ...options,
       query: undefined,
       params: undefined,
@@ -140,7 +131,7 @@ export function useDirectusCollections() {
   >(
     collection: string,
     meta: MaybeRef<Partial<T>>,
-    options?: DirectusFetchOptionsCollections<R>,
+    options?: DirectusFetchParams<R>,
   ) {
     return $directusFetch<T, R>(directusPath('collections', collection), {
       ...options,
@@ -156,29 +147,28 @@ export function useDirectusCollections() {
   function updateCollection<
     ResT,
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    collection: string,
-    meta: MaybeRef<Partial<DataT>>,
-    options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
-
-    return useDirectusFetch<ResT, DataT>(directusPath('collections', collection), {
-      ...fetchOptions,
+    collection: MaybeRef<string>,
+    meta: MaybeRef<Partial<ResT>>,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(() => directusPath('collections', toValue(collection)), {
+      ...options,
       body: {
         meta: toValue(meta),
       },
       query: undefined,
       params: undefined,
       method: 'PATCH',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
+      immediate: options?.immediate === undefined ? false : options.immediate,
+      watch: options?.watch === undefined ? false : options.watch,
     })
   }
 
   function $deleteCollection(
     collection: string,
-    options?: DirectusFetchOptionsCollections,
+    options?: DirectusFetchParams,
   ) {
     return $directusFetch(directusPath('collections', collection), {
       ...options,
@@ -188,19 +178,21 @@ export function useDirectusCollections() {
     })
   }
 
-  function deleteCollection(
-    collection: string,
-    options?: DirectusUseFetchOptionsCollections<unknown>,
-  ) {
-    const { immediate, watch, ...fetchOptions } = options || {}
-
-    return useDirectusFetch(directusPath('collections', collection), {
-      ...fetchOptions,
+  function deleteCollection<
+    ResT,
+    DataT = ResT,
+    DefaultT = undefined,
+  >(
+    collection: MaybeRef<string>,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<DefaultT | PickFrom<DataT, KeysOf<DataT>>, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(() => directusPath('collections', toValue(collection)), {
+      ...options,
       query: undefined,
       params: undefined,
       method: 'DELETE',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
+      immediate: options?.immediate === undefined ? false : options.immediate,
+      watch: options?.watch === undefined ? false : options.watch,
     })
   }
 

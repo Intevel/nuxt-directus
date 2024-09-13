@@ -5,7 +5,7 @@ import type {
   PickFrom,
   HttpResponseError,
   DirectusFetchParams,
-  DirectusUseFetchParams,
+  UseDirectusFetchParams,
 } from '#directus/types'
 import {
   directusPath,
@@ -14,6 +14,8 @@ import {
 
 import type { AsyncData } from '#app'
 import {
+  type MaybeRef,
+  toValue,
   useDirectusFetch,
   useNuxtApp,
 } from '#imports'
@@ -30,7 +32,7 @@ export type RevisionObject = {
   item: string
 }
 
-export function useDirectusActivity() {
+export function useDirectusRevisions() {
   const { $directusFetch } = useNuxtApp()
 
   function $readRevision<
@@ -50,14 +52,13 @@ export function useDirectusActivity() {
   function readRevision<
     ResT extends RevisionObject,
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    id: RevisionObject['id'],
-    options?: DirectusUseFetchParams<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const fetchOptions = destructureFetchParams(options)
-
-    return useDirectusFetch<ResT, DataT>(directusPath('revisions', undefined, id), {
-      ...fetchOptions,
+    id: MaybeRef<RevisionObject['id']>,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(() => directusPath('revisions', undefined, toValue(id)), {
+      ...options,
       method: 'GET',
     })
   }
@@ -76,15 +77,14 @@ export function useDirectusActivity() {
   }
 
   function readRevisions<
-    ResT extends RevisionObject[] | [],
+    ResT extends RevisionObject[],
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    options?: DirectusUseFetchParams<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const fetchOptions = destructureFetchParams(options)
-
-    return useDirectusFetch<ResT, DataT>(directusPath('revisions'), {
-      ...fetchOptions,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(directusPath('revisions'), {
+      ...options,
       method: 'GET',
     })
   }

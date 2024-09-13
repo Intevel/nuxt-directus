@@ -5,7 +5,7 @@ import type {
   PickFrom,
   HttpResponseError,
   DirectusFetchParams,
-  DirectusUseFetchParams,
+  UseDirectusFetchParams,
 } from '#directus/types'
 import {
   directusPath,
@@ -63,20 +63,19 @@ export function useDirectusActivity() {
   function createComment<
     ResT extends CommentObject,
     DataT = ResT,
+    DefaultT = undefined,
   >(
     comment: MaybeRef<ResT>,
-    options?: DirectusUseFetchParams<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
-
-    return useDirectusFetch<ResT, DataT>(directusPath('activity', 'comment'), {
-      ...fetchOptions,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(directusPath('activity', 'comment'), {
+      ...options,
       query: undefined,
       params: undefined,
-      body: toValue(comment),
+      body: comment,
       method: 'POST',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
+      immediate: options?.immediate === undefined ? false : options.immediate,
+      watch: options?.watch === undefined ? false : options.watch,
     })
   }
 
@@ -97,14 +96,13 @@ export function useDirectusActivity() {
   function readActivity<
     ResT extends ActivityObject,
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    id: ActivityObject['id'],
-    options?: DirectusUseFetchParams<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const fetchOptions = destructureFetchParams(options)
-
-    return useDirectusFetch<ResT, DataT>(directusPath('activity', undefined, id), {
-      ...fetchOptions,
+    id: MaybeRef<ActivityObject['id']>,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(() => directusPath('activity', undefined, toValue(id)), {
+      ...options,
       method: 'GET',
     })
   }
@@ -123,15 +121,14 @@ export function useDirectusActivity() {
   }
 
   function readActivities<
-    ResT extends ActivityObject[] | [],
+    ResT extends ActivityObject[],
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    options?: DirectusUseFetchParams<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const fetchOptions = destructureFetchParams(options)
-
-    return useDirectusFetch<ResT, DataT>(directusPath('activity'), {
-      ...fetchOptions,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(directusPath('activity'), {
+      ...options,
       method: 'GET',
     })
   }
@@ -158,21 +155,20 @@ export function useDirectusActivity() {
   function updateComment<
     ResT extends Pick<CommentObject, 'comment'>,
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    id: ActivityObject['id'],
+    id: MaybeRef<ActivityObject['id']>,
     comment: MaybeRef<ResT>,
-    options?: DirectusUseFetchParams<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
-
-    return useDirectusFetch<ResT, DataT>(directusPath('activity', 'comment', id), {
-      ...fetchOptions,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(() => directusPath('activity', 'comment', toValue(id)), {
+      ...options,
       query: undefined,
       params: undefined,
-      body: toValue(comment),
+      body: comment,
       method: 'PATCH',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
+      immediate: options?.immediate === undefined ? false : options.immediate,
+      watch: options?.watch === undefined ? false : options.watch,
     })
   }
 
@@ -195,19 +191,18 @@ export function useDirectusActivity() {
   function deleteComment<
     ResT extends null,
     DataT = ResT,
+    DefaultT = undefined,
   >(
-    id: ActivityObject['id'],
-    options?: DirectusUseFetchParams<ResT, DataT>,
-  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
-
-    return useDirectusFetch<ResT, DataT>(directusPath('activity', 'comment', id), {
-      ...fetchOptions,
+    id: MaybeRef<ActivityObject['id']>,
+    options?: UseDirectusFetchParams<ResT, DataT, DefaultT>,
+  ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | DefaultT, FetchError<HttpResponseError> | undefined> {
+    return useDirectusFetch<ResT, DataT, DefaultT>(() => directusPath('activity', 'comment', toValue(id)), {
+      ...options,
       query: undefined,
       params: undefined,
       method: 'DELETE',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
+      immediate: options?.immediate === undefined ? false : options.immediate,
+      watch: options?.watch === undefined ? false : options.watch,
     })
   }
 

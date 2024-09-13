@@ -2,13 +2,24 @@
   <div>
     <div>
       <label>
+        Collection:<br>
+        <input v-model="collection" type="text">
+      </label>
+      <br>
+      <label>
         Search:<br>
-        <input v-model="search" type="text">
+        <input v-model="search" type="search">
       </label>
       <br>
       <label>
         Limit:<br>
-        <input v-model="limit" type="number">
+        <input
+          v-model="limit"
+          type="range"
+          min="-1"
+          max="10"
+          step="1"
+        >
       </label>
     </div>
     <div>
@@ -37,10 +48,11 @@ interface Page {
 }
 
 const { readItems } = useDirectusItems()
+const collection = ref('pages')
 const search = ref('')
-const limit = ref(1)
+const limit = ref(-1)
 
-const { data } = await readItems<Page[]>('pages', {
+const { data } = await readItems<Page[]>(collection, {
   fields: ['id', 'title', 'permalink'],
   search,
   limit,
