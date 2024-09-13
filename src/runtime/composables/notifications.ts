@@ -21,15 +21,15 @@ import {
 } from '#imports'
 
 export type NotificationObject = {
-  id?: number
-  timestamp?: string
-  status?: string
-  recipient?: string
-  sender?: string
-  subject?: string
-  message?: string
-  collection?: string
-  item?: string
+  id: number
+  timestamp: string
+  status: string
+  recipient: string
+  sender: string
+  subject: string
+  message: string
+  collection: string
+  item: string
 }
 
 export function useDirectusNotifications() {
