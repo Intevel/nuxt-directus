@@ -1,13 +1,15 @@
-import type { FetchError, FetchOptions, MappedResponseType, ResponseType } from 'ofetch'
+import type { FetchError, MappedResponseType, ResponseType } from 'ofetch'
 
 import type {
   KeysOf,
   PickFrom,
   HttpResponseError,
-  DirectusUseFetchOptions,
+  DirectusFetchParams,
+  DirectusUseFetchParams,
 } from '#directus/types'
 import {
   directusPath,
+  destructureFetchParams,
 } from '#directus/utils/fetch-options'
 
 import type { AsyncData } from '#app'
@@ -30,31 +32,20 @@ export type NotificationObject = {
   item?: string
 }
 
-export type DirectusFetchOptionsNotifications<
-  R extends ResponseType = 'json',
-> = Omit<FetchOptions<R>, 'method' | 'params' | 'query' | 'body'>
-
-export type DirectusUseFetchOptionsNotifications<
-  ResT,
-  DataT = ResT,
-  PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
-  DefaultT = undefined,
-> = Omit<DirectusUseFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query' | 'body'>
-
 export function useDirectusNotifications() {
   const { $directusFetch } = useNuxtApp()
 
   function $createNotification<
     T extends NotificationObject,
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     notification: MaybeRef<T>,
-    options?: DirectusFetchOptionsNotifications<R>,
+    options?: DirectusFetchParams<R>,
   ): Promise<MappedResponseType<R, T>> {
+    const fetchOptions = destructureFetchParams(options)
+
     return $directusFetch<T, R>(directusPath('notifications'), {
-      ...options,
-      query: undefined,
-      params: undefined,
+      ...fetchOptions,
       body: toValue(notification),
       method: 'POST',
     })
@@ -65,14 +56,12 @@ export function useDirectusNotifications() {
     DataT = ResT,
   >(
     notification: MaybeRef<ResT>,
-    options?: DirectusUseFetchOptionsNotifications<ResT, DataT>,
+    options?: DirectusUseFetchParams<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
+    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
 
     return useDirectusFetch<ResT, DataT>(directusPath('notifications'), {
       ...fetchOptions,
-      query: undefined,
-      params: undefined,
       body: toValue(notification),
       method: 'POST',
       immediate: immediate === undefined ? false : immediate,
@@ -82,15 +71,15 @@ export function useDirectusNotifications() {
 
   function $createNotifications<
     T extends NotificationObject[],
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     notification: MaybeRef<T>,
-    options?: DirectusFetchOptionsNotifications<R>,
+    options?: DirectusFetchParams<R>,
   ): Promise<MappedResponseType<R, T>> {
+    const fetchOptions = destructureFetchParams(options)
+
     return $directusFetch<T, R>(directusPath('notifications'), {
-      ...options,
-      query: undefined,
-      params: undefined,
+      ...fetchOptions,
       body: toValue(notification),
       method: 'POST',
     })
@@ -101,14 +90,12 @@ export function useDirectusNotifications() {
     DataT = ResT,
   >(
     notification: MaybeRef<ResT>,
-    options?: DirectusUseFetchOptionsNotifications<ResT, DataT>,
+    options?: DirectusUseFetchParams<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
+    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
 
     return useDirectusFetch<ResT, DataT>(directusPath('notifications'), {
       ...fetchOptions,
-      query: undefined,
-      params: undefined,
       body: toValue(notification),
       method: 'POST',
       immediate: immediate === undefined ? false : immediate,
@@ -118,15 +105,15 @@ export function useDirectusNotifications() {
 
   function $readNotification<
     T extends NotificationObject,
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     id: number,
-    options?: DirectusFetchOptionsNotifications<R>,
+    options?: DirectusFetchParams<R>,
   ): Promise<MappedResponseType<R, T>> {
+    const fetchOptions = destructureFetchParams(options)
+
     return $directusFetch<T, R>(directusPath('notifications', undefined, id), {
-      ...options,
-      query: undefined,
-      params: undefined,
+      ...fetchOptions,
       method: 'GET',
     })
   }
@@ -136,30 +123,26 @@ export function useDirectusNotifications() {
     DataT = ResT,
   >(
     id: number,
-    options?: DirectusUseFetchOptionsNotifications<ResT, DataT>,
+    options?: DirectusUseFetchParams<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
+    const fetchOptions = destructureFetchParams(options)
 
     return useDirectusFetch<ResT, DataT>(directusPath('notifications', undefined, id), {
       ...fetchOptions,
-      query: undefined,
-      params: undefined,
       method: 'GET',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
     })
   }
 
   function $readNotifications<
     T extends NotificationObject[],
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
-    options?: DirectusFetchOptionsNotifications<R>,
+    options?: DirectusFetchParams<R>,
   ): Promise<MappedResponseType<R, T>> {
+    const fetchOptions = destructureFetchParams(options)
+
     return $directusFetch<T, R>(directusPath('notifications'), {
-      ...options,
-      query: undefined,
-      params: undefined,
+      ...fetchOptions,
       method: 'GET',
     })
   }
@@ -168,33 +151,29 @@ export function useDirectusNotifications() {
     ResT extends NotificationObject[],
     DataT = ResT,
   >(
-    options?: DirectusUseFetchOptionsNotifications<ResT, DataT>,
+    options?: DirectusUseFetchParams<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
+    const fetchOptions = destructureFetchParams(options)
 
     return useDirectusFetch<ResT, DataT>(directusPath('notifications'), {
       ...fetchOptions,
-      query: undefined,
-      params: undefined,
       method: 'GET',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
     })
   }
 
   function $updateNotification<
     T extends NotificationObject,
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     id: number,
     notification: MaybeRef<T>,
-    options?: DirectusFetchOptionsNotifications<R>,
+    options?: DirectusFetchParams<R>,
   ): Promise<MappedResponseType<R, T>> {
+    const fetchOptions = destructureFetchParams(options)
+
     return $directusFetch<T, R>(directusPath('notifications', undefined, id), {
-      ...options,
+      ...fetchOptions,
       body: toValue(notification),
-      query: undefined,
-      params: undefined,
       method: 'PATCH',
     })
   }
@@ -205,15 +184,13 @@ export function useDirectusNotifications() {
   >(
     id: number,
     notification: MaybeRef<ResT>,
-    options?: DirectusUseFetchOptionsNotifications<ResT, DataT>,
+    options?: DirectusUseFetchParams<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
+    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
 
     return useDirectusFetch<ResT, DataT>(directusPath('notifications', undefined, id), {
       ...fetchOptions,
       body: toValue(notification),
-      query: undefined,
-      params: undefined,
       method: 'PATCH',
       immediate: immediate === undefined ? false : immediate,
       watch: watch === undefined ? false : watch,
@@ -222,20 +199,20 @@ export function useDirectusNotifications() {
 
   function $updateNotifications<
     T extends NotificationObject[],
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     ids: number[],
     notifications: MaybeRef<T>,
-    options?: DirectusFetchOptionsNotifications<R>,
+    options?: DirectusFetchParams<R>,
   ): Promise<MappedResponseType<R, T>> {
+    const fetchOptions = destructureFetchParams(options)
+
     return $directusFetch<T, R>(directusPath('notifications', undefined), {
-      ...options,
+      ...fetchOptions,
       body: {
         keys: ids,
         data: toValue(notifications),
       },
-      query: undefined,
-      params: undefined,
       method: 'PATCH',
     })
   }
@@ -246,9 +223,9 @@ export function useDirectusNotifications() {
   >(
     ids: number[],
     notifications: MaybeRef<ResT>,
-    options?: DirectusUseFetchOptionsNotifications<ResT, DataT>,
+    options?: DirectusUseFetchParams<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
+    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
 
     return useDirectusFetch<ResT, DataT>(directusPath('notifications'), {
       ...fetchOptions,
@@ -256,8 +233,6 @@ export function useDirectusNotifications() {
         keys: ids,
         data: toValue(notifications),
       },
-      query: undefined,
-      params: undefined,
       method: 'PATCH',
       immediate: immediate === undefined ? false : immediate,
       watch: watch === undefined ? false : watch,
@@ -266,26 +241,24 @@ export function useDirectusNotifications() {
 
   function $deleteNotification(
     id: number,
-    options?: DirectusFetchOptionsNotifications,
+    options?: DirectusFetchParams,
   ): Promise<void> {
+    const fetchOptions = destructureFetchParams(options)
+
     return $directusFetch(directusPath('notifications', undefined, id), {
-      ...options,
-      query: undefined,
-      params: undefined,
+      ...fetchOptions,
       method: 'DELETE',
     })
   }
 
   function deleteNotification(
     id: number,
-    options?: DirectusUseFetchOptionsNotifications<unknown>,
+    options?: DirectusUseFetchParams<unknown>,
   ): AsyncData<unknown, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
+    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
 
     return useDirectusFetch(directusPath('notifications', undefined, id), {
       ...fetchOptions,
-      query: undefined,
-      params: undefined,
       method: 'DELETE',
       immediate: immediate === undefined ? false : immediate,
       watch: watch === undefined ? false : watch,
@@ -294,28 +267,26 @@ export function useDirectusNotifications() {
 
   function $deleteNotifications(
     ids: number[],
-    options?: DirectusFetchOptionsNotifications,
+    options?: DirectusFetchParams,
   ): Promise<void> {
+    const fetchOptions = destructureFetchParams(options)
+
     return $directusFetch(directusPath('notifications'), {
-      ...options,
+      ...fetchOptions,
       body: ids,
-      query: undefined,
-      params: undefined,
       method: 'DELETE',
     })
   }
 
   function deleteNotifications(
     ids: number[],
-    options?: DirectusUseFetchOptionsNotifications<unknown>,
+    options?: DirectusUseFetchParams<unknown>,
   ): AsyncData<unknown, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
+    const { immediate, watch, ...fetchOptions } = destructureFetchParams(options)
 
     return useDirectusFetch(directusPath('notifications'), {
       ...fetchOptions,
       body: ids,
-      query: undefined,
-      params: undefined,
       method: 'DELETE',
       immediate: immediate === undefined ? false : immediate,
       watch: watch === undefined ? false : watch,
