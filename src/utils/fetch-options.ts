@@ -7,23 +7,27 @@ import type {
   DirectusUseFetchParams,
 } from '../runtime/types'
 
-type DirectusAPI = 'items' | 'collections'
+type DirectusAPI = 'items' | 'collections' | 'notifications'
 
-export function directusPath(endpoint: 'collections', collection?: string, id?: string): string
-export function directusPath(endpoint: Exclude<DirectusAPI, 'collections'>, collection: string, id?: string): string
-export function directusPath(endpoint: DirectusAPI, collection?: string, id?: string): string {
+export function directusPath(endpoint: 'collections' | 'notifications', collection?: string, id?: string | number): string
+export function directusPath(endpoint: Exclude<DirectusAPI, 'collections'>, collection: string, id?: string | number): string
+export function directusPath(endpoint: DirectusAPI, collection?: string, id?: string | number): string {
   if (endpoint === 'collections') {
-    if (collection === undefined) {
-      return 'collections'
-    }
-    return joinURL('collections', collection)
+    return collection !== undefined
+      ? joinURL('collections', collection)
+      : 'collections'
+  }
+  else if (endpoint === 'notifications') {
+    return id !== undefined
+      ? joinURL('notifications', id.toString())
+      : 'notifications'
   }
   if (collection === undefined) {
     throw new Error('Collection must be defined for endpoints other than "collections"')
   }
   const input = [collection]
   if (id !== undefined) {
-    input.push(id)
+    input.push(id.toString())
   }
   return joinURL(endpoint, ...input)
 }
