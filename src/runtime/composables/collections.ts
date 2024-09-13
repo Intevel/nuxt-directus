@@ -27,7 +27,7 @@ export type CollectionObject = {
 }
 
 export type DirectusFetchOptionsCollections<
-  R extends ResponseType = 'json',
+  R extends ResponseType = ResponseType,
 > = Omit<FetchOptions<R>, 'method' | 'params' | 'query' | 'body'>
 
 export type DirectusUseFetchOptionsCollections<
@@ -42,7 +42,7 @@ export function useDirectusCollections() {
 
   function $createCollection<
     T extends CollectionObject,
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     collection: MaybeRef<CollectionObject>,
     options?: DirectusFetchOptionsCollections<R>,
@@ -78,7 +78,7 @@ export function useDirectusCollections() {
 
   function $readCollection<
     T,
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     collection: string,
     options?: DirectusFetchOptionsCollections<R>,
@@ -98,21 +98,17 @@ export function useDirectusCollections() {
     collection: string,
     options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
-
     return useDirectusFetch<ResT, DataT>(directusPath('collections', collection), {
-      ...fetchOptions,
+      ...options,
       query: undefined,
       params: undefined,
       method: 'GET',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
     })
   }
 
   function $readCollections<
     T,
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     options?: DirectusFetchOptionsCollections<R>,
   ) {
@@ -130,21 +126,17 @@ export function useDirectusCollections() {
   >(
     options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
-    const { immediate, watch, ...fetchOptions } = options || {}
-
     return useDirectusFetch<ResT, DataT>(directusPath('collections'), {
-      ...fetchOptions,
+      ...options,
       query: undefined,
       params: undefined,
       method: 'GET',
-      immediate: immediate === undefined ? false : immediate,
-      watch: watch === undefined ? false : watch,
     })
   }
 
   function $updateCollection<
     T,
-    R extends ResponseType = 'json',
+    R extends ResponseType = ResponseType,
   >(
     collection: string,
     meta: MaybeRef<Partial<T>>,
