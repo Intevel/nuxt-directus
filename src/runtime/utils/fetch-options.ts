@@ -2,16 +2,45 @@ import type { FetchOptions, ResponseType } from 'ofetch'
 import { joinURL } from 'ufo'
 
 import type {
-  DirectusFetchParams,
+  KeysOf,
   DirectusUseFetchOptions,
-  DirectusUseFetchParams,
-} from '../runtime/types'
+} from '#directus/types'
+import type {
+  MaybeRefOrGetter,
+} from '#imports'
 
-type DirectusAPI = 'items' | 'collections' | 'notifications'
+type MaybeRefOrGetterParams<T> = T extends object
+  ? { [P in keyof T]: MaybeRefOrGetter<T[P]> }
+  : T
+
+export type DirectusEndpoints = 'items' | 'collections' | 'notifications'
+
+export interface DirectusQueryParams {
+  fields?: Array<string>
+  sort?: string | Array<string>
+  filter?: Record<string, unknown>
+  limit?: number
+  offset?: number
+  page?: number
+  alias?: string | Array<string>
+  deep?: Record<string, unknown>
+  search?: string
+}
+
+export type DirectusFetchParams<
+  R extends ResponseType = 'json',
+> = DirectusQueryParams & Omit<FetchOptions<R>, 'method' | 'params' | 'query'>
+
+export type DirectusUseFetchParams<
+  ResT,
+  DataT = ResT,
+  PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
+  DefaultT = undefined,
+> = MaybeRefOrGetterParams<DirectusQueryParams> & Omit<DirectusUseFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query'>
 
 export function directusPath(endpoint: 'collections' | 'notifications', collection?: string, id?: string | number): string
-export function directusPath(endpoint: Exclude<DirectusAPI, 'collections'>, collection: string, id?: string | number): string
-export function directusPath(endpoint: DirectusAPI, collection?: string, id?: string | number): string {
+export function directusPath(endpoint: Exclude<DirectusEndpoints, 'collections'>, collection: string, id?: string | number): string
+export function directusPath(endpoint: DirectusEndpoints, collection?: string, id?: string | number): string {
   if (endpoint === 'collections') {
     return collection !== undefined
       ? joinURL('collections', collection)

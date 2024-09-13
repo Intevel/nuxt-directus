@@ -5,10 +5,10 @@ import type {
   PickFrom,
   HttpResponseError,
   DirectusUseFetchOptions,
-} from '../types'
+} from '#directus/types'
 import {
   directusPath,
-} from '../../utils/fetch-options'
+} from '#directus/utils/fetch-options'
 
 import type { AsyncData } from '#app'
 import {

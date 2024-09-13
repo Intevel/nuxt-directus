@@ -6,12 +6,12 @@ import type {
   HttpResponseError,
   DirectusFetchParams,
   DirectusUseFetchParams,
-} from '../types'
+} from '#directus/types'
 import {
   directusPath,
   destructureFetchParams,
   destructureUseFetchParams,
-} from '../../utils/fetch-options'
+} from '#directus/utils/fetch-options'
 
 import type { AsyncData } from '#app'
 import {

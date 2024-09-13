@@ -5,10 +5,10 @@ import type {
   PickFrom,
   HttpResponseError,
   DirectusUseFetchOptions,
-} from '../types'
+} from '#directus/types'
 import {
   directusPath,
-} from '../../utils/fetch-options'
+} from '#directus/utils/fetch-options'
 
 import type { AsyncData } from '#app'
 import {
@@ -18,7 +18,7 @@ import {
   useNuxtApp,
 } from '#imports'
 
-type CollectionObject = {
+export type CollectionObject = {
   collection: string
   schema: null | {
     [key: string]: unknown
@@ -26,11 +26,11 @@ type CollectionObject = {
   [key: string]: unknown
 }
 
-type DirectusCollectionsFetchOptions<
+export type DirectusFetchOptionsCollections<
   R extends ResponseType = 'json',
 > = Omit<FetchOptions<R>, 'method' | 'params' | 'query' | 'body'>
 
-type DirectusCollectionsUseFetchOptions<
+export type DirectusUseFetchOptionsCollections<
   ResT,
   DataT = ResT,
   PickKeys extends KeysOf<DataT> = KeysOf<DataT>,
@@ -45,7 +45,7 @@ export function useDirectusCollections() {
     R extends ResponseType = 'json',
   >(
     collection: MaybeRef<CollectionObject>,
-    options?: DirectusCollectionsFetchOptions<R>,
+    options?: DirectusFetchOptionsCollections<R>,
   ) {
     return $directusFetch<T, R>(directusPath('collections'), {
       ...options,
@@ -61,7 +61,7 @@ export function useDirectusCollections() {
     DataT = ResT,
   >(
     collection: MaybeRef<CollectionObject>,
-    options?: DirectusCollectionsUseFetchOptions<ResT, DataT>,
+    options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { immediate, watch, ...fetchOptions } = options || {}
 
@@ -81,7 +81,7 @@ export function useDirectusCollections() {
     R extends ResponseType = 'json',
   >(
     collection: string,
-    options?: DirectusCollectionsFetchOptions<R>,
+    options?: DirectusFetchOptionsCollections<R>,
   ) {
     return $directusFetch<T, R>(directusPath('collections', collection), {
       ...options,
@@ -96,7 +96,7 @@ export function useDirectusCollections() {
     DataT = ResT,
   >(
     collection: string,
-    options?: DirectusCollectionsUseFetchOptions<ResT, DataT>,
+    options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { immediate, watch, ...fetchOptions } = options || {}
 
@@ -114,7 +114,7 @@ export function useDirectusCollections() {
     T,
     R extends ResponseType = 'json',
   >(
-    options?: DirectusCollectionsFetchOptions<R>,
+    options?: DirectusFetchOptionsCollections<R>,
   ) {
     return $directusFetch<T, R>(directusPath('collections'), {
       ...options,
@@ -128,7 +128,7 @@ export function useDirectusCollections() {
     ResT,
     DataT = ResT,
   >(
-    options?: DirectusCollectionsUseFetchOptions<ResT, DataT>,
+    options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { immediate, watch, ...fetchOptions } = options || {}
 
@@ -148,7 +148,7 @@ export function useDirectusCollections() {
   >(
     collection: string,
     meta: MaybeRef<Partial<T>>,
-    options?: DirectusCollectionsFetchOptions<R>,
+    options?: DirectusFetchOptionsCollections<R>,
   ) {
     return $directusFetch<T, R>(directusPath('collections', collection), {
       ...options,
@@ -167,7 +167,7 @@ export function useDirectusCollections() {
   >(
     collection: string,
     meta: MaybeRef<Partial<DataT>>,
-    options?: DirectusCollectionsUseFetchOptions<ResT, DataT>,
+    options?: DirectusUseFetchOptionsCollections<ResT, DataT>,
   ): AsyncData<PickFrom<DataT, KeysOf<DataT>> | undefined, FetchError<HttpResponseError> | null> {
     const { immediate, watch, ...fetchOptions } = options || {}
 
@@ -186,7 +186,7 @@ export function useDirectusCollections() {
 
   function $deleteCollection(
     collection: string,
-    options?: DirectusCollectionsFetchOptions,
+    options?: DirectusFetchOptionsCollections,
   ) {
     return $directusFetch(directusPath('collections', collection), {
       ...options,
@@ -198,7 +198,7 @@ export function useDirectusCollections() {
 
   function deleteCollection(
     collection: string,
-    options?: DirectusCollectionsUseFetchOptions<unknown>,
+    options?: DirectusUseFetchOptionsCollections<unknown>,
   ) {
     const { immediate, watch, ...fetchOptions } = options || {}
 

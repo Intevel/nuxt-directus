@@ -11,7 +11,7 @@ import {
   authentication,
   createDirectus,
   rest,
-} from '#nuxt-directus/sdk'
+} from '#directus/sdk'
 import { useRuntimeConfig } from '#imports'
 
 /**
