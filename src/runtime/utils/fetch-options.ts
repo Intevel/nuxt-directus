@@ -3,10 +3,12 @@ import { joinURL } from 'ufo'
 
 import type {
   KeysOf,
+  DirectusEndpoints,
   DirectusUseFetchOptions,
 } from '#directus/types'
-import type {
-  MaybeRefOrGetter,
+import {
+  type MaybeRefOrGetter,
+  createError,
 } from '#imports'
 
 type MaybeRefOrGetterParams<T> = T extends object
@@ -38,9 +40,21 @@ export type DirectusUseFetchParams<
 > = MaybeRefOrGetterParams<DirectusQueryParams>
 & Omit<DirectusUseFetchOptions<ResT, DataT, PickKeys, DefaultT>, 'method' | 'params' | 'query' | 'body'>
 
-export function directusPath(endpoint: 'collections' | 'notifications', collection?: string, id?: string | number): string
-export function directusPath(endpoint: Exclude<DirectusEndpoints, 'collections'>, collection: string, id?: string | number): string
-export function directusPath(endpoint: DirectusEndpoints, collection?: string, id?: string | number): string {
+export function directusPath(
+  endpoint: 'activity' | 'collections' | 'notifications',
+  collection?: string,
+  id?: string | number,
+): string
+export function directusPath(
+  endpoint: Exclude<DirectusEndpoints, 'activity' | 'collections' | 'notifications'>,
+  collection: string,
+  id?: string | number,
+): string
+export function directusPath(
+  endpoint: DirectusEndpoints,
+  collection?: string,
+  id?: string | number,
+): string {
   if (endpoint === 'collections') {
     return collection !== undefined
       ? joinURL('collections', collection)
@@ -51,10 +65,13 @@ export function directusPath(endpoint: DirectusEndpoints, collection?: string, i
       ? joinURL('notifications', id.toString())
       : 'notifications'
   }
-  if (collection === undefined) {
-    throw new Error('Collection must be defined for endpoints other than "collections"')
+  if (endpoint !== 'activity' && collection === undefined) {
+    throw createError({
+      statusCode: 500,
+      message: 'Collection must be defined for endpoints other than "activity", "collections" and "notifications".',
+    })
   }
-  const input = [collection]
+  const input = collection ? [collection] : []
   if (id !== undefined) {
     input.push(id.toString())
   }
