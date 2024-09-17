@@ -1,12 +1,16 @@
 import { ofetch } from 'ofetch'
 
-import { defineNuxtPlugin } from '#imports'
+import { createError, defineNuxtPlugin } from '#imports'
 
 export default defineNuxtPlugin((nuxt) => {
   const {
     url,
     staticToken,
   } = nuxt.$config.public.directus
+  if (!url) throw createError({
+    statusCode: 500,
+    message: 'Missing Directus URL',
+  })
 
   const directusFetch = ofetch.create({
     baseURL: url,
