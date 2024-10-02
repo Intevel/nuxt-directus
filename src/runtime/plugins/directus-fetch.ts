@@ -2,11 +2,11 @@ import { ofetch } from 'ofetch'
 
 import { createError, defineNuxtPlugin } from '#imports'
 
-export default defineNuxtPlugin((nuxt) => {
+export default defineNuxtPlugin(({ $config }) => {
   const {
     url,
     staticToken,
-  } = nuxt.$config.public.directus
+  } = $config.public.directus
   if (!url) throw createError({
     statusCode: 500,
     message: 'Missing Directus URL',
@@ -18,9 +18,9 @@ export default defineNuxtPlugin((nuxt) => {
       options.headers ||= {}
 
       // @ts-expect-error Authorization header wrong type
-      if (staticToken && options.headers.Authorization) {
+      if (staticToken && !options.headers.Authorization) {
         // @ts-expect-error Authorization header wrong type
-        options.headers.Authorization = staticToken
+        options.headers.Authorization = `Bearer ${staticToken}`
       }
 
       // TODO: add user's token
