@@ -2,7 +2,7 @@ import type { FetchOptions, ResponseType } from 'ofetch'
 
 export * from '#directus/utils/fetch-options'
 
-export type DirectusEndpoints = 'activity' | 'collections' | 'items' | 'notifications' | 'revisions' | 'translations'
+export type DirectusEndpoints = 'activity' | 'collections' | 'items' | 'notifications' | 'revisions' | 'translations' | 'versions'
 
 export type DirectusMethods = 'get' | 'post' | 'patch' | 'delete' | 'search'
 

@@ -41,12 +41,12 @@ export function destructureFetchParams<
 }
 
 export function directusPath(
-  endpoint: 'activity' | 'collections' | 'notifications' | 'revisions' | 'translations',
+  endpoint: 'activity' | 'collections' | 'notifications' | 'revisions' | 'translations' | 'versions',
   collection?: string,
   id?: string | number,
 ): string
 export function directusPath(
-  endpoint: Exclude<DirectusEndpoints, 'activity' | 'collections' | 'notifications' | 'revisions' | 'translations'>,
+  endpoint: Exclude<DirectusEndpoints, 'activity' | 'collections' | 'notifications' | 'revisions' | 'translations' | 'versions'>,
   collection: string,
   id?: string | number,
 ): string
@@ -66,10 +66,10 @@ export function directusPath(
       ? joinURL(endpoint, id.toString())
       : endpoint
   }
-  else if (endpoint !== 'activity' && collection === undefined) {
+  else if (endpoint !== 'activity' && endpoint !== 'versions' && collection === undefined) {
     throw createError({
       statusCode: 500,
-      message: 'Collection must be defined for endpoints other than "activity", "collections", "notifications", "revisions" and "translations".',
+      message: 'Collection must be defined for endpoints other than "activity", "collections", "notifications", "revisions", "translations" and "versions".',
     })
   }
   const input = collection ? [collection] : []
