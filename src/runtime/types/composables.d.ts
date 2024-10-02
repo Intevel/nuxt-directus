@@ -6,7 +6,7 @@ export type * from '#directus/composables/notifications'
 export type * from '#directus/composables/revisions'
 export type * from '#directus/composables/translations'
 export type * from '#directus/composables/versions'
+export type * from '#directus/composables/tokens'
 
 // TODO: move them to related composables
 // export type * from './use-directus-sdk'
-// export type * from './use-directus-tokens'

@@ -1,8 +1,4 @@
 import type {
-  AuthenticationData,
-} from '@directus/sdk'
-import type {
-  DirectusTokens,
   ModuleOptions,
 } from '../types'
 import type { CookieRef } from '#app'
@@ -12,6 +8,27 @@ import {
   useNuxtApp,
   useRuntimeConfig,
 } from '#app'
+import {
+  type Ref,
+} from '#imports'
+
+export interface AuthenticationData {
+  access_token: string | null
+  refresh_token: string | null
+  expires: number | null
+  expires_at: number | null
+}
+
+export interface AuthenticationStorage {
+  get: () => Promise<AuthenticationData | null> | AuthenticationData | null
+  set: (value: AuthenticationData | null) => Promise<unknown> | unknown
+}
+
+export interface DirectusTokens extends AuthenticationStorage {
+  refreshToken: (maxAge?: number | undefined) => CookieRef<string | null | undefined>
+  accessToken: (maxAge?: number | undefined) => CookieRef<string | null | undefined>
+  tokens: Ref<AuthenticationData | null>
+}
 
 /**
  * This expands the default Directus storage implementation for authenticated data. It adds a `store` named export for direct access within the Nuxt app using `useState` under the hood.
@@ -82,5 +99,6 @@ export const useDirectusTokens = (useStaticToken?: boolean | string): DirectusTo
     set,
     tokens,
     refreshToken,
+    accessToken,
   }
 }
