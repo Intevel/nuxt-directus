@@ -18,9 +18,16 @@ export function useDirectusFetch<
   options?: FetchOptions<R>,
 ) {
   const {
-    url,
-    staticToken,
-  } = useRuntimeConfig().public.directus
+    public: {
+      directus: {
+        url,
+        staticToken: publicToken,
+      },
+    },
+    directus: {
+      staticToken,
+    },
+  } = useRuntimeConfig()
   if (!url) throw createError({
     statusCode: 500,
     message: 'Missing Directus URL',
@@ -32,9 +39,9 @@ export function useDirectusFetch<
       options.headers ||= {}
 
       // @ts-expect-error Authorization header wrong type
-      if (staticToken && !options.headers.Authorization) {
+      if ((staticToken || publicToken) && !options.headers.Authorization) {
         // @ts-expect-error Authorization header wrong type
-        options.headers.Authorization = `Bearer ${staticToken}`
+        options.headers.Authorization = `Bearer ${staticToken || publicToken}`
       }
 
       // TODO: add user's token
