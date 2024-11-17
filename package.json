@@ -30,7 +30,7 @@
     "dev:build": "nuxi build playground",
     "dev:prepare": "nuxt-module-build --stub && nuxi prepare playground",
     "docs": "cd docs && pnpm dev",
-    "release": "nuxt-module-build && changelogen --release --push && pnpm publish",
+    "release": "nuxt-module-build && changelogen --release --minor --push && pnpm publish",
     "lint": "eslint --ext .js,.ts,.vue"
   },
   "dependencies": {
@@ -62,5 +62,5 @@
   "unbuild": {
     "failOnWarn": false
   },
-  "packageManager": "pnpm@7.27.1"
+  "packageManager": "pnpm@9.12.3"
 }
