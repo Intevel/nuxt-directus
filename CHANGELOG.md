@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## v5.7.0
+
+
+### 🚀 Enhancements
+
+  - Add file upload and deletion functionality (f805a9e)
+
+### 🩹 Fixes
+
+  - Add runtime types to type exports (429554c)
+
+### 📖 Documentation
+
+  - Use new `nuxi module add` command in installation (2ea7888)
+
+### 🏡 Chore
+
+  - Indicate compatibility with new v4 major (cefc5e3)
+  - Rename domain (5d4af61)
+  - Update pnpm (029e413)
+
+### ❤️  Contributors
+
+- Conner Bachmann <bac@christmann.info>
+- Yavuz Yildirim <yvzyldrm@gmail.com>
+- Till Davin <till@zaubar.com>
+- Daniel Roe ([@danielroe](http://github.com/danielroe))
+
 ## v5.6.1
 
 
