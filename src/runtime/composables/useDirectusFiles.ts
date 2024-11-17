@@ -50,5 +50,67 @@ export const useDirectusFiles = () => {
     return url.href
   }
 
-  return { getFiles, getThumbnail }
+  const uploadFiles = async (fileData, options = {}) => {
+    try {
+      const formData = new FormData();
+      
+      if (Array.isArray(fileData)) {
+        fileData.forEach((file) => {
+          formData.append('file[]', file);
+        });
+      } else {
+        formData.append('file', fileData);
+      }
+
+      const uploadResponse = await directus("/files", {
+        method: "POST",
+        body: formData
+      });
+
+      const fileId = uploadResponse.data.id;
+
+      if (options.title || options.tags) {
+        const updateData = {};
+        if (options.title) updateData.title = options.title;
+        if (options.tags) updateData.tags = options.tags;
+
+        await directus(`/files/${fileId}`, {
+          method: "PATCH",
+          body: updateData
+        });
+
+        const updatedFile = await directus(`/files/${fileId}`, {
+          method: "GET"
+        });
+
+        return updatedFile.data;
+      }
+
+      return uploadResponse.data;
+
+    } catch (error) {
+      console.error('File upload error:', error);
+      throw error;
+    }
+  };
+
+  const deleteFiles = async (fileId) => {
+    try {
+      if (Array.isArray(fileId)) {
+        await directus("/files", {
+          method: "DELETE",
+          body: fileId
+        });
+      } else {
+        await directus(`/files/${fileId}`, {
+          method: "DELETE"
+        });
+      }
+    } catch (error) {
+      console.error('File upload error:', error);
+      throw error;
+    }
+  };
+
+  return { getFiles, getThumbnail, uploadFiles, deleteFiles }
 }
