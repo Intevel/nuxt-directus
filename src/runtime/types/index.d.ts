@@ -121,12 +121,21 @@ export interface DirectusThumbnailOptions {
   key?: string;
 }
 
+export interface DirectusUserCreation {
+  email: string;
+  password: string;
+}
+
 export interface DirectusRegisterCredentials {
   first_name?: string | null;
   last_name?: string | null;
   email: string;
   password: string;
   verification_url?: string | null;
+}
+
+export interface DirectusEmailVerification {
+  token: string;
 }
 
 export type DirectusFile = {

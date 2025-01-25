@@ -9,6 +9,8 @@ import type {
   DirectusPasswordForgotCredentials,
   DirectusPasswordResetCredentials,
   DirectusRegisterCredentials,
+  DirectusEmailVerification,
+  DirectusUserCreation,
   DirectusUser
 } from '../types'
 import { useDirectus } from './useDirectus'
@@ -108,7 +110,7 @@ export const useDirectusAuth = () => {
   }
 
   const createUser = async (
-    data: DirectusRegisterCredentials,
+    data: DirectusUserCreation,
     useStaticToken?: boolean
   ): Promise<DirectusUser> => {
     return await directus('/users', {
@@ -121,6 +123,15 @@ export const useDirectusAuth = () => {
     data: DirectusRegisterCredentials
   ): Promise<DirectusUser> => {
     return await directus('/users/register', {
+      method: 'POST',
+      body: data
+    })
+  }
+
+  const verifyEmail = async (
+    data: DirectusEmailVerification
+  ): Promise<void> => {
+    return await directus('/users/register/verify-email', {
       method: 'POST',
       body: data
     })
@@ -185,6 +196,7 @@ export const useDirectusAuth = () => {
     logout,
     createUser,
     register,
+    verifyEmail,
     inviteUser,
     acceptInvite,
     loginWithProvider,
