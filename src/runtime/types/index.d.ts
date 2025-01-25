@@ -122,8 +122,11 @@ export interface DirectusThumbnailOptions {
 }
 
 export interface DirectusRegisterCredentials {
+  first_name?: string | null;
+  last_name?: string | null;
   email: string;
   password: string;
+  verification_url?: string | null;
 }
 
 export type DirectusFile = {
@@ -149,13 +152,13 @@ export type DirectusFile = {
   uploaded_on: string;
   width?: number | null;
   [key: string]: any;
-} | null;
+} | null
 
 export type DirectusFolders = {
   id: string;
   name: string;
   parent?: string | DirectusFolders | null;
-};
+}
 
 export interface DirectusFileRequest {
   id?: string;
@@ -228,24 +231,24 @@ export interface DirectusRevision {
 export interface DirectusItemMetadata {
   total_count?: number;
   filter_count?: number;
-};
+}
 
 export interface DirectusItems<T> {
   data: NonNullable<T[]>;
   meta?: DirectusItemMetadata;
-};
+}
 
 export interface DirectusItem<T> {
   data: NonNullable<T>;
-};
+}
 
 export interface DirectusInviteCreation {
   email: string;
   role: string;
   invite_url?: string
-};
+}
 
 export interface DirectusAcceptInvite {
   token: string;
   password: string
-};
+}

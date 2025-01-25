@@ -74,7 +74,7 @@ export const useDirectusAuth = () => {
   ): Promise<DirectusAuthResponse> => {
     removeTokens()
 
-    const response = await $fetch<{data: DirectusAuthResponse}>('/auth/login', {
+    const response = await $fetch<{ data: DirectusAuthResponse }>('/auth/login', {
       baseURL: baseUrl,
       body: data,
       method: 'POST'
@@ -117,12 +117,13 @@ export const useDirectusAuth = () => {
     }, useStaticToken)
   }
 
-  // Alias for createUser
   const register = async (
     data: DirectusRegisterCredentials
-  // eslint-disable-next-line require-await
   ): Promise<DirectusUser> => {
-    return createUser(data)
+    return await directus('/users/register', {
+      method: 'POST',
+      body: data
+    })
   }
 
   const inviteUser = async (
