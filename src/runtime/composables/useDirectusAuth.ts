@@ -10,6 +10,8 @@ import type {
   DirectusPasswordForgotCredentials,
   DirectusPasswordResetCredentials,
   DirectusRegisterCredentials,
+  DirectusEmailVerification,
+  DirectusUserCreation,
   DirectusUser
 } from '../types'
 import { useDirectus } from './useDirectus'
@@ -75,7 +77,7 @@ export const useDirectusAuth = () => {
   ): Promise<DirectusAuthResponse> => {
     removeTokens()
 
-    const response = await $fetch<{data: DirectusAuthResponse}>('/auth/login', {
+    const response = await $fetch<{ data: DirectusAuthResponse }>('/auth/login', {
       baseURL: baseUrl,
       body: data,
       method: 'POST'
@@ -138,7 +140,7 @@ export const useDirectusAuth = () => {
   }
 
   const createUser = async (
-    data: DirectusRegisterCredentials,
+    data: DirectusUserCreation,
     useStaticToken?: boolean
   ): Promise<DirectusUser> => {
     return await directus('/users', {
@@ -147,12 +149,22 @@ export const useDirectusAuth = () => {
     }, useStaticToken)
   }
 
-  // Alias for createUser
   const register = async (
     data: DirectusRegisterCredentials
-  // eslint-disable-next-line require-await
   ): Promise<DirectusUser> => {
-    return createUser(data)
+    return await directus('/users/register', {
+      method: 'POST',
+      body: data
+    })
+  }
+
+  const verifyEmail = async (
+    data: DirectusEmailVerification
+  ): Promise<string> => {
+    return await directus('/users/register/verify-email', {
+      method: 'POST',
+      body: data
+    })
   }
 
   const inviteUser = async (
@@ -214,6 +226,7 @@ export const useDirectusAuth = () => {
     logout,
     createUser,
     register,
+    verifyEmail,
     inviteUser,
     acceptInvite,
     loginWithProvider,
