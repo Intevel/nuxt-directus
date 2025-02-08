@@ -130,7 +130,7 @@ export const useDirectusAuth = () => {
 
   const verifyEmail = async (
     data: DirectusEmailVerification
-  ): Promise<void> => {
+  ): Promise<string> => {
     return await directus('/users/register/verify-email', {
       method: 'POST',
       body: data
