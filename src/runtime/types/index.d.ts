@@ -168,6 +168,14 @@ export interface DirectusFileRequest {
   params?: DirectusQueryParams;
 }
 
+export interface DirectusField {
+  collection: string;
+  field: string;
+  type: string;
+  meta: Record<string, any>;
+  schema: Record<string, any>;
+}
+
 export interface DirectusFieldsRequest {
   collection?: string;
 }
@@ -259,7 +267,7 @@ export interface DirectusRevision {
 export interface DirectusItemMetadata {
   total_count?: number;
   filter_count?: number;
-};
+}
 
 export interface DirectusItems<T> {
   data: NonNullable<T[]>;

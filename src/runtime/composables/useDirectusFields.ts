@@ -2,17 +2,18 @@ import {
   DirectusFieldRequest,
   DirectusFieldCreation,
   DirectusFieldUpdate,
-  DirectusFieldsRequest
+  DirectusFieldsRequest,
+  DirectusField
 } from '../types'
 import { useDirectus } from './useDirectus'
 
 export const useDirectusFields = () => {
   const directus = useDirectus()
 
-  const getFields = async <T>(
+  const getFields = async (
     data: DirectusFieldsRequest
-  ): Promise<T> => {
-    const fields = await directus<{ data: T }>(
+  ): Promise<DirectusField[]> => {
+    const fields = await directus<{ data: DirectusField[] }>(
       `/fields/${data.collection}`,
       {
         method: 'GET'
@@ -21,11 +22,11 @@ export const useDirectusFields = () => {
     return fields.data
   }
 
-  const getField = async <T>(data: DirectusFieldRequest): Promise<T> => {
+  const getField = async (data: DirectusFieldRequest): Promise<DirectusField> => {
     if (!data.field) {
       throw new Error('Field name is required')
     }
-    const field = await directus<{ data: T }>(
+    const field = await directus<{ data: DirectusField }>(
       `/fields/${data.collection}/${data.field}`,
       {
         method: 'GET'
@@ -34,8 +35,8 @@ export const useDirectusFields = () => {
     return field.data
   }
 
-  const createField = async <T>(data: DirectusFieldCreation): Promise<T> => {
-    const field = await directus<{ data: T }>(`/fields/${data.collection}`, {
+  const createField = async (data: DirectusFieldCreation): Promise<DirectusField> => {
+    const field = await directus<{ data: DirectusField }>(`/fields/${data.collection}`, {
       method: 'POST',
       body: {
         field: data.field,
@@ -47,8 +48,8 @@ export const useDirectusFields = () => {
     return field.data
   }
 
-  const updateField = async <T>(data: DirectusFieldUpdate): Promise<T> => {
-    const field = await directus<{ data: T }>(
+  const updateField = async (data: DirectusFieldUpdate): Promise<DirectusField> => {
+    const field = await directus<{ data: DirectusField }>(
       `/fields/${data.collection}/${data.field}`,
       {
         method: 'PATCH',
@@ -61,17 +62,16 @@ export const useDirectusFields = () => {
     return field.data
   }
 
-  const deleteField = async <T>(data: DirectusFieldRequest): Promise<T> => {
+  const deleteField = async (data: DirectusFieldRequest): Promise<void> => {
     if (!data.field) {
       throw new Error('Field name is required')
     }
-    const field = await directus<{ data: T }>(
+    await directus(
       `/fields/${data.collection}/${data.field}`,
       {
         method: 'DELETE'
       }
     )
-    return field.data
   }
 
   return {
