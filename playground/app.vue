@@ -25,6 +25,9 @@
     <button style="margin-top: 25px" @click="fetchCollections">
       Fetch Collections
     </button>
+    <button style="margin-top: 25px" @click="fetchFields">
+      Fetch Fields
+    </button>
     <button style="margin-top: 25px" @click="logUser">
       Log User
     </button>
@@ -57,6 +60,7 @@ const { login, loginWithProvider, logout } = useDirectusAuth()
 const user = useDirectusUser()
 const { getItems, getItemById, createItems, deleteItems } = useDirectusItems()
 const { getCollections } = useDirectusCollections()
+const { getFields } = useDirectusFields()
 const router = useRouter()
 const { token } = useDirectusToken()
 
@@ -73,6 +77,14 @@ interface Article {
   title: string;
   content: string;
   status: string;
+}
+
+interface Field {
+  collection: string;
+  field: string;
+  type: string;
+  schema: Object;
+  meta: Object;
 }
 
 let articleIds: (string | number | undefined)[] = []
@@ -147,6 +159,17 @@ const fetchCollections = async () => {
   try {
     const collections = await getCollections()
     console.log(collections)
+
+    router.push('/d')
+  } catch (e) {}
+}
+
+const fetchFields = async () => {
+  try {
+    const fields = await getFields<Field>({
+      collection: 'Articles'
+    });
+    console.log(fields)
 
     router.push('/d')
   } catch (e) {}

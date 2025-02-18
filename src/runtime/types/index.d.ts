@@ -168,6 +168,38 @@ export interface DirectusFileRequest {
   params?: DirectusQueryParams;
 }
 
+export interface DirectusField {
+  collection: string;
+  field: string;
+  type: string;
+  meta: Record<string, any>;
+  schema: Record<string, any>;
+}
+
+export interface DirectusFieldsRequest {
+  collection?: string;
+}
+
+export interface DirectusFieldRequest {
+  collection: string
+  field?: string
+}
+
+export interface DirectusFieldCreation {
+  collection: string
+  field: string
+  type: string
+  meta?: Record<string, any>
+  schema?: Record<string, any>
+}
+
+export interface DirectusFieldUpdate {
+  collection: string
+  field: string
+  meta?: Record<string, any>
+  schema?: Record<string, any>
+}
+
 export interface DirectusNotificationObject {
   id?: number;
   timestamp?: string;
@@ -179,6 +211,7 @@ export interface DirectusNotificationObject {
   collection?: string;
   item?: string;
 }
+
 
 export interface DirectusCollectionRequest {
   collection?: string;
@@ -234,7 +267,7 @@ export interface DirectusRevision {
 export interface DirectusItemMetadata {
   total_count?: number;
   filter_count?: number;
-};
+}
 
 export interface DirectusItems<T> {
   data: NonNullable<T[]>;
